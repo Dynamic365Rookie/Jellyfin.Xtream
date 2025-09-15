@@ -4,6 +4,7 @@
 	<SourceCode>
 		<Declaration><![CDATA[
 [DataContractAttribute]
+[SysOperationContractProcessing(classStr(UBSOutboundInterfaceVendInvoiceContractUIBuilder))]
 internal final class UBSOutboundInterfaceVendInvoiceContract
 {
     DataAreaId legalEntity;

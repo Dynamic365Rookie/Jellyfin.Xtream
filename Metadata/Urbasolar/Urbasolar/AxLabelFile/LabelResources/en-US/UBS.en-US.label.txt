@@ -1,5 +1,6 @@
 ﻿NewLabel0=Label files created on 10/23/2024 09:00:42 for label file Id UBS and language en-US
  ;Label file comment - see above label
+UBSAccountingTool=UBS - Accounting Tool
 UBSActivateMailSending=Activate mail sending.
 UBSActivateReferencingDocument=Activate vendor referencing
 UBSAlertBody=Alert body
@@ -14,6 +15,7 @@ UBSAutomaticReceptionWarning=No open period for the automatic receipt of line nu
 UBSAutomaticRetention=Warranty retention automation
 UBSBankFRAccountNumLength=The length of %1 should be 11 characters
 UBSBlockageMonitoring=Blockage monitoring
+UBSBusinessCentral=Business Central
 UBSCancellationToNotSend=Cancellation to not send to vendor
 UBSCancellationToSend=Cancellation to send to vendor
 UBSCategoryProcurementManager=Procurement category manager
@@ -148,6 +150,7 @@ UBSRequestedDateCheckError=The required date can not be reached with current del
 UBSResource=Resource
 UBSResourceRequest=Resource Request
 UBSRootURLAuthentication=URL root authentication
+UBSSage=Sage
 UBSSalesLineQuantityError=Sales line quantity cannot exceed related purchase requisition line quantity.
 UBSSalesOrderCreated=Sales order created with Sales ID: %1
 UBSSiteIdDoesNotExist=Site %1 does not exist for legal entity %2.

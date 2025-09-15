@@ -4,13 +4,13 @@
 	<SourceCode>
 		<Declaration><![CDATA[
 [DataContractAttribute]
+[SysOperationContractProcessing(classStr(UBSOutboundInterfaceAccrualContractUIBuilder))]
 internal final class UBSOutboundInterfaceAccrualContract
 {
     TransDate periodDate;
     DataAreaId legalEntity;
 
 }
-
 ]]></Declaration>
 		<Methods>
 			<Method>

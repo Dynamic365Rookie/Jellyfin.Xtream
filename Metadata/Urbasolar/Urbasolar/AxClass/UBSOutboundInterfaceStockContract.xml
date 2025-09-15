@@ -4,6 +4,7 @@
 	<SourceCode>
 		<Declaration><![CDATA[
 [DataContractAttribute]
+[SysOperationContractProcessing(classStr(UBSOutboundInterfaceStockContractUIBuilder))]
 internal final class UBSOutboundInterfaceStockContract
 {
     TransDate periodDate;

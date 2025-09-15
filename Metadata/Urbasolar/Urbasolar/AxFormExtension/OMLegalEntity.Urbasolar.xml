@@ -29,6 +29,20 @@
 			</FormControl>
 			<Parent>Tab</Parent>
 		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlmvm043a51</Name>
+			<FormControl xmlns=""
+				i:type="AxFormComboBoxControl">
+				<Name>CompanyInfo_UBSInterfaceTarget</Name>
+				<Type>ComboBox</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>UBSInterfaceTarget</DataField>
+				<DataSource>CompanyInfo</DataSource>
+				<Items />
+			</FormControl>
+			<Parent>TopPanel</Parent>
+		</AxFormExtensionControl>
 	</Controls>
 	<DataSourceModifications />
 	<DataSourceReferences />

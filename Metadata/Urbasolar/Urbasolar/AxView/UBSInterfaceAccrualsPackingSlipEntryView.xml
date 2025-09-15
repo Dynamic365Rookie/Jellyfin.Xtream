@@ -170,7 +170,31 @@ public class UBSInterfaceAccrualsPackingSlipEntryView extends common
 						<Name>GeneralJournalEntry</Name>
 						<DynamicFields>Yes</DynamicFields>
 						<Table>GeneralJournalEntry</Table>
-						<DataSources />
+						<DataSources>
+							<AxQuerySimpleEmbeddedDataSource>
+								<Name>CompanyInfo</Name>
+								<DynamicFields>Yes</DynamicFields>
+								<Table>CompanyInfo</Table>
+								<DataSources />
+								<DerivedDataSources />
+								<Fields />
+								<Ranges>
+									<AxQuerySimpleDataSourceRange>
+										<Name>UBSInterfaceTarget</Name>
+										<Field>UBSInterfaceTarget</Field>
+										<Value>UBSInterfaceTarget::Sage</Value>
+									</AxQuerySimpleDataSourceRange>
+								</Ranges>
+								<Relations>
+									<AxQuerySimpleDataSourceRelation>
+										<Name>QueryDataSourceRelation1</Name>
+										<Field>SubledgerVoucherDataAreaId</Field>
+										<JoinDataSource>GeneralJournalEntry</JoinDataSource>
+										<RelatedField>DataArea</RelatedField>
+									</AxQuerySimpleDataSourceRelation>
+								</Relations>
+							</AxQuerySimpleEmbeddedDataSource>
+						</DataSources>
 						<DerivedDataSources />
 						<Fields />
 						<Ranges />

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSInterfaceTarget</Name>
+	<Label>@UBS:UBSAccountingTool</Label>
+	<UseEnumValue>No</UseEnumValue>
+	<EnumValues>
+		<AxEnumValue>
+			<Name>None</Name>
+			<Label>@SYS80253</Label>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>Sage</Name>
+			<Label>@UBS:UBSSage</Label>
+			<Value>1</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>BC</Name>
+			<Label>@UBS:UBSBusinessCentral</Label>
+			<Value>2</Value>
+		</AxEnumValue>
+	</EnumValues>
+	<IsExtensible>true</IsExtensible>
+</AxEnum>

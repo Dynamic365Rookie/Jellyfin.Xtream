@@ -12,6 +12,12 @@
 			<DataField>UBSActivateReferencingDocument</DataField>
 			<DataSource>CompanyInfo</DataSource>
 		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSInterfaceTarget</Name>
+			<DataField>UBSInterfaceTarget</DataField>
+			<DataSource>CompanyInfo</DataSource>
+		</AxDataEntityViewField>
 	</Fields>
 	<Mappings />
 	<PropertyModifications />

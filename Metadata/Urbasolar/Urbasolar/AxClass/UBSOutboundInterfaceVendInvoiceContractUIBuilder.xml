@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterfaceVendInvoiceContractUIBuilder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSOutboundInterfaceVendInvoiceContractUIBuilder extends SysOperationUIBuilder
+{
+    private UBSOutboundInterfaceVendInvoiceContract contract;
+
+    DataAreaId legalEntity;
+    boolean reprocessError;
+
+    private DialogField dialogLegalEntity;
+    private DialogField dialogReprocessError;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>build</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public void build()
+    {
+        super();
+
+        Dialog dialogLocal = dialog as Dialog;
+
+        dialogLegalEntity = dialog.addFieldValue(extendedtypestr(DataAreaId), legalEntity, "@SYS13342");
+        dialogReprocessError = dialog.addFieldValue(enumstr(NoYes), reprocessError, "@UBS:UBSReprocessError");
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>postRun</Name>
+				<Source><![CDATA[
+    [Hookable(false)]
+    public void postRun()
+    {
+        super();
+
+        dialogLegalEntity.registerOverrideMethod(
+            methodStr(FormStringControl, lookup),
+            methodStr(UBSOutboundInterfaceVendInvoiceContractUIBuilder, dialogLegalEntityLookup),
+            this);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dialogLegalEntityLookup</Name>
+				<Source><![CDATA[
+    private void dialogLegalEntityLookup(FormControl _formControl)
+    {
+        // Create an instance of SysReferenceTableLookup with the "lookup table" and
+        // the current form control.
+        SysTableLookup sysTableLookup = SysTableLookup::newParameters(tableNum(CompanyInfo), _formControl);
+
+        // Add fields to be shown in the lookup form.
+        sysTableLookup.addLookupfield(fieldNum(CompanyInfo, DataArea));
+        sysTableLookup.addLookupfield(fieldNum(CompanyInfo, Name));
+
+        // Create the QueryBuildDataSource.
+        Query query = new Query();
+        QueryBuildDataSource queryBuildDataSource = query.addDataSource(tableNum(CompanyInfo));
+
+        queryBuildDataSource.addRange(fieldNum(CompanyInfo,UBSInterfaceTarget)).value(queryValue(UBSInterfaceTarget::Sage));
+
+        sysTableLookup.parmQuery(query);
+        sysTableLookup.performFormLookup();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getContract</Name>
+				<Source><![CDATA[
+    private UBSOutboundInterfaceVendInvoiceContract getContract()
+    {
+        if (contract == null)
+        {
+            contract = this.dataContractObject() as UBSOutboundInterfaceVendInvoiceContract;
+        }
+
+        return contract;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFromDialog</Name>
+				<Source><![CDATA[
+    public void getFromDialog()
+    {
+        super();
+
+        contract = this.getContract();
+        contract.parmLegalEntity(dialogLegalEntity.value());
+        contract.parmReprocessError(dialogReprocessError.value());
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,5 +1,6 @@
 ﻿NewLabel0=Label files created on 10/23/2024 09:00:43 for label file Id UBS and language fr
  ;Label file comment - see above label
+UBSAccountingTool=UBS - Outil comptable
 UBSActivateMailSending=Activer l'envoi de mails.
 UBSActivateReferencingDocument=Activer le référencement fournisseur
 UBSAlertBody=Corps de l'alerte
@@ -13,6 +14,7 @@ UBSAutomaticReceptionWarning=Aucune période d'ouverte pour la réception automa
 UBSAutomaticRetention=Automatisation de retenue de garantie
 UBSBankFRAccountNumLength=La longueur du %1 doit être 11 caractères.
 UBSBlockageMonitoring=Suivi des blocages
+UBSBusinessCentral=Business Central
 UBSCancellationToNotSend=Annnulation à ne pas envoyer au fournisseur
 UBSCancellationToSend=Annulation à envoyer au fournisseur
 UBSCategoryProcurementManager=Responsable de la catégorie d’approvisionnement
@@ -139,6 +141,7 @@ UBSRequestedDate=UBS - Date souhaitée
 UBSRequestedDateCheckError=La date souhaitée ne peut pas être atteinte compte tenu des délais.
 UBSResourceRequest=Resource request
 UBSRootURLAuthentication=Racine URL de l'authentification
+UBSSage=Sage
 UBSSalesLineQuantityError=La quantité de la ligne de commande de vente ne doit pas dépasser la quantité de la ligne de demande d'achat.
 UBSSalesOrderCreated=La commande de vente %1 a été créée
 UBSSenderMailAddress=Adresse mail expéditeur
