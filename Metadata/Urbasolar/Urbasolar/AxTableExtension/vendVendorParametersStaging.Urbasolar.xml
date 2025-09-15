@@ -222,7 +222,6 @@
 		<AxTableField xmlns=""
 			i:type="AxTableFieldEnum">
 			<Name>SkipRereadOnUpdate</Name>
-			<FeatureClass>PurchTableRereadHandlingFlight</FeatureClass>
 			<HelpText>@Scm:PurchSkipRereadOnUpdateFieldHelpText</HelpText>
 			<Label>@Scm:PurchSkipRereadOnUpdateFieldLabel</Label>
 			<EnumType>NoYes</EnumType>
