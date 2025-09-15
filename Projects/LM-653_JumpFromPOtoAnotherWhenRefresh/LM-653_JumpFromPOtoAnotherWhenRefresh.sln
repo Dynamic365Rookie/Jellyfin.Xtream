@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FC65038C-1B2F-41E1-A629-BED71D161FFF}") = "LM-653_JumpFromPOtoAnotherWhenRefresh (VAR) [Urbasolar]", "LM-653_JumpFromPOtoAnotherWhenRefresh\LM-653_JumpFromPOtoAnotherWhenRefresh.rnrproj", "{E64DCA39-0AC3-4702-862C-CCA7FE191FE7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E64DCA39-0AC3-4702-862C-CCA7FE191FE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E64DCA39-0AC3-4702-862C-CCA7FE191FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://dev.azure.com/urbasolard365finance
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = LM-653_JumpFromPOtoAnotherWhenRefresh\\LM-653_JumpFromPOtoAnotherWhenRefresh.rnrproj
+		SccProjectName1 = LM-653_JumpFromPOtoAnotherWhenRefresh
+		SccLocalPath1 = LM-653_JumpFromPOtoAnotherWhenRefresh
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchTable_PurchTableDS_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(FormDataSourceStr(PurchTable, PurchTable))]
+internal final class PurchTable_PurchTableDS_Urbasolar_Extension
+{
+ }
+
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>research</Name>
+				<Source><![CDATA[
+    public void research(boolean _retainPosition)
+    {
+        PurchTable currentRecord;
+        currentRecord.data(this.cursor());
+
+        next research(true);
+
+        if(currentRecord)
+        {
+            this.positionToRecord(currentRecord);
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
