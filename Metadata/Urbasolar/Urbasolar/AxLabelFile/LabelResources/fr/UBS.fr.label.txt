@@ -147,6 +147,7 @@ UBSSiteUBSSAS=Site UBS_SAS
 UBSSReferencingDocumentBatchController=Mise à jour auto du référencement fournisseur
 UBSStartingMonth=Mois de début
 UBSStockAlertBatchController=Urbasolar - Alerte niveau de stock
+UBSSyncDefaultDimVendor=Synchronisation pour tous les vendeurs et toutes les entités
 UBSTestBearerConnectionSuccess=La connexion au bearer de l'API est correcte.
 UBSTestConnection=Test de connexion
 UBSTimesheetTracking=UBS - RECPEP - Suivi des feuilles de temps

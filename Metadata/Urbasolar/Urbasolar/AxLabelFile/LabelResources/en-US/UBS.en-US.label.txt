@@ -155,6 +155,7 @@ UBSSiteUBSSAS=UBS_SAS Site
 UBSSReferencingDocumentBatchController=Automated update of vendor referencing
 UBSStartingMonth=Start month
 UBSStockAlertBatchController=Urbasolar - Stock Alert
+UBSSyncDefaultDimVendor=Sync default dimension for all vendor for all entity
 UBSTenantId=Tenant Id
 UBSTestBearerConnectionSuccess=The connection to the API bearer is correct.
 UBSTestConnection=Connection test

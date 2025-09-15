@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SysDataSharingSqlObjectsDataCopy_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(SysDataSharingSqlObjectsDataCopy))]
+final class SysDataSharingSqlObjectsDataCopy_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>promptCopyData</Name>
+				<Source><![CDATA[
+    public static void promptCopyData(RecId _policyRecId)
+    {
+        next promptCopyData(_policyRecId);
+
+        SysDataSharingOrganizationEnabled org;
+        SysDataSharingRuleEnabled         ruleEnabled;
+        SysDataSharingPolicy              sharingPolicy;
+
+        List            sharedList      = SysDataSharingSqlObjects::getTopologicalOrdering(_policyRecId);
+        ListEnumerator  listEnum        = sharedList.getEnumerator();
+
+        while (listEnum.moveNext())
+        {
+            select firstonly SharedTableName from ruleEnabled
+                        where ruleEnabled.RecId == listEnum.current();
+
+            if(ruleEnabled.SharedTableName == tableStr(VendTable))
+            {
+                select firstfast org where org.DataSharingPolicy == _policyRecId;   
+                DataAreaId destinationAreaId = org.DataSharingCompany;
+
+                UBSTriggerDimensionDefaultingList dimensionDefaulting = UBSTriggerDimensionDefaultingList::construct();
+                dimensionDefaulting.batchInfo().parmBatchExecute(NoYes::Yes);
+                dimensionDefaulting.batchInfo().parmCaption('@UBS:UBSSyncDefaultDimVendor');
+                dimensionDefaulting.parmSourceEntity(destinationAreaId);
+        
+                BatchHeader batchHeader = BatchHeader::construct();
+                batchHeader.addTask(dimensionDefaulting);
+                batchHeader.save();
+            }
+        }
+
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

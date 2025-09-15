@@ -40,18 +40,30 @@ internal final class UBSTriggerDimensionDefaultingMain
             changecompany(organization.DataSharingCompany)
             {
                 vendTable = VendTable::find(_vendorAccount,true);
-                ttsbegin;
-                DimensionDefaultFacade::copyDimensionValueToDefaultDimensionField(vendTable, fieldNum(VendTable, AccountNum), vendTable, fieldNum(VendTable, DefaultDimension));
-                ttscommit;
+
+                if(vendTable)
+                {
+                    ttsbegin;
+                    DimensionDefaultFacade::copyDimensionValueToDefaultDimensionField(vendTable, fieldNum(VendTable, AccountNum), vendTable, fieldNum(VendTable, DefaultDimension));
+                    ttscommit;
+                }                
             }
         }
 
-        ttsbegin;
         UBSVendorDimensionToSync vendorDimensionToSync;
-        vendorDimensionToSync.UBSAccountNum = _vendorAccount;
-        vendorDimensionToSync.UBSDimensionIsUpdated = NoYes::Yes;
-        vendorDimensionToSync.insert();
-        ttscommit;
+
+        select RecId from vendorDimensionToSync where 
+            vendorDimensionToSync.UBSAccountNum == _vendorAccount;
+
+        if(!vendorDimensionToSync)
+        {
+            ttsbegin;
+            UBSVendorDimensionToSync vendorDimensionToSync2;
+            vendorDimensionToSync2.UBSAccountNum = _vendorAccount;
+            vendorDimensionToSync2.UBSDimensionIsUpdated = NoYes::Yes;
+            vendorDimensionToSync2.insert();
+            ttscommit;
+        }
     }
 
 ]]></Source>
