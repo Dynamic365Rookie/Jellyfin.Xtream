@@ -47,10 +47,14 @@ final class VendTable_Form_Urbasolar_Extension
             }
         }
 
-        if(!vendTable.BankAccount)
+        if(CompanyInfo::find().UBSActivateReferencingDocument)
         {
-            validate = checkFailed('@UBS:UBSVendTableBankAccountMandatory');
+            if(!vendTable.BankAccount)
+            {
+                validate = checkFailed('@UBS:UBSVendTableBankAccountMandatory');
+            }
         }
+
         return ret && validate;
     }
 

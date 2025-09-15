@@ -14,11 +14,19 @@ final class VendTable_Table_Urbasolar_Extension
 				<Source><![CDATA[
     void insert()
     {
-        this.Blocked = CustVendorBlocked::All;
+        boolean activateReferencing = CompanyInfo::find().UBSActivateReferencingDocument;
+
+        if(activateReferencing)
+        {
+            this.Blocked = CustVendorBlocked::All;
+        }
 
         next insert();
 
-        vendOnHoldHistory::createHistoryRecord(this.AccountNum, this.Blocked,PurchParameters::find().UBSCreationReason);
+        if(activateReferencing)
+        {
+            vendOnHoldHistory::createHistoryRecord(this.AccountNum, this.Blocked,PurchParameters::find().UBSCreationReason);
+        }
 
         BatchHeader batchHeader;
 

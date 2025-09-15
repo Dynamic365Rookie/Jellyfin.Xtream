@@ -1,6 +1,7 @@
 ﻿NewLabel0=Label files created on 10/23/2024 09:00:43 for label file Id UBS and language fr
  ;Label file comment - see above label
 UBSActivateMailSending=Activer l'envoi de mails.
+UBSActivateReferencingDocument=Activer le référencement fournisseur
 UBSAlertBody=Corps de l'alerte
 UBSApproveReason=Code motif d'approbation
 UBSAttachDocToBankAccount=Merci d’attacher le RIB avant de soumettre au flux de validation.

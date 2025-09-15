@@ -12,7 +12,7 @@ public class UBSReferencingDocuments extends common
 			<Method>
 				<Name>checkReferencingDocument</Name>
 				<Source><![CDATA[
-    public static boolean checkReferencingDocument(RefRecId _party) 
+    public static boolean checkReferencingDocument(RefRecId _party)
     {
         boolean                 ret                  = true;
         UBSReferencingDocuments referencingDocuments = UBSReferencingDocuments::findNotReferencingDocument(_party);
@@ -34,11 +34,14 @@ public class UBSReferencingDocuments extends common
     {
         UBSReferencingDocuments referencingDocuments;
 
-        if(!VendParameters::find().UBSDisableReferencingCheck)
+        if(CompanyInfo::find().UBSActivateReferencingDocument)
         {
-            select firstfast referencingDocuments
+            if(!VendParameters::find().UBSDisableReferencingCheck)
+            {
+                select firstfast referencingDocuments
                 where referencingDocuments.UBSDocumentName =='' &&
                       referencingDocuments.Party == _party;
+            }
         }
 
         return referencingDocuments;

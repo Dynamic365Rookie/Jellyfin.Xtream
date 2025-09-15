@@ -72,36 +72,39 @@ internal final class UBSSReferencingDocumentBatchService extends SysOperationSer
                     {
                         changecompany(dataArea.Id)
                         {
-                            if(!VendParameters::find().UBSDisableReferencingCheck)
+                            if(CompanyInfo::find().UBSActivateReferencingDocument)
                             {
-                                VendTable vendTableCC = VendTable::findByPartyRecId(dirPartyTable.RecId, true);
-
-                                if(vendTableCC)
+                                if(!VendParameters::find().UBSDisableReferencingCheck)
                                 {
-                                    ttsbegin;
-                                    vendTableCC.Blocked                   = CustVendorBlocked::Requisition;
-                                    vendTableCC.VendPriceToleranceGroupId = vendPriceToleranceGroupId;
-                                    vendTableCC.update();
-                                    ttscommit;
+                                    VendTable vendTableCC = VendTable::findByPartyRecId(dirPartyTable.RecId, true);
 
-                                    vendOnHoldHistory::createHistoryRecord(vendTableCC.AccountNum,
+                                    if(vendTableCC)
+                                    {
+                                        ttsbegin;
+                                        vendTableCC.Blocked                   = CustVendorBlocked::Requisition;
+                                        vendTableCC.VendPriceToleranceGroupId = vendPriceToleranceGroupId;
+                                        vendTableCC.update();
+                                        ttscommit;
+
+                                        vendOnHoldHistory::createHistoryRecord(vendTableCC.AccountNum,
                                                                            vendTableCC.Blocked,
                                                                            updateReason);
 
-                                    if(vendTableCC.canModifyChangeProposal())
-                                    {
-                                        VendTable originalTableCC = vendTableCC.orig();
+                                        if(vendTableCC.canModifyChangeProposal())
+                                        {
+                                            VendTable originalTableCC = vendTableCC.orig();
 
-                                        ttsbegin;
-                                        // create or update an approval entry
-                                        VendTableChangeProposal change = VendTableChangeProposal::findOrCreate(vendTableCC.RecId, true);
-                                        change.(fieldNum(VendTableChangeProposal,VendPriceToleranceGroupId)) = vendTableCC.(fieldNum(VendTable,VendPriceToleranceGroupId));
-                                        change.setFlagForChangedField(VendTableChangeProposalField::VendPriceToleranceGroupId);
-                                        change.update();
+                                            ttsbegin;
+                                            // create or update an approval entry
+                                            VendTableChangeProposal change = VendTableChangeProposal::findOrCreate(vendTableCC.RecId, true);
+                                            change.(fieldNum(VendTableChangeProposal,VendPriceToleranceGroupId)) = vendTableCC.(fieldNum(VendTable,VendPriceToleranceGroupId));
+                                            change.setFlagForChangedField(VendTableChangeProposalField::VendPriceToleranceGroupId);
+                                            change.update();
 
-                                        vendTableCC.VendPriceToleranceGroupId = originalTableCC.VendPriceToleranceGroupId;
-                                        vendTableCC.update();
-                                        ttscommit;
+                                            vendTableCC.VendPriceToleranceGroupId = originalTableCC.VendPriceToleranceGroupId;
+                                            vendTableCC.update();
+                                            ttscommit;
+                                        }
                                     }
                                 }
                             }

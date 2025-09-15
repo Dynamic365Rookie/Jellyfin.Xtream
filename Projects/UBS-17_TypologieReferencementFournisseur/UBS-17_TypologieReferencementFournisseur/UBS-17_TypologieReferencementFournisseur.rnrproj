@@ -123,6 +123,11 @@
       <Name>DirPartyV2Entity.Urbasolar</Name>
       <Link>Data Entity Extensions\DirPartyV2Entity.Urbasolar</Link>
     </Content>
+    <Content Include="AxDataEntityViewExtension\OMLegalEntity.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>OMLegalEntity.Urbasolar</Name>
+      <Link>Data Entity Extensions\OMLegalEntity.Urbasolar</Link>
+    </Content>
     <Content Include="AxDataEntityViewExtension\vendVendorParametersEntity.Urbasolar">
       <SubType>Content</SubType>
       <Name>vendVendorParametersEntity.Urbasolar</Name>
@@ -152,6 +157,11 @@
       <SubType>Content</SubType>
       <Name>DirPartyTable.Urbasolar</Name>
       <Link>Form Extensions\DirPartyTable.Urbasolar</Link>
+    </Content>
+    <Content Include="AxFormExtension\OMLegalEntity.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>OMLegalEntity.Urbasolar</Name>
+      <Link>Form Extensions\OMLegalEntity.Urbasolar</Link>
     </Content>
     <Content Include="AxFormExtension\SrmParameters.Urbasolar">
       <SubType>Content</SubType>
@@ -213,6 +223,11 @@
       <Name>VendTableListPage.Urbasolar</Name>
       <Link>Simple Query Extensions\VendTableListPage.Urbasolar</Link>
     </Content>
+    <Content Include="AxTableExtension\CompanyInfo.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>CompanyInfo.Urbasolar</Name>
+      <Link>Table Extensions\CompanyInfo.Urbasolar</Link>
+    </Content>
     <Content Include="AxTableExtension\DirPartyTable.Urbasolar">
       <SubType>Content</SubType>
       <Name>DirPartyTable.Urbasolar</Name>
@@ -222,6 +237,11 @@
       <SubType>Content</SubType>
       <Name>DirPartyV2Staging.Urbasolar</Name>
       <Link>Table Extensions\DirPartyV2Staging.Urbasolar</Link>
+    </Content>
+    <Content Include="AxTableExtension\OMLegalStaging.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>OMLegalStaging.Urbasolar</Name>
+      <Link>Table Extensions\OMLegalStaging.Urbasolar</Link>
     </Content>
     <Content Include="AxTableExtension\PurchParameters.Urbasolar">
       <SubType>Content</SubType>

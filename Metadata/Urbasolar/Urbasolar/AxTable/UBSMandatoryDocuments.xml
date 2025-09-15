@@ -17,18 +17,21 @@ public class UBSMandatoryDocuments extends common
         UBSReferencingDocuments referencingDocuments;
         UBSMandatoryDocuments   mandatoryDocuments;
 
-        if(!VendParameters::find().UBSDisableReferencingCheck)
+        if(CompanyInfo::find().UBSActivateReferencingDocument)
         {
-            while select UBSReferencing from mandatoryDocuments
+            if(!VendParameters::find().UBSDisableReferencingCheck)
+            {
+                while select UBSReferencing from mandatoryDocuments
                     notexists join referencingDocuments
                         where mandatoryDocuments.UBSDocuments   == referencingDocuments.UBSDocuments &&
                               mandatoryDocuments.UBSReferencing == _dirPartyTable.UBSReferencing &&
                               referencingDocuments.Party        == _dirPartyTable.RecId
-            {
-                if(mandatoryDocuments.UBSReferencing == _dirPartyTable.UBSReferencing)
                 {
-                    ret = checkFailed('@UBS:UBSMissingDocumentInVendor');
-                    break;
+                    if(mandatoryDocuments.UBSReferencing == _dirPartyTable.UBSReferencing)
+                    {
+                        ret = checkFailed('@UBS:UBSMissingDocumentInVendor');
+                        break;
+                    }
                 }
             }
         }
