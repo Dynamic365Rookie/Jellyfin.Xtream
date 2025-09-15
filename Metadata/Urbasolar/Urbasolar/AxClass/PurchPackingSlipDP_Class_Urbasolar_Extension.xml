@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchPackingSlipDP_Class_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(PurchPackingSlipDP))]
+
+public final class PurchPackingSlipDP_Class_Urbasolar_Extension
+{
+
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initializeProductReceiptHeader</Name>
+				<Source><![CDATA[
+    protected PurchPackingSlipHeaderTmp initializeProductReceiptHeader()
+    {
+        PurchPackingSlipHeaderTmp purchPackingSlipHeaderTmpLocal = next initializeProductReceiptHeader();
+
+        purchPackingSlipHeaderTmpLocal.UBSPackingSlipNum = this.parmVendPackingSlipJour().UBSgetPackingSlipNumber();
+
+        purchPackingSlipHeaderTmpLocal.UBSAmountExcludingTax = this.parmVendPackingSlipJour().UBSgetCumulatedTotalAmount();
+        purchPackingSlipHeaderTmpLocal.UBSAmountExcludingTax_PurchReq = this.parmVendPackingSlipJour().UBSgetCumulatedTotalAmount_PurchReq();
+        purchPackingSlipHeaderTmpLocal.UBSTotalTaxAmount = this.parmVendPackingSlipJour().UBSgetCumulatedTaxAmount();
+
+        VendPackingSlipJour previousVendPackingSlipJour = this.parmVendPackingSlipJour().UBSgetPreviousPackingSlip();
+
+        purchPackingSlipHeaderTmpLocal.UBSPreviousPackingSlipAmountExcludingTax = previousVendPackingSlipJour.UBSgetCumulatedTotalAmount();
+        purchPackingSlipHeaderTmpLocal.UBSPreviousPackingSlipAmountExcludingTax_PurchReq = previousVendPackingSlipJour.UBSgetCumulatedTotalAmount_PurchReq();
+        purchPackingSlipHeaderTmpLocal.UBSPreviousPackingSlipTotalTaxAmount = previousVendPackingSlipJour.UBSgetCumulatedTaxAmount();
+        purchPackingSlipHeaderTmpLocal.UBSPreviousPackingSlipDeliveryDate = previousVendPackingSlipJour.DeliveryDate;
+
+        purchPackingSlipHeaderTmpLocal.UBSMonthAmountExcludingTax = this.parmVendPackingSlipJour().UBSgetMonthTotalAmount();
+        purchPackingSlipHeaderTmpLocal.UBSMonthAmountExcludingTax_PurchReq = this.parmVendPackingSlipJour().UBSgetMonthTotalAmount_PurchReq();
+        purchPackingSlipHeaderTmpLocal.UBSMonthTotalTaxAmount = this.parmVendPackingSlipJour().UBSgetMonthTaxAmount();
+
+
+        return purchPackingSlipHeaderTmpLocal;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

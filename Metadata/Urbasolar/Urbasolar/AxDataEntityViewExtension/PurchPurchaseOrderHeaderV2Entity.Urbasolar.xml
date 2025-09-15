@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxDataEntityViewExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchPurchaseOrderHeaderV2Entity.Urbasolar</Name>
+	<DataSources />
+	<FieldGroupExtensions>
+		<AxTableFieldGroupExtension>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>UBSProjectDim</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>UBSRequestedDate</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>UBSTaxRecalcFlag</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroupExtension>
+	</FieldGroupExtensions>
+	<FieldGroups />
+	<FieldModifications />
+	<Fields>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSProjectDim</Name>
+			<DataField>UBSProjectDim</DataField>
+			<DataSource>PurchTable</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSRequestedDate</Name>
+			<DataField>UBSRequestedDate</DataField>
+			<DataSource>PurchTable</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSTaxRecalcFlag</Name>
+			<DataField>UBSTaxRecalcFlag</DataField>
+			<DataSource>PurchTable</DataSource>
+		</AxDataEntityViewField>
+	</Fields>
+	<Mappings />
+	<PropertyModifications />
+	<Relations />
+</AxDataEntityViewExtension>

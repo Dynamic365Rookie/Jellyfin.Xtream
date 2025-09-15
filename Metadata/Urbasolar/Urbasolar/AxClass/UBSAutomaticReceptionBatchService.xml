@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSAutomaticReceptionBatchService</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSAutomaticReceptionBatchService extends SysOperationServiceBase
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Process</Name>
+				<Source><![CDATA[
+    public void Process()
+    {
+        PurchFormletterParmData     purchFormLetterParmData;
+        PurchParmUpdate             purchParmUpdate;
+        PurchFormLetter             purchFormLetter;
+        PurchParmTable              purchParmTable;
+        PurchParmLine               purchParmLine;
+        PurchReqTable               purchReqTable;
+        PurchReqLine                purchReqLine;
+        PurchTable                  purchTable;
+        PurchLine                   purchLine;
+        TransDate                   dateToInsert;
+        PurchId                     purchId;  
+        Num                         packingSlipId;
+        boolean ret = false;
+
+        TransDate executionDate = dateStartMth(today());
+        
+        while select purchTable
+                    where purchTable.DocumentState == VersioningDocumentState::Confirmed &&
+                          purchTable.PurchStatus == PurchStatus::Backorder
+                join purchLine
+                    where purchLine.PurchId == purchTable.PurchId &&
+                          purchLine.LineAmount > 0 &&
+                          purchLine.UBSAutomaticReceptionDate <= executionDate &&
+                         (purchLine.PurchStatus == PurchStatus::Backorder ||
+                          purchLine.PurchStatus == PurchStatus::None)
+               exists join purchReqLine
+                    where purchReqLine.LineRefId == purchLine.PurchReqLineRefId
+               exists join purchReqTable
+                    where purchReqTable.RecId == purchReqLine.PurchReqTable &&
+                          purchReqTable.UBSRecurringServicePurchase == NoYes::Yes
+        {
+            dateToInsert = LedgerFiscalCalendarPeriod::findNextAvailableDate(purchLine.UBSAutomaticReceptionDate);
+
+            if(dateToInsert)
+            {
+                ttsbegin;
+                purchFormLetterParmData = PurchFormletterParmData::newData(DocumentStatus::PackingSlip,VersioningUpdateType::Initial);
+                purchFormLetterParmData.parmOnlyCreateParmUpdate(true);
+                purchFormLetterParmData.createData(false);
+                purchParmUpdate = purchFormLetterParmData.parmParmUpdate();
+
+                purchParmTable.clear();
+                purchParmTable.TransDate                = dateToInsert;
+                purchParmTable.Ordering                 = DocumentStatus::PackingSlip;
+                purchParmTable.ParmJobStatus            = ParmJobStatus::Waiting;
+                purchParmTable.Num                      = this.createReceptionNumber(purchTable.PurchId);
+                purchParmTable.PurchId                  = purchTable.PurchId;
+                purchParmTable.PurchName                = purchTable.PurchName;
+                purchParmTable.DeliveryName             = purchTable.DeliveryName;
+                purchParmTable.DeliveryPostalAddress    = purchTable.DeliveryPostalAddress;
+                purchParmTable.OrderAccount             = purchTable.OrderAccount;
+                purchParmTable.CurrencyCode             = purchTable.CurrencyCode;
+                purchParmTable.InvoiceAccount           = purchTable.InvoiceAccount;
+                purchParmTable.ParmId                   = purchParmUpdate.ParmId;
+                purchParmTable.insert();
+
+                purchParmLine.InitFromPurchLine(purchLine);
+                purchParmLine.ReceiveNow    = purchLine.PurchQty;
+                purchParmLine.ParmId        = purchParmTable.ParmId;
+                purchParmLine.TableRefId    = purchParmTable.TableRefId;
+                purchParmLine.setQty(DocumentStatus::PackingSlip, false, true);
+                purchParmLine.setLineAmount();
+                purchParmLine.insert();
+
+                purchFormLetter = PurchFormLetter::construct(DocumentStatus::PackingSlip);
+                purchFormLetter.transDate(dateToInsert);
+                purchFormLetter.proforma(false);
+                purchFormLetter.specQty(PurchUpdate::ReceiveNow);
+                purchFormLetter.purchTable(purchTable);
+               
+                purchFormLetter.parmParmTableNum(purchParmTable.ParmId);
+                purchFormLetter.parmId(purchParmTable.ParmId);
+                purchFormLetter.purchParmUpdate(purchFormLetterParmData.parmParmUpdate());
+                purchFormLetter.run();
+                ttscommit;
+            }
+            else
+            {
+                throw Global::warning(strFmt('@UBS:UBSAutomaticReceptionWarning',purchLine.LineNumber,purchLine.PurchId));
+            }
+        }
+        
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createReceptionNumber</Name>
+				<Source><![CDATA[
+    private str createReceptionNumber(PurchId _purchId)
+    {
+        NumberSeq  num             = NumberSeq::newGetNum(NumberSeqReference::findReference(extendedTypeNum(PurchInternalPackingSlipId)));
+        str        numNext         = num.num();
+        str        receptionNumber = strLen(strFmt("%1_%2",numNext,_purchId)) < 21 ? strFmt("%1_%2",numNext,_purchId) : numNext;
+
+        return receptionNumber;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

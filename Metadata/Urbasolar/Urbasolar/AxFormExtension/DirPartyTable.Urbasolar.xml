@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>DirPartyTable.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlc4e45dr41</Name>
+			<FormControl xmlns=""
+				i:type="AxFormActionPaneTabControl">
+				<Name>UrbasolarActionPaneTab</Name>
+				<Type>ActionPaneTab</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormButtonGroupControl">
+						<Name>UrbasolarButtonGroupHeader</Name>
+						<Type>ButtonGroup</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormMenuFunctionButtonControl">
+								<Name>UBSReferencingDocuments</Name>
+								<Type>MenuFunctionButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<MenuItemName>UBSReferencingDocuments</MenuItemName>
+								<Text>@UBS:UBSReferencingDocuments</Text>
+							</AxFormControl>
+						</Controls>
+						<Caption>@UBS:UBSUrbasolar</Caption>
+					</AxFormControl>
+				</Controls>
+				<Caption>@UBS:UBSUrbasolar</Caption>
+			</FormControl>
+			<Parent>apAddrBook</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControl0ki4lutk1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormGroupControl">
+				<Name>Urbasolar</Name>
+				<Type>Group</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>DirPartyTable_UBSProcCategoryName</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSProcCategoryName</DataField>
+						<DataSource>DirPartyTable</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>DirPartyTable_UBSReferencing</Name>
+						<AllowEdit>No</AllowEdit>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSReferencing</DataField>
+						<DataSource>DirPartyTable</DataSource>
+					</AxFormControl>
+				</Controls>
+				<Caption>@UBS:UBSUrbasolar</Caption>
+			</FormControl>
+			<Parent>GroupGeneral</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

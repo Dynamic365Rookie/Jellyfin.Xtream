@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterfaceVendInvoiceService</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSOutboundInterfaceVendInvoiceService extends SysOperationServiceBase
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Process</Name>
+				<Source><![CDATA[
+    public void Process(UBSOutboundInterfaceVendInvoiceContract _invoiceContract)
+    {
+        UBSInterfaceExecutionHistoryTable execution;
+        boolean ret;
+        UBSVendInvoiceSageExport vendInvoiceExport;
+
+        vendInvoiceExport.skipDataMethods(true);
+        vendInvoiceExport.skipDatabaseLog(true);
+        vendInvoiceExport.skipEvents(true);
+
+        execution = UBSInterfaceExecutionHistoryTable::insertExecution(UBSEndPointType::VendorInvoice,_invoiceContract.parmLegalEntity());
+        
+        try
+        {
+            if(UBSInterfaceExecutionHistoryTable::existsRunningInstanceForScope(UBSEndPointType::VendorInvoice,execution.RecId,_invoiceContract.parmLegalEntity()))
+            {
+                execution.updateStatus(UBSInterfaceStatus::Failed,"@UBS:UBSExportAlreadyRunning");
+                return;
+            }
+
+            str bearer = UBSOutboundInterfaceToolkit::getBearer();
+
+            ret = UBSOutboundInterfaceIntegrator::postInterface(
+                UBSOutboundInterfaceEndPoint::findByEndPointType(UBSEndPointType::VendorInvoice),
+                bearer,execution,
+                [_invoiceContract.parmLegalEntity(),_invoiceContract.parmReprocessError()]
+                );
+
+            if(ret)
+            {
+
+                update_recordset crosscompany vendInvoiceExport
+                    setting UBSExportStatus = UBSExportStatus::Processed,
+                        ExecutionDateTime = DateTimeUtil::utcNow()
+                    where vendInvoiceExport.UBSExportStatus == UBSExportStatus::InProcess
+                    && (_invoiceContract.parmLegalEntity() == '' || vendInvoiceExport.DataAreaId == _invoiceContract.parmLegalEntity());
+
+                execution.updateStatus(UBSInterfaceStatus::Processed);
+            }
+            else
+            {
+                update_recordset crosscompany vendInvoiceExport
+                    setting UBSExportStatus = UBSExportStatus::Error,
+                        ErrorMessage = "Check interface log",
+                        ExecutionDateTime = DateTimeUtil::utcNow()
+                    where vendInvoiceExport.UBSExportStatus == UBSExportStatus::InProcess
+                    && (_invoiceContract.parmLegalEntity() == '' || vendInvoiceExport.DataAreaId == _invoiceContract.parmLegalEntity());
+
+                execution.updateStatus(UBSInterfaceStatus::Failed);
+            }
+        }
+        catch
+        {
+            System.Exception ex = CLRInterop::getLastException();
+
+            if(ex)
+            {
+                execution.updateStatus(UBSInterfaceStatus::Failed,ex.InnerException.ToString());
+
+                update_recordset crosscompany vendInvoiceExport
+                    setting UBSExportStatus = UBSExportStatus::Error,
+                        ErrorMessage = ex.InnerException.ToString(),
+                        ExecutionDateTime = DateTimeUtil::utcNow()
+                    where vendInvoiceExport.UBSExportStatus == UBSExportStatus::InProcess
+                    && (_invoiceContract.parmLegalEntity() == '' || vendInvoiceExport.DataAreaId == _invoiceContract.parmLegalEntity());
+            }
+            else
+            {
+                execution.updateStatus(UBSInterfaceStatus::Failed,"Unknown error");
+
+                update_recordset crosscompany vendInvoiceExport
+                    setting UBSExportStatus = UBSExportStatus::Error,
+                        ErrorMessage = "Unknown error",
+                        ExecutionDateTime = DateTimeUtil::utcNow()
+                    where vendInvoiceExport.UBSExportStatus == UBSExportStatus::InProcess
+                    && (_invoiceContract.parmLegalEntity() == '' || vendInvoiceExport.DataAreaId == _invoiceContract.parmLegalEntity());
+            }
+        }
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>generateInvoiceUrl</Name>
+				<Source><![CDATA[
+    public static str generateInvoiceUrl(RefRecId _recId,DataAreaId _legalEntity)
+    {
+        str ret;
+        var env = Microsoft.Dynamics.ApplicationPlatform.Environment.EnvironmentFactory::GetApplicationEnvironment();
+        str url = env.Infrastructure.HostUrl;
+
+        ret = strFmt("%1?cmp=%2&mi=%3&filter=RecId:%4",url,_legalEntity,menuItemDisplayStr(VendInvoiceJournal),_recId);
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

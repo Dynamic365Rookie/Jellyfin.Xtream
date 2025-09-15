@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterfaceVendInvoiceContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContractAttribute]
+internal final class UBSOutboundInterfaceVendInvoiceContract
+{
+    DataAreaId legalEntity;
+    boolean reprocessError;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmLegalEntity</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Legal entity for the export
+    /// </summary>
+    /// <param name = "_legalEntity">legalEntity</param>
+    /// <returns>legalEntity</returns>
+    [DataMemberAttribute]
+    public DataAreaId parmLegalEntity(DataAreaId _legalEntity = legalEntity)
+    {
+        legalEntity = _legalEntity ;
+        return legalEntity ;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmReprocessError</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Include error records
+    /// </summary>
+    /// <param name = "_legalEntity">legalEntity</param>
+    /// <returns>legalEntity</returns>
+    [DataMemberAttribute,
+        SysOperationLabelAttribute(literalStr("@UBS:UBSReprocessError"))]
+    public boolean parmReprocessError(boolean _reprocessError = reprocessError)
+    {
+        reprocessError = _reprocessError ;
+        return reprocessError ;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

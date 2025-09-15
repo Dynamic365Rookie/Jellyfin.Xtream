@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <BuildTasksDirectory Condition=" '$(BuildTasksDirectory)' == ''">$(MSBuildProgramFiles32)\MSBuild\Microsoft\Dynamics\AX</BuildTasksDirectory>
+    <Model>Urbasolar</Model>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <OutputPath>bin</OutputPath>
+    <SchemaVersion>2.0</SchemaVersion>
+    <GenerateCrossReferences>True</GenerateCrossReferences>
+    <RunAppCheckerRules>False</RunAppCheckerRules>
+    <LogAppcheckerDiagsAsErrors>False</LogAppcheckerDiagsAsErrors>
+    <DeployOnline>False</DeployOnline>
+    <ProjectGuid>{94a7531b-5267-4fc9-a23e-e65a32904ed9}</ProjectGuid>
+    <Name>UBS-9_DimProjectFields</Name>
+    <RootNamespace>UBS-9_DimProjectFields</RootNamespace>
+    <StartupType>Class</StartupType>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Configuration>Debug</Configuration>
+    <DBSyncInBuild>False</DBSyncInBuild>
+    <GenerateFormAdaptors>False</GenerateFormAdaptors>
+    <Company>
+    </Company>
+    <Partition>initial</Partition>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DataEntityExpandParentChildRelations>False</DataEntityExpandParentChildRelations>
+    <DataEntityUseLabelTextAsFieldName>False</DataEntityUseLabelTextAsFieldName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Classes\" />
+    <Folder Include="Data Entity Extensions\" />
+    <Folder Include="Form Extensions\" />
+    <Folder Include="Label Files\" />
+    <Folder Include="Table Extensions\" />
+    <Folder Include="Tables\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AxClass\DimensionValueDetailsEventHandler_Class_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>DimensionValueDetailsEventHandler_Class_Urbasolar_Extension</Name>
+      <Link>Classes\DimensionValueDetailsEventHandler_Class_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\DimensionValueDetails_Form_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>DimensionValueDetails_Form_Urbasolar_Extension</Name>
+      <Link>Classes\DimensionValueDetails_Form_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\FinancialDimensionValueEntity_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>FinancialDimensionValueEntity_Urbasolar_Extension</Name>
+      <Link>Classes\FinancialDimensionValueEntity_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\FinancialDimensionValueLegalEntityOverrideEntity_Entity_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>FinancialDimensionValueLegalEntityOverrideEntity_Entity_Urbasolar_Extension</Name>
+      <Link>Classes\FinancialDimensionValueLegalEntityOverrideEntity_Entity_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\InventSite_Table_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>InventSite_Table_Urbasolar_Extension</Name>
+      <Link>Classes\InventSite_Table_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\PurchAutoCreate_PurchReq_Class_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>PurchAutoCreate_PurchReq_Class_Urbasolar_Extension</Name>
+      <Link>Classes\PurchAutoCreate_PurchReq_Class_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\PurchLine_Table_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>PurchLine_Table_Urbasolar_Extension</Name>
+      <Link>Classes\PurchLine_Table_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\PurchReqLine_Table_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>PurchReqLine_Table_Urbasolar_Extension</Name>
+      <Link>Classes\PurchReqLine_Table_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\PurchTable_Table_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>PurchTable_Table_Urbasolar_Extension</Name>
+      <Link>Classes\PurchTable_Table_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\UBSPopulateUBSInventSiteCrossCompany">
+      <SubType>Content</SubType>
+      <Name>UBSPopulateUBSInventSiteCrossCompany</Name>
+      <Link>Classes\UBSPopulateUBSInventSiteCrossCompany</Link>
+    </Content>
+    <Content Include="AxDataEntityViewExtension\FinancialDimensionValueEntity.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>FinancialDimensionValueEntity.Urbasolar</Name>
+      <Link>Data Entity Extensions\FinancialDimensionValueEntity.Urbasolar</Link>
+    </Content>
+    <Content Include="AxDataEntityViewExtension\FinancialDimensionValueLegalEntityOverrideEntity.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>FinancialDimensionValueLegalEntityOverrideEntity.Urbasolar</Name>
+      <Link>Data Entity Extensions\FinancialDimensionValueLegalEntityOverrideEntity.Urbasolar</Link>
+    </Content>
+    <Content Include="AxFormExtension\DimensionValueDetails.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>DimensionValueDetails.Urbasolar</Name>
+      <Link>Form Extensions\DimensionValueDetails.Urbasolar</Link>
+    </Content>
+    <Content Include="AxFormExtension\PurchReqTable.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>PurchReqTable.Urbasolar</Name>
+      <Link>Form Extensions\PurchReqTable.Urbasolar</Link>
+    </Content>
+    <Content Include="AxLabelFile\UBS_en-US">
+      <SubType>Content</SubType>
+      <Name>UBS_en-US</Name>
+      <Link>Label Files\UBS_en-US</Link>
+    </Content>
+    <Content Include="AxLabelFile\UBS_fr">
+      <SubType>Content</SubType>
+      <Name>UBS_fr</Name>
+      <Link>Label Files\UBS_fr</Link>
+    </Content>
+    <Content Include="AxTableExtension\DimensionAttributeValue.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>DimensionAttributeValue.Urbasolar</Name>
+      <Link>Table Extensions\DimensionAttributeValue.Urbasolar</Link>
+    </Content>
+    <Content Include="AxTableExtension\DimensionAttrValueLedgerOverride.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>DimensionAttrValueLedgerOverride.Urbasolar</Name>
+      <Link>Table Extensions\DimensionAttrValueLedgerOverride.Urbasolar</Link>
+    </Content>
+    <Content Include="AxTableExtension\FinancialDimensionValueEntityStaging.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>FinancialDimensionValueEntityStaging.Urbasolar</Name>
+      <Link>Table Extensions\FinancialDimensionValueEntityStaging.Urbasolar</Link>
+    </Content>
+    <Content Include="AxTableExtension\FinancialDimensionValueLegalEntityOverrideStaging.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>FinancialDimensionValueLegalEntityOverrideStaging.Urbasolar</Name>
+      <Link>Table Extensions\FinancialDimensionValueLegalEntityOverrideStaging.Urbasolar</Link>
+    </Content>
+    <Content Include="AxTable\UBSInventSiteCrossCompany">
+      <SubType>Content</SubType>
+      <Name>UBSInventSiteCrossCompany</Name>
+      <Link>Tables\UBSInventSiteCrossCompany</Link>
+    </Content>
+    <Content Include="UBS.en-US.label.txt">
+      <SubType>Content</SubType>
+      <Name>UBS.en-US.label.txt</Name>
+      <DependentUpon>AxLabelFile\UBS_en-US</DependentUpon>
+    </Content>
+    <Content Include="UBS.fr.label.txt">
+      <SubType>Content</SubType>
+      <Name>UBS.fr.label.txt</Name>
+      <DependentUpon>AxLabelFile\UBS_fr</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+  <Import Project="$(BuildTasksDirectory)\Microsoft.Dynamics.Framework.Tools.BuildTasks.17.0.targets" />
+</Project>

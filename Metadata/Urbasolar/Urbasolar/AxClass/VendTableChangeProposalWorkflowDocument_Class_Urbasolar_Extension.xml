@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendTableChangeProposalWorkflowDocument_Class_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(VendTableChangeProposalWorkflowDocument))]
+final class VendTableChangeProposalWorkflowDocument_Class_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getUBSReferencing</Name>
+				<Source><![CDATA[
+    private UBSReferencing getUBSReferencing(TableId _tableId, RecId _recId)
+    {
+        if(_tableId != tableNum(VendTable))
+        {
+            throw Error(strFmt("@SYS112754",_tableId));
+        }
+    
+        return DirPartyTable::findRec(VendTable::findRecId(_recId).Party).UBSReferencing;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmUBSReferencing</Name>
+				<Source><![CDATA[
+    public UBSReferencing parmUBSReferencing(CompanyId _companyId,TableId _tableId, RecId _recId)
+    {
+        return this.getUBSReferencing(_tableId,_recId);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getUBSProcCategoryName</Name>
+				<Source><![CDATA[
+    private UBSEcoResCategoryName getUBSProcCategoryName(TableId _tableId, RecId _recId)
+    {
+        if(_tableId != tableNum(VendTable))
+        {
+            throw Error(strFmt("@SYS112754",_tableId));
+        }
+    
+        return DirPartyTable::findRec(VendTable::findRecId(_recId).Party).UBSProcCategoryName;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmUBSProcCategoryName</Name>
+				<Source><![CDATA[
+    public UBSEcoResCategoryName parmUBSProcCategoryName(CompanyId _companyId,TableId _tableId, RecId _recId)
+    {
+        return this.getUBSProcCategoryName(_tableId,_recId);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

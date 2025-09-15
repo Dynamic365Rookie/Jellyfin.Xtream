@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSTaxServiceParametersStaging</Name>
+	<SourceCode>
+		<Methods />
+	</SourceCode>
+	<ConfigurationKey>LedgerBasicSalesTax</ConfigurationKey>
+	<DeveloperDocumentation>@DMF:StagingDeveloperDocumentation</DeveloperDocumentation>
+	<FormRef>TaxIntegrationTaxServiceParameters</FormRef>
+	<Label>@TaxIntegration:TaxServiceParameterCaption</Label>
+	<TableGroup>Staging</TableGroup>
+	<PrimaryIndex>StagingIdx</PrimaryIndex>
+	<ReplacementKey>StagingIdx</ReplacementKey>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>ExtensionList</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@DMF:StagingExtensionGroup</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>DefinitionGroup</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>IsSelected</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>TransferStatus</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>ExecutionId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>DefinitionGroup</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>DMFDefinitionGroupName</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Mandatory>Yes</Mandatory>
+			<StringSize>60</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ExecutionId</Name>
+			<AllowEdit>No</AllowEdit>
+			<ExtendedDataType>DMFExecutionId</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Mandatory>Yes</Mandatory>
+			<StringSize>90</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IsSelected</Name>
+			<ExtendedDataType>DMFIsSelected</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>TransferStatus</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<EnumType>DMFTransferStatus</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>Key</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IsEnable</Name>
+			<HelpText>@TaxIntegration:EnableAdvancedTaxCalculationHelpText</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:EnableAdvancedTaxCalculation</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>FeatureSetupName</Name>
+			<ExtendedDataType>TaxIntegrationFeatureSetupName</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:FeatureSetupName</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>FeatureSetupVersion</Name>
+			<ExtendedDataType>TaxIntegrationFeatureSetupVersion</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:FeatureSetupVersion</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>FeatureSetupId</Name>
+			<ExtendedDataType>TaxIntegrationFeatureSetupId</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IsISVTaxSolutionProviderEnabled</Name>
+			<ExtendedDataType>NoYesId</ExtendedDataType>
+			<HelpText>@TaxIntegration:EnableTaxSolutionProviderHelpText</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:EnableTaxSolutionProvider</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ISVFeatureSetupName</Name>
+			<ExtendedDataType>TaxIntegrationFeatureSetupName</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:FeatureSetupName</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ISVFeatureSetupVersion</Name>
+			<ExtendedDataType>TaxIntegrationFeatureSetupVersion</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:FeatureSetupVersion</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ISVFeatureSetupId</Name>
+			<ExtendedDataType>TaxIntegrationFeatureSetupId</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>ErrorProcessMode</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<EnumType>TaxIntegrationErrorProcessMode</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>RoundOff</Name>
+			<ExtendedDataType>TaxRoundOff</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@Tax:RoundingPrecision</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>RoundOffType</Name>
+			<ExtendedDataType>TaxRoundOffType</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@Tax:RoundingMethod</Label>
+			<EnumType>RoundOffType</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>DefaultErrorValidation</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:DefaultResultValidationType</Label>
+			<EnumType>TaxIntegrationErrorValidationType</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>RoundOffPrinciple</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<EnumType>TaxRoundOffPrinciple</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>RoundOffCalculationMethod</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<EnumType>TaxRoundOffCalculationMethod</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>TaxCodeAdjustment</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:TaxCodeAdjustment</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IsMultipleTaxIdEnabled</Name>
+			<HelpText>@TaxMultipleVATID:MultipleVATIDParameterHelpText</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxMultipleVATID:MultipleVATIDParameterLabel</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IsMultipleTaxIdIntrastatEnabled</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@SYS6530</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IsMultipleTaxIdEUSalesListEnabled</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@EUSalesListCommon:EUSalesList</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IsMultipleTaxIdVATDeclarationEnabled</Name>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@EUSalesListCommon:VATDeclaration</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>DisableCalculationParameter</Name>
+			<HelpText>@TaxIntegration:DisableCalculationParameterHelpText</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:DisableCalculationParameter</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IsUpdateTaxExemptNumberFromCustomerAddrEnabled</Name>
+			<HelpText>@TaxIntegration:EnableUpdateTaxExemptNumberFromCustomerAddrHelpText</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:EnableUpdateTaxExemptNumberFromCustomerAddr</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IsAddressValidationEnabled</Name>
+			<HelpText>@TaxIntegration:EnableAddressValidationDescription</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:EnableAddressValidation</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>OverwriteAddress</Name>
+			<HelpText>@TaxIntegration:OverwriteAddressHelpText</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:OverwriteAddress</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>AutomaticValidation</Name>
+			<HelpText>@TaxIntegration:AutomaticValidationHelpText</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:AutomaticValidation</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>AccrueUseTax</Name>
+			<HelpText>@TaxIntegration:AccrueUseTaxHelpText</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:AccrueUseTaxLabel</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>ToleranceAmount</Name>
+			<ExtendedDataType>AmountMST</ExtendedDataType>
+			<HelpText>@TaxIntegration:ToleranceFixedAmountHelpText</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:ToleranceFixedAmount</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>TolerancePercent</Name>
+			<ExtendedDataType>Percent</ExtendedDataType>
+			<HelpText>@TaxIntegration:TolerancePercentageHelpText</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:TolerancePercentage</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>ToleranceValidation</Name>
+			<HelpText>@TaxIntegration:TaxIntegrationUseTaxToleranceValidationTypeDesc</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Label>@TaxIntegration:TaxIntegrationUseTaxToleranceValidationTypeLabel</Label>
+			<EnumType>TaxIntegrationUseTaxToleranceValidationType</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>PurchaseModuleEnabled</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<ExtendedDataType>NoYesId</ExtendedDataType>
+			<Label>@UBS:UBSPurchaseProcessEnabled</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>StagingIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>DefinitionGroup</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>ExecutionId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations />
+	<StateMachines />
+</AxTable>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SalesPurchTableToLineUpdatePrompt_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(SalesPurchTableToLineUpdatePrompt))]
+final class SalesPurchTableToLineUpdatePrompt_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    public Object dialog()
+    {
+        Object ret = next dialog();
+    
+        if(this.fieldList)
+        {
+            MapEnumerator   enumerator = this.fieldList.getEnumerator();
+            fieldId         locField;
+            DialogField     diagField;
+
+            if(this.sourceTable is PurchTable)
+            {
+                while(enumerator.moveNext())
+                {
+                    if(enumerator.currentKey()==fieldNum(PurchTable,DefaultDimension))
+                    {
+                        locField    = enumerator.currentKey();
+                        diagField   = enumerator.currentValue();
+                        diagField.value(1);
+                        diagField.enabled(false);
+                    }
+                }
+                if(locField)
+                {
+                    //Boolean is mandatory below otherwhise it bug
+                    boolean isRemoved  = this.fieldList.remove(locField);
+                    boolean isInserted = this.fieldList.insert(locField,diagField);
+                }
+            }
+        }
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

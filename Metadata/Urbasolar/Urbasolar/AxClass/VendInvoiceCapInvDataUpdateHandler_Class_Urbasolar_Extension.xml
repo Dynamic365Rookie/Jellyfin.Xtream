@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendInvoiceCapInvDataUpdateHandler_Class_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using Newtonsoft.Json.Linq;
+
+[ExtensionOf(classStr(VendInvoiceCapInvDataUpdateHandler))]
+final class VendInvoiceCapInvDataUpdateHandler_Class_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>updateInvoiceHeader</Name>
+				<Source><![CDATA[
+    public static void updateInvoiceHeader(VendorInvoiceHeaderEntity _header, JArray _attributes, CapturedInvoiceType _invoiceType)
+    {
+        next updateInvoiceHeader(_header, _attributes, _invoiceType);
+        
+        // extend logic based on invoice type
+        System.Collections.IEnumerator iterator = _attributes.GetEnumerator(); 
+        
+        while (iterator.MoveNext())
+        {
+            JObject attribute = iterator.Current;
+            str propName = attribute.GetValue('Key').ToString(); 
+            str strValue = attribute.GetValue('Value').ToString(); 
+            
+            switch (propName)
+            {
+                case "cr4d5_bankAccountIBAN":
+                    _header.UBSBankIBAN = strValue; 
+                    break;
+                case "cr4d5_bankAccountNumber":
+                    _header.UBSAccountNum = strValue;
+                    break;
+                case "cr4d5_bankAccountSWIFT":
+                    _header.UBSSWIFTNo = strValue;
+                    break;
+                case "cr4d5_invoicedescription":
+                    _header.InvoiceDescription = strValue;
+            }
+        }
+
+        _header.update();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchReqTable_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(PurchReqTable))]
+final class PurchReqTable_Table_Urbasolar_Extension
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>update</Name>
+				<Source><![CDATA[
+    public void update()
+    {
+        PurchReqTable orig = this.orig();
+
+        next update();
+
+        if(this.UBSProjectDim != orig.UBSProjectDim)
+        {
+            this.updateLinesProjectDimension();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateLinesProjectDimension</Name>
+				<Source><![CDATA[
+    public void updateLinesProjectDimension()
+    {
+        PurchReqLine                        purchReqLine;
+        DimensionAttributeValueSetStorage   storage;
+        DimensionAttrValueLedgerOverride    override;
+        UBSInventSiteCrossCompany           inventSiteCrossCompany;
+        InventDim                           inventDim;
+
+        DimensionAttributeValue             dimAttrValue = DimensionAttributeValue::find(this.UBSProjectDim);
+
+        ttsbegin;
+        while select forupdate purchReqLine 
+            where purchReqLine.PurchReqTable == this.RecId
+        {
+            storage = DimensionAttributeValueSetStorage::find(purchReqLine.defaultDimension);
+        
+            if(dimAttrValue)
+            {
+                storage.addItem(dimAttrValue);
+                purchReqLine.defaultDimension = storage.save();
+
+                override = DimensionAttrValueLedgerOverride::findByDimensionAttrValueLedgerOverride(dimAttrValue.RecId, Ledger::current());
+                inventSiteCrossCompany = UBSInventSiteCrossCompany::findByRecId(override.UBSInventSiteCCRecId);
+                inventDim = purchReqLine.inventDim(true);
+                inventDim.InventSiteId = inventSiteCrossCompany.SiteId;
+                inventDim.update();
+
+                purchReqLine.modifyInventDim(inventDim,fieldNum(InventDim, InventSiteId), false);
+
+                purchReqLine.update();
+            }
+        }
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UbsGetWFLastApproverAndValidationTime</Name>
+				<Source><![CDATA[
+    public container UbsGetWFLastApproverAndValidationTime()
+    {
+        WorkflowTrackingStatusTable workflowTrackingStatusTable;
+        WorkflowTrackingTable       workflowTrackingTable;
+        PurchReqTable               purchReqTable;
+      
+        select firstonly User, CreatedDateTime from workflowTrackingTable
+                order by workflowTrackingTable.RecId desc
+                exists join workflowTrackingStatusTable
+                    where workflowTrackingTable.WorkflowTrackingStatusTable == workflowTrackingStatusTable.RecId
+                        && workflowTrackingStatusTable.ContextTableId == this.TableId
+                        && workflowTrackingStatusTable.ContextRecId == this.RecId
+                        && workflowTrackingTable.TrackingContext == workflowtrackingcontext::WorkItem
+                        && workflowTrackingTable.TrackingType == workflowtrackingtype::Approval;
+   
+        return [workflowTrackingTable.User, workflowTrackingTable.CreatedDateTime];
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSPurchaseOrderToSalesOrderToolkit</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public final class UBSPurchaseOrderToSalesOrderToolkit
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>hasStockedLines</Name>
+				<Source><![CDATA[
+    public static boolean hasStockedLines(PurchTable _purchTable)
+    {
+        boolean hasLine = 0;
+        InventModelGroupItem InventModelGroupItem;
+        InventModelGroup InventModelGroup;
+        PurchLine purchLine;
+
+        select firstonly purchLine where purchLine.PurchId == _purchTable.PurchId
+                join InventModelGroupItem where InventModelGroupItem.ItemId == purchLine.ItemId
+                join InventModelGroup where InventModelGroup.ModelGroupId == InventModelGroupItem.ModelGroupId
+            && InventModelGroup.StockedProduct == 1;
+
+        if(purchLine) hasLine = 1;
+
+        return hasLine;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createOrUpdateSalesOrderFromPurchaseOrder</Name>
+				<Source><![CDATA[
+    public static void createOrUpdateSalesOrderFromPurchaseOrder(PurchTable _purchTable)
+    {
+        SalesTable salesTable;
+
+        select * from salesTable where salesTable.UBSPurchId == _purchTable.PurchId;
+        if(salesTable)
+        {
+            UBSPurchaseOrderToSalesOrderToolkit::updateSalesOrderFromPurchaseOrder(_purchTable);
+        }
+        else
+        {
+            UBSPurchaseOrderToSalesOrderToolkit::createSalesOrderFromPurchaseOrder(_purchTable);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createSalesOrderFromPurchaseOrder</Name>
+				<Source><![CDATA[
+    public static void createSalesOrderFromPurchaseOrder(PurchTable _purchTable)
+    {
+        SalesTable salesTable;
+        SalesLine salesLine;
+        CustTable custTable;
+        CustAccount custAccount;
+        NumberSeq numberSeq;
+        SalesId salesID;
+
+        InventModelGroupItem InventModelGroupItem;
+        InventModelGroup InventModelGroup;
+
+        SalesParameters salesParameters = SalesParameters::find();
+
+        PurchLine purchLine;
+        InventDim inventDim;
+
+        //Only one sales order can be related to this purchase order
+        select * from salesTable where salesTable.UBSPurchId == _purchTable.PurchId;
+        if(salesTable) return;
+
+        //If all PO lines have their site set with UBS_SAS / if PO has no line, do not create SO
+        //Check if atleast one line having other site than UBS_SAS exists
+        select firstonly purchLine 
+            where purchLine.PurchId == _purchTable.PurchId
+            join inventDim
+            where inventDim.inventDimId == purchLine.InventDimId
+            && inventDim.InventSiteId != salesParameters.UBS_SAS_InventSiteId;
+        if(!purchLine) return;
+
+        try
+        {
+            DimensionAttributeValue projectDimAttrValue = DimensionAttributeValue::find(_purchTable.UBSProjectDim);
+
+            if(!UBSPurchaseOrderToSalesOrderToolkit::hasStockedLines(_purchTable)) return;
+
+            ttsbegin;
+            salesTable.clear();
+
+            //Number sequence automatically gets the next number as per system's configuration
+            //You can create your own unique number for sales id. But it should not be duplicated.
+            //NumberSequence of the system manages numbers for us.
+            //SalesId is mandatory to create sales order
+            numberSeq = NumberSeq::newGetNum(SalesParameters::numRefSalesId());
+            numberSeq.used();
+            salesTable.SalesId = numberSeq.num();
+            salesID = salesTable.SalesId;
+
+            salesTable.initValue();
+
+            //Give CustAccount as per your scenario
+            //It is mandatory to create sales order
+            custAccount = projectDimAttrValue.DisplayValue;
+
+            if(CustTable::find(custAccount))
+            {
+                salesTable.CustAccount = custAccount;
+            }
+            else
+            {
+                /*throw*/ error(strFmt("@UBS:UBSCustAccountNotFound", custAccount));
+                return;
+            }
+
+            //Initializing the sales order from customer
+            salesTable.initFromCustTable();
+            salesTable.UBSProjectDim = _purchTable.UBSProjectDim;
+            salesTable.updateHeaderProjectDimension(_purchTable.UBSProjectDim);
+            salesTable.UBSPurchId = _purchTable.PurchId;
+            
+            salesTable.insert();
+
+
+            while select purchLine where purchLine.PurchId == _purchTable.PurchId
+                join inventDim
+                    where inventDim.inventDimId == purchLine.InventDimId
+                    && inventDim.InventSiteId != salesParameters.UBS_SAS_InventSiteId
+                join InventModelGroupItem where InventModelGroupItem.ItemId == purchLine.ItemId
+                join InventModelGroup where InventModelGroup.ModelGroupId == InventModelGroupItem.ModelGroupId
+                && InventModelGroup.StockedProduct == 1
+            {
+                UBSPurchaseOrderToSalesOrderToolkit::createSalesLineFromPurchLine(SalesId, purchLine);
+            }
+
+            ttscommit;
+
+            info(strFmt("@UBS:UBSSalesOrderCreated",salesID));
+
+        }
+        catch(Exception::Error)
+        {
+            ttsabort;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createSalesLineFromPurchLine</Name>
+				<Source><![CDATA[
+    public static void createSalesLineFromPurchLine(SalesId _salesId, PurchLine _purchLine)
+    {
+        SalesLine salesLine;
+        InventTable inventTable;
+        PurchReqLine purchReqLine;
+        InventDim inventDim;
+        InventDim ubsInventDim;
+        str ubsSite;
+        PurchTable purchTable = PurchTable::find(_purchLine.PurchId);
+
+        DimensionAttributeValue projectDimAttrValue = DimensionAttributeValue::find(purchTable.UBSProjectDim);
+
+        SalesParameters salesParameters = SalesParameters::find();
+
+        ubsSite = salesParameters.UBS_SAS_InventSiteId;
+
+        //Give ItemId as per your scenario
+        //It is mandatory to create sales line
+        select * from inventTable
+                    where inventTable.itemId == _purchLine.ItemId;
+                    
+        salesLine.clear();
+        salesLine.SalesId = _salesId;
+        salesLine.ItemId = inventTable.ItemId;
+        salesLine.itemIdChanged();
+
+        salesLine.SalesPrice = _purchLine.PurchPrice;
+        salesLine.UnderDeliveryPct = _purchLine.UnderDeliveryPct;
+
+        salesLine.UBSPurchLineRecId = _purchLine.RecId;
+        salesLine.LineNum           = _purchLine.LineNumber;
+        salesLine.SalesUnit         = _purchLine.PurchUnit;
+
+        if(_purchLine.PurchStatus == PurchStatus::Canceled) //Cancelled line case
+        {
+            if(_purchLine.inventDim())
+            {
+                inventDim.InventSiteId = salesParameters.UBS_SAS_InventSiteId;
+            }
+            salesLine.InventDimId = InventdIm::findOrCreate(inventDim).inventDimId;
+
+            salesLine.SalesQty = _purchLine.PurchQty;
+            salesLine.QtyOrdered = _purchLine.QtyOrdered;
+        }
+        else
+        {
+            purchReqLine = purchReqLine::findLineRefId(_purchLine.PurchReqLineRefId);
+            if((purchReqLine && purchReqLine.PurchQty <= _purchLine.PurchQty) || !purchReqLine) //100% ordered item case
+            {
+                if(_purchLine.inventDim())
+                {
+                    inventDim.InventSiteId = _purchLine.inventDim().InventSiteId;
+                    inventDim.InventLocationId = _purchLine.inventDim().InventLocationId;
+                    inventDim.inventBatchId = _purchLine.inventDim().inventBatchId;
+                    inventDim.inventSerialId = _purchLine.inventDim().inventSerialId;
+                    inventDim.wMSLocationId = _purchLine.inventDim().wMSLocationId;
+                    inventDim.InventStatusId = _purchLine.inventDim().InventStatusId;
+                }
+                salesLine.InventDimId = InventdIm::findOrCreate(inventDim).inventDimId;
+
+                salesLine.SalesQty = _purchLine.PurchQty;
+                salesLine.QtyOrdered = _purchLine.QtyOrdered;
+                
+            }
+            else if(purchReqLine && (_purchLine.PurchQty < purchReqLine.PurchQty)) //Partial stock available
+            {
+
+                if(_purchLine.inventDim())
+                {
+                    inventDim.InventSiteId = _purchLine.inventDim().InventSiteId;
+                    inventDim.InventLocationId = _purchLine.inventDim().InventLocationId;
+                    inventDim.inventBatchId = _purchLine.inventDim().inventBatchId;
+                    inventDim.inventSerialId = _purchLine.inventDim().inventSerialId;
+                    inventDim.wMSLocationId = _purchLine.inventDim().wMSLocationId;
+                    inventDim.InventStatusId = _purchLine.inventDim().InventStatusId;
+                }
+                salesLine.InventDimId = InventdIm::findOrCreate(inventDim).inventDimId;
+
+                salesLine.SalesQty = _purchLine.PurchQty;
+                salesLine.QtyOrdered = _purchLine.QtyOrdered;
+
+                //Direct delivery line
+                SalesLine directDeliverySalesLine;
+                directDeliverySalesLine.SalesId = _salesId;
+                directDeliverySalesLine.ItemId = inventTable.ItemId;
+                directDeliverySalesLine.SalesPrice = _purchLine.PurchPrice;
+
+                directDeliverySalesLine.SalesQty = (purchReqLine.PurchQty - _purchLine.PurchQty);
+                directDeliverySalesLine.QtyOrdered = (purchReqLine.PurchQty - _purchLine.QtyOrdered);
+                directDeliverySalesLine.UBSPurchLineRecId = _purchLine.RecId;
+                directDeliverySalesLine.SalesUnit = _purchLine.PurchUnit;
+
+                ubsInventDim.InventSiteId = InventLocation::find(ubsSite).InventSiteId;
+                ubsInventDim.InventLocationId = "";
+                directDeliverySalesLine.InventDimId = InventDim::findOrCreate(ubsInventDim).inventDimId;
+
+                directDeliverySalesLine.createLine(NoYes::Yes, // Validate
+                NoYes::Yes, // initFromSalesTable
+                NoYes::No, // initFromInventTable
+                NoYes::Yes, // calcInventQty
+                NoYes::Yes, // searchMarkup
+                NoYes::Yes, // searchPrice
+                NoYes::No, // checkReservation
+                NoYes::No, // skipCreditLimitCheck
+                NoYes::Yes); // ignoreSalesTableInventDim
+
+                directDeliverySalesLine.DefaultDimension = _purchLine.DefaultDimension;
+                directDeliverySalesLine.LineAmount = directDeliverySalesLine.calcLineAmount();
+                directDeliverySalesLine.update();
+            }
+        }
+             
+        salesLine.createLine(NoYes::Yes, // Validate
+        NoYes::Yes, // initFromSalesTable
+        NoYes::No, // initFromInventTable
+        NoYes::Yes, // calcInventQty
+        NoYes::Yes, // searchMarkup
+        NoYes::Yes, // searchPrice
+        NoYes::No, // checkReservation
+        NoYes::No, // skipCreditLimitCheck
+        NoYes::Yes); // ignoreSalesTableInventDim
+
+        salesLine.DefaultDimension = _purchLine.DefaultDimension;
+        salesLine.LineAmount = salesLine.calcLineAmount();
+
+        salesLine.update();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateSalesOrderFromPurchaseOrder</Name>
+				<Source><![CDATA[
+    public static void updateSalesOrderFromPurchaseOrder(PurchTable _purchTable)
+    {
+        SalesTable salesTable;
+        CustTable custTable;
+        SalesLine salesLine;
+        CustAccount custAccount;
+        NumberSeq numberSeq;
+        str warehouse;
+
+        InventModelGroupItem InventModelGroupItem;
+        InventModelGroup InventModelGroup;
+
+        SalesParameters salesParameters = SalesParameters::find();
+
+        PurchLine purchLine;
+        InventDim inventDim;
+
+        //Only one sales order can be related to this purchase order
+        select forupdate salesTable where salesTable.UBSPurchId == _purchTable.PurchId;
+        if(!salesTable) return;
+
+        try
+        {
+
+            ttsbegin;
+            DimensionAttributeValue projectDimAttrValue = DimensionAttributeValue::find(_purchTable.UBSProjectDim);
+
+            if(!UBSPurchaseOrderToSalesOrderToolkit::hasStockedLines(_purchTable)) return;
+
+            salesTable.UBSProjectDim = _purchTable.UBSProjectDim;
+            salesTable.updateHeaderProjectDimension(_purchTable.UBSProjectDim);
+            salesTable.UBSPurchId = _purchTable.PurchId;
+            salesTable.update();
+
+            while select forupdate salesLine where salesLine.UBSPurchLineRecId != 0 // Delete sales lines related to a purchase order (deleted or not)
+                && salesLine.SalesId == salesTable.SalesId
+            {
+                salesLine.delete();
+            }
+
+            while select purchLine where purchLine.PurchId == _purchTable.PurchId && purchLine.IsDeleted == NoYes::No
+                join inventDim
+                    where inventDim.inventDimId == purchLine.InventDimId
+                    && inventDim.InventSiteId != salesParameters.UBS_SAS_InventSiteId
+                join InventModelGroupItem where InventModelGroupItem.ItemId == purchLine.ItemId
+                join InventModelGroup where InventModelGroup.ModelGroupId == InventModelGroupItem.ModelGroupId
+                && InventModelGroup.StockedProduct == 1
+            {
+                UBSPurchaseOrderToSalesOrderToolkit::createSalesLineFromPurchLine(salesTable.SalesId, purchLine);
+            }
+
+            ttscommit;
+
+        }
+        catch(Exception::Error)
+        {
+            ttsabort;
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

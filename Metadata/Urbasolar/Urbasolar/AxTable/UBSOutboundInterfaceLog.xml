@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterfaceLog</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class UBSOutboundInterfaceLog extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>insertLog</Name>
+				<Source><![CDATA[
+    public static void insertLog(str _ubsResource, str _resourceRequest,str _endPoint,
+                            UBSEndPointType _endPointType,int _returnedCode,str _retrunedMessage,RefrecId _history = 0)
+    {
+        UBSOutboundInterfaceLog outboundInterfaceLog;
+
+        ttsbegin;
+        outboundInterfaceLog.UBSResource = _ubsResource;
+        outboundInterfaceLog.UBSResourceRequest = _resourceRequest;
+        outboundInterfaceLog.UBSEndPoint = _endPoint;
+        outboundInterfaceLog.UBSEndPointType = _endPointType;
+        outboundInterfaceLog.UBSReturnedCode = _returnedCode;
+        outboundInterfaceLog.UBSRetrunedMessage = _retrunedMessage;
+        outboundInterfaceLog.UBSInterfaceExecutionHistory = _history;
+        outboundInterfaceLog.insert();
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<AllowRowVersionChangeTracking>Yes</AllowRowVersionChangeTracking>
+	<CreatedDateTime>Yes</CreatedDateTime>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSResource</Name>
+			<Label>@UBS:UBSResource</Label>
+			<StringSize>150</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSResourceRequest</Name>
+			<Label>@UBS:UBSResourceRequest</Label>
+			<StringSize>50</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSEndPoint</Name>
+			<Label>@UBS:UBSEndPoint</Label>
+			<StringSize>500</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSEndPointType</Name>
+			<Label>@UBS:UBSEndPointType</Label>
+			<EnumType>UBSEndPointType</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>UBSReturnedCode</Name>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSRetrunedMessage</Name>
+			<StringSize>-1</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>UBSInterfaceExecutionHistory</Name>
+			<ExtendedDataType>RefRecId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes />
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>InterfaceExecutionHistory</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<RelatedTable>UBSInterfaceExecutionHistoryTable</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSInterfaceExecutionHistory</Name>
+					<Field>UBSInterfaceExecutionHistory</Field>
+					<RelatedField>RecId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

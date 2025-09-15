@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSTriggerDimensionDefaultingService</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSTriggerDimensionDefaultingService extends SysOperationServiceBase
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Process</Name>
+				<Source><![CDATA[
+    public void Process(UBSTriggerDimensionDefaultingContract _dimensionContract)
+    {
+        UBSVendorDimensionToSync    vendorDimensionToSync;
+        DataArea                    dataArea;
+
+        while select forupdate vendorDimensionToSync
+            where !vendorDimensionToSync.UBSDimensionIsUpdated
+        {
+            while select id from dataArea
+                where dataArea.id != _dimensionContract.parmLegalEntity()
+            {
+                changecompany(dataArea.id)
+                {
+                    VendTable  vendTable = VendTable::find(vendorDimensionToSync.UBSAccountNum,true);
+
+                    if(vendTable)
+                    {
+                        ttsbegin;
+                        DimensionDefaultFacade::copyDimensionValueToDefaultDimensionField(vendTable, fieldNum(VendTable, AccountNum), vendTable, fieldNum(VendTable, DefaultDimension));
+                        ttscommit;
+                    }
+                }
+            }
+
+            ttsbegin;
+            vendorDimensionToSync.UBSDimensionIsUpdated = NoYes::Yes;
+            vendorDimensionToSync.update();
+            ttscommit;
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterfaceStockContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContractAttribute]
+internal final class UBSOutboundInterfaceStockContract
+{
+    TransDate periodDate;
+    DataAreaId legalEntity;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmPeriodDate</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Period date for the export
+    /// </summary>
+    /// <param name = "_periodDate">periodDate</param>
+    /// <returns>periodDate</returns>
+    [DataMemberAttribute]
+    public TransDate parmPeriodDate(TransDate _periodDate = periodDate)
+    {
+        periodDate = _periodDate ;
+        return periodDate ;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmLegalEntity</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Legal entity for the export
+    /// </summary>
+    /// <param name = "_legalEntity">legalEntity</param>
+    /// <returns>legalEntity</returns>
+    [DataMemberAttribute]
+    public DataAreaId parmLegalEntity(DataAreaId _legalEntity = legalEntity)
+    {
+        legalEntity = _legalEntity ;
+        return legalEntity ;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

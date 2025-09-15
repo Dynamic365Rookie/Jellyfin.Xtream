@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendInvoiceInfoLine_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(VendInvoiceInfoLine))]
+final class VendInvoiceInfoLine_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>ubsSubBillDeferralGetDefaultLedgerDimensionAccount</Name>
+				<Source><![CDATA[
+    internal LedgerDimensionAccount ubsSubBillDeferralGetDefaultLedgerDimensionAccount()
+    {
+        LedgerDimensionAccount          ledgerDimensionAccount;
+        LedgerDimensionDefaultAccount   ledgerDimensionDefaultAccount;
+            
+        if (this.PurchLineRecId)
+        {
+            ledgerDimensionDefaultAccount = this.purchLine().ledgerDimensionConsumption();
+        }
+        else
+        {
+            if (this.isCategoryBased() || !this.inventoried())
+            {
+                ledgerDimensionDefaultAccount = this.accountItemLedgerDimension(InventAccountType::PurchExpense);
+            }
+            else if (InventTable::modelGroupByItemId(this.ItemId).PostOnhandFinancial)
+            {
+                ledgerDimensionDefaultAccount = this.accountItemLedgerDimension(InventAccountType::PurchReceipt);
+            }
+            else
+            {
+                ledgerDimensionDefaultAccount = this.accountItemLedgerDimension(InventAccountType::PurchConsump);
+            }
+        }
+            
+        if (ledgerDimensionDefaultAccount)
+        {
+            ledgerDimensionAccount = LedgerDimensionFacade::serviceCreateLedgerDimension(ledgerDimensionDefaultAccount, this.DefaultDimension);
+        }
+
+        return ledgerDimensionAccount;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

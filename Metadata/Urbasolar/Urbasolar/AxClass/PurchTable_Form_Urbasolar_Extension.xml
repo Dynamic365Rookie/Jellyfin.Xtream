@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchTable_Form_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formStr(PurchTable))]
+final class PurchTable_Form_Urbasolar_Extension
+{
+   
+    
+
+
+    
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>PurchTable_OnInitialized</Name>
+				<Source><![CDATA[
+    [FormEventHandler(formStr(PurchTable), FormEventType::Initialized)]
+    public static void PurchTable_OnInitialized(xFormRun sender, FormEventArgs e)
+    {
+        DimensionEntryControl dimControlLine    = sender.design().controlName(identifierStr(DimensionEntryControlLine));
+        DimensionEntryControl dimControlHeader  = sender.design().controlName(identifierStr(DimensionEntryControlHeader));
+        str                   dimAttributeName  = DimensionAttribute::UBSGetTableName(tableStr(VendTable),fieldStr(VendTable,AccountNum));
+        str dimAttributeProject = 'Project';
+
+        UBSDefaultDimensionToolKit::disableSeveralDimensionsInForm(dimControlLine, dimAttributeName, dimAttributeProject);
+        UBSDefaultDimensionToolKit::disableDimensionInForm(dimControlHeader,dimAttributeName);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>OrderAccount_OnModified</Name>
+				<Source><![CDATA[
+    [FormDataFieldEventHandler(formDataFieldStr(PurchTable, PurchTable, OrderAccount), FormDataFieldEventType::Modified)]
+    public static void OrderAccount_OnModified(FormDataObject sender, FormDataFieldEventArgs e)
+    {
+        FormDataSource  formDataSource      = sender.datasource();
+        PurchTable      purchTable          = formDataSource.cursor();
+        str             dimAttributeName    = DimensionAttribute::UBSGetTableName(tableStr(VendTable),fieldStr(VendTable,AccountNum));
+
+        container conAttribute  = [dimAttributeName];
+        container conValue      = [purchTable.OrderAccount];
+
+        DimensionDefault        newDim    = UBSDefaultDimensionToolKit::createDefaultDimension(conAttribute,conValue);
+        LedgerDimensionValueSet mergeDim  = UBSDefaultDimensionToolKit::setDimensionValueToDefaultDimension(purchTable.DefaultDimension,newDim,tableStr(VendTable), dimAttributeName);
+
+        purchTable.DefaultDimension = mergeDim;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>PurchTable_UBSProjectDim_OnLookup</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    [FormControlEventHandler(formControlStr(PurchTable, PurchTable_UBSProjectDim), FormControlEventType::Lookup)]
+    public static void PurchTable_UBSProjectDim_OnLookup(FormControl sender, FormControlEventArgs e)
+    {
+
+        UBSProjectDimensionValueLookup::projectDimensionLookup(sender, e);
+
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

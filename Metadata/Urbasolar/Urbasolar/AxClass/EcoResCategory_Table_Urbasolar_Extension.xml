@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>EcoResCategory_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(EcoResCategory))]
+final class EcoResCategory_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>findCategoryProcurementManager</Name>
+				<Source><![CDATA[
+    public static UserId findCategoryProcurementManager(RecId _recid)
+    { 
+        EcoResCategory ecoResCategory;
+
+        select firstfast categoryProcurementManager from ecoResCategory
+            where ecoResCategory.recid == _recid;
+
+        return ecoResCategory.CategoryProcurementManager;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

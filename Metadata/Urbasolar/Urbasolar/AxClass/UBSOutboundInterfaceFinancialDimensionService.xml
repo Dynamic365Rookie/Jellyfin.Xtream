@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterfaceFinancialDimensionService</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSOutboundInterfaceFinancialDimensionService extends SysOperationServiceBase
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Process</Name>
+				<Source><![CDATA[
+    public void Process()
+    {
+        UBSOutboundInterfaceEndPoint outboundInterfaceEndPoint = UBSOutboundInterfaceEndPoint::findByEndPointType(UBSEndPointType::FinancialDimension);
+        UBSOutboundInterface         outboundInterface         = UBSOutboundInterface::findUBSOutboundInterface();
+        System.Collections.ArrayList outbountList;
+        System.Object[]              returnedCode;
+
+        UBSInterfaceExecutionHistoryTable execution;
+        boolean ret;
+
+        execution = UBSInterfaceExecutionHistoryTable::insertExecution(UBSEndPointType::FinancialDimension);
+        
+        try
+        {
+            str bearer = UBSOutboundInterfaceToolkit::getBearer();
+
+            ret = UBSOutboundInterfaceIntegrator::postInterface(outboundInterfaceEndPoint,bearer,execution);
+
+            if(ret)
+            {
+                execution.updateStatus(UBSInterfaceStatus::Processed);
+            }
+            else
+            {
+                execution.updateStatus(UBSInterfaceStatus::Failed);
+            }
+        }
+        catch
+        {
+            System.Exception ex = CLRInterop::getLastException();
+
+            if(ex)
+            {
+                execution.updateStatus(UBSInterfaceStatus::Failed,ex.InnerException.ToString());
+            }
+            else
+            {
+                execution.updateStatus(UBSInterfaceStatus::Failed,"Unknown error");
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

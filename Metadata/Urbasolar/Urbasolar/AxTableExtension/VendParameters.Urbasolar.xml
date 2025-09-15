@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTableExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendParameters.Urbasolar</Name>
+	<FieldGroupExtensions />
+	<FieldGroups />
+	<FieldModifications />
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSWarrantyRetentionAutomated</Name>
+			<Label>@UBS:UBSWarrantyRetentionAutomated</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSWarrantyRetentionTransSuffix</Name>
+			<Label>@UBS:UBSWarrantyRetentionTransSuffix</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>UBSWarrantyRetentionJournalBase</Name>
+			<Label>@UBS:UBSWarrantyRetentionJournalBase</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>UBSWarrantyRetentionCreditTransPostingProfile</Name>
+			<Label>@UBS:UBSWarrantyRetentionCreditTransPostingProfile</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSVendorInterfaceDMFDefinitionGroup</Name>
+			<ExtendedDataType>DMFDefinitionGroupName</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@UBS:UBSVendorsDMFExportProject</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSJournalName</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>LedgerJournalNameId</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSAccountID</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>CompanyBankAccountId</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSLockDim</Name>
+			<Label>@UBS:UBSLockDim</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes />
+	<Mappings />
+	<PropertyModifications />
+	<RelationExtensions />
+	<RelationModifications />
+	<Relations>
+		<AxTableRelation xmlns=""
+			i:type="AxTableRelationForeignKey">
+			<Name>UBSLedgerJournalName</Name>
+			<RelatedTable>LedgerJournalName</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSWarrantyRetentionJournalBase</Name>
+					<Field>UBSWarrantyRetentionJournalBase</Field>
+					<RelatedField>RecId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation xmlns=""
+			i:type="AxTableRelationForeignKey">
+			<Name>UBSVendLedgerCredit</Name>
+			<RelatedTable>VendLedger</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSWarrantyRetentionCreditTransPostingProfile</Name>
+					<Field>UBSWarrantyRetentionCreditTransPostingProfile</Field>
+					<RelatedField>RecId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>UBSVendorInterfaceDMFDefinitionGroup</Name>
+			<RelatedTable>DMFDefinitionGroup</RelatedTable>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSVendorInterfaceDMFDefinitionGroup</Name>
+					<Field>UBSVendorInterfaceDMFDefinitionGroup</Field>
+					<RelatedField>DefinitionGroupName</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>UBSJournalName</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<RelatedTable>LedgerJournalName</RelatedTable>
+			<RelatedTableCardinality>ExactlyOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSJournalName</Name>
+					<Field>UBSJournalName</Field>
+					<RelatedField>JournalName</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>BankAccountTable</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<RelatedTable>BankAccountTable</RelatedTable>
+			<RelatedTableCardinality>ExactlyOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSAccountID</Name>
+					<Field>UBSAccountID</Field>
+					<RelatedField>AccountID</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+</AxTableExtension>

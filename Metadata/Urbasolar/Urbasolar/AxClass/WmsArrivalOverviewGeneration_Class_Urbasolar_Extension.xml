@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>WmsArrivalOverviewGeneration_Class_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(WmsArrivalOverviewGeneration))]
+
+public final class WmsArrivalOverviewGeneration_Class_Urbasolar_Extension
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initOverviewValues</Name>
+				<Source><![CDATA[
+    protected void initOverviewValues(
+        WMSArrivalOverviewTmp   _wmsArrivalOverviewTmp,
+        DateStatus              _dateStatus,
+        InventTransType         _inventTransType,
+        InventTransRefId        _inventTransRefId,
+        InventSiteId            _inventSiteId,
+        InventLocationId        _inventLocationId)
+    {
+        PurchTable              purchTable;
+
+        next initOverviewValues(_wmsArrivalOverviewTmp, _dateStatus, _inventTransType,_inventTransRefId,_inventSiteId, _inventLocationId);
+
+        switch (_inventTransType)
+        {
+            case InventTransType::Purch:
+                purchTable = this.parmInventTransRefBuffer();
+                if (!purchTable)
+                {
+                    purchTable = this.parmInventTransRefBuffer(PurchTable::find(_inventTransRefId));
+                }
+                _wmsArrivalOverviewTmp.UBSRequestedDate      = purchTable.UBSRequestedDate;
+
+                break;
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

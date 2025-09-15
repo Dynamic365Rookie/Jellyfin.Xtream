@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchAutoCreate_PurchReq_Class_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(PurchAutoCreate_PurchReq))]
+final class PurchAutoCreate_PurchReq_Class_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>createPurchLineRecord</Name>
+				<Source><![CDATA[
+    protected void createPurchLineRecord(PurchReqLine _reqLine, PurchReqPurchaseOrderGenerationRule _purchReqPurchaseOrderGenerationRule)
+    {
+        PurchReqTable purchReqTableLocal = _reqLine.purchReqTable();
+        if(_reqLine.UBSAutomaticReceptionDate)
+        {
+            purchLine.UBSAutomaticReceptionDate = _reqLine.UBSAutomaticReceptionDate;
+        }
+
+        purchLine.UBSRequestedDate = purchReqTableLocal.UBSRequestedDate;
+     
+        next createPurchLineRecord(_reqLine,_purchReqPurchaseOrderGenerationRule);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setPurchTable</Name>
+				<Source><![CDATA[
+    public void setPurchTable()
+    {
+        next setPurchTable();
+
+        List            listRecordListLocal  = this.parmPurchReqLineRecordList();
+        ListEnumerator  listEnumeratorLocal  = listRecordListLocal.getEnumerator();
+
+        listEnumeratorLocal.moveNext();
+
+        PurchReqLine  purchReqLineLocal  = listEnumeratorLocal.current();
+        PurchReqTable purchReqTableLocal = PurchReqTable::find(purchReqLineLocal.PurchReqTable);
+
+        if(purchReqTableLocal)
+        {
+            ttsbegin;
+            purchTable.UBSProjectDim = purchReqTableLocal.UBSProjectDim;
+            purchTable.UBSRequestedDate = purchReqTableLocal.UBSRequestedDate;
+            purchTable.WorkerPurchPlacer = purchReqTableLocal.Originator;
+            ttscommit;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createLines</Name>
+				<Source><![CDATA[
+    protected void createLines()
+    {
+        next createLines();
+
+        purchTable.updateHeaderProjectDimension();
+        purchTable.update();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>endUpdate</Name>
+				<Source><![CDATA[
+    public void endUpdate()
+    {
+        next endUpdate();
+
+        PurchParameters purchParam = PurchParameters::find();
+
+        if(purchParam.UBSPurchaseOrderAutoSubmissonWF)
+        {
+            List        purchReqLineList    = this.parmPurchReqLineRecordList();
+            PurchTable  purchTable          = PurchTable::find(this.purchId(), true);
+
+            if(purchTable && purchTable.ChangeRequestRequired && PurchTable.DocumentState != VersioningDocumentState::Draft)
+            {
+                ttsbegin;
+                purchTable.DocumentState = VersioningDocumentState::Draft;
+                purchTable.doUpdate();
+                ttscommit;
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canSubmit</Name>
+				<Source><![CDATA[
+    private boolean canSubmit(PurchTable _purchTable)
+    {
+        boolean             canSubmit   = true;
+
+        if (_purchTable.isPartiallyDistributed())
+        {
+            canSubmit  =  false;
+            UbsPrTransformToPoLog::insertLog(null,'',_purchTable,'@UBS:UBSErrorPOAutoSubmitPartiallyDistributed');
+        }
+        else
+        {
+            canSubmit = _purchTable.checkFullyDistributedAndQualified();
+
+            if(!canSubmit)
+            {
+                UbsPrTransformToPoLog::insertLog(null,'',_purchTable,'@UBS:UBSErrorPOAutoSubmitDistributed');
+            }
+        }
+
+        return canSubmit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>buildLinesNum</Name>
+				<Source><![CDATA[
+    private str buildLinesNum(List _purchReqLineList)
+    {
+        ListEnumerator purchReqLineEnumerator = _purchReqLineList.getEnumerator();
+        str            linesNum;
+        
+        purchReqLineEnumerator.reset();
+
+        while(purchReqLineEnumerator.moveNext())
+        {
+            PurchReqLine reqLine = purchReqLineEnumerator.current();
+            linesNum += linesNum == "" ? strFmt("%1", reqLine.LineNum) : strFmt(", %1", reqLine.LineNum);
+        }
+
+        return linesNum;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>create</Name>
+				<Source><![CDATA[
+    public void create()
+    {
+        next create();
+
+        WorkflowCorrelationId   workflowCorrelationId;
+        PurchReqLine            purchReqLine;
+
+        PurchTable              purchTable          = PurchTable::find(this.purchId(), true);
+        List                    purchReqLineList    = this.parmPurchReqLineRecordList();
+       
+        select firstonly purchReqLine
+            where purchReqLine.PurchId == purchTable.PurchId &&
+                  purchReqLine.VendAccountDataArea == purchTable.DataAreaId;
+
+        if(PurchReqPurchaseOrderGenerationRule::isAutoSubmitPurchaseOrderStatic(purchReqLine) && purchTable.ChangeRequestRequired)
+        {
+            if (purchTable && this.canSubmit(purchTable))
+            {
+                ttsbegin;
+                workflowCorrelationId = Workflow::activateFromWorkflowType(workFlowTypeStr(PurchTableTemplate),
+                                                                               purchtable.RecId,
+                                                                               '@UBS:UBSAutomacticSubmission',
+                                                                               false,curUserId());
+
+                VersioningPurchaseOrder::newPurchaseOrder(purchTable).submitChangeRequest();
+                ttscommit;
+            }
+            else
+            {
+                str linesNumber = this.buildLinesNum(purchReqLineList);
+                UbsPrTransformToPoLog::insertLog(purchReqLine.purchReqTable(),linesNumber,purchTable, '@UBS:UBSErrorPOAutoSubmit');
+            }
+
+            if(workflowCorrelationId)
+            {
+                WorkflowTrackingTable workflowTrackingTable = Workflow::findLastWorkflowTrackingRecord(workflowCorrelationId);
+
+                if(!workflowTrackingTable)
+                {
+                    str linesNumber = this.buildLinesNum(purchReqLineList);
+                    UbsPrTransformToPoLog::insertLog(purchReqLine.purchReqTable(),linesNumber,purchTable, '@UBS:UBSErrorPOAutoSubmitTrackingTable');
+                }
+                else
+                {
+                    str linesNumber = this.buildLinesNum(purchReqLineList);
+                    UbsPrTransformToPoLog::insertLog(purchReqLine.purchReqTable(),linesNumber,purchTable, '@UBS:UBSNoErrorPOAutoSubmit');
+                }
+            }
+            else
+            {
+                str linesNumber = this.buildLinesNum(purchReqLineList);
+                UbsPrTransformToPoLog::insertLog(purchReqLine.purchReqTable(),linesNumber,purchTable, '@UBS:UBSErrorPOAutoSubmitActivateFromWorkflowType');
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

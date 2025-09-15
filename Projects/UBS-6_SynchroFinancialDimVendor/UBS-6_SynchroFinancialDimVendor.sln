@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FC65038C-1B2F-41E1-A629-BED71D161FFF}") = "UBS-6_SynchroFinancialDimVendor (VAR) [Urbasolar]", "UBS-6_SynchroFinancialDimVendor\UBS-6_SynchroFinancialDimVendor.rnrproj", "{31D507ED-D961-4EF0-95F6-09C6DF4D55A0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31D507ED-D961-4EF0-95F6-09C6DF4D55A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31D507ED-D961-4EF0-95F6-09C6DF4D55A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {43E54FC5-B291-4305-8797-BC6051412065}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://dev.azure.com/labdevms
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = UBS-6_SynchroFinancialDimVendor\\UBS-6_SynchroFinancialDimVendor.rnrproj
+		SccProjectName1 = UBS-6_SynchroFinancialDimVendor
+		SccLocalPath1 = UBS-6_SynchroFinancialDimVendor
+	EndGlobalSection
+EndGlobal

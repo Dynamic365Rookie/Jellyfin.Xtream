@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FC65038C-1B2F-41E1-A629-BED71D161FFF}") = "UP-47_UP-48 (VAR) [Urbasolar]", "UP-47_UP-48\UP-47_UP-48.rnrproj", "{0A12815E-6A3D-45BB-AD5B-E71F5E49E216}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A12815E-6A3D-45BB-AD5B-E71F5E49E216}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A12815E-6A3D-45BB-AD5B-E71F5E49E216}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://dev.azure.com/urbasolard365finance
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = UP-47_UP-48\\UP-47_UP-48.rnrproj
+		SccProjectName1 = UP-47_UP-48
+		SccLocalPath1 = UP-47_UP-48
+	EndGlobalSection
+EndGlobal

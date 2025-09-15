@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSPopulateUBSInventSiteCrossCompany</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSPopulateUBSInventSiteCrossCompany
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        InventSite inventSite;
+        UBSInventSiteCrossCompany inventSiteCC;
+        while select crosscompany InventSite
+        {
+            if(!UBSInventSiteCrossCompany::find(InventSite.SiteId, InventSite.DataAreaId))
+            {
+                inventSiteCC = UBSInventSiteCrossCompany::createRecord(InventSite.SiteId, InventSite.DataAreaId);
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

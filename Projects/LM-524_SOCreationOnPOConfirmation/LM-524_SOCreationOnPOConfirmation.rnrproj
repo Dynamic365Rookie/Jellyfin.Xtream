@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <BuildTasksDirectory Condition=" '$(BuildTasksDirectory)' == ''">$(MSBuildProgramFiles32)\MSBuild\Microsoft\Dynamics\AX</BuildTasksDirectory>
+    <Model>Urbasolar</Model>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <OutputPath>bin</OutputPath>
+    <SchemaVersion>2.0</SchemaVersion>
+    <GenerateCrossReferences>True</GenerateCrossReferences>
+    <RunAppCheckerRules>False</RunAppCheckerRules>
+    <LogAppcheckerDiagsAsErrors>False</LogAppcheckerDiagsAsErrors>
+    <DeployOnline>False</DeployOnline>
+    <ProjectGuid>{9e95b1ad-bb61-4989-ac99-2e2aa31a3531}</ProjectGuid>
+    <Name>LM-524_SOCreationOnPOConfirmation</Name>
+    <RootNamespace>LM-524_SOCreationOnPOConfirmation</RootNamespace>
+    <StartupType>Class</StartupType>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Configuration>Debug</Configuration>
+    <DBSyncInBuild>False</DBSyncInBuild>
+    <GenerateFormAdaptors>False</GenerateFormAdaptors>
+    <Company>
+    </Company>
+    <Partition>initial</Partition>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DataEntityExpandParentChildRelations>False</DataEntityExpandParentChildRelations>
+    <DataEntityUseLabelTextAsFieldName>False</DataEntityUseLabelTextAsFieldName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Classes\" />
+    <Folder Include="Form Extensions\" />
+    <Folder Include="Label Files\" />
+    <Folder Include="Table Extensions\" />
+    <Folder Include="Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AxClass\FormletterService_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>FormletterService_Urbasolar_Extension</Name>
+      <Link>Classes\FormletterService_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\PurchFormLetter_Confirmation_Class_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>PurchFormLetter_Confirmation_Class_Urbasolar_Extension</Name>
+      <Link>Classes\PurchFormLetter_Confirmation_Class_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\PurchTableTemplateEventHandler_Urbasolar_Class_Extension">
+      <SubType>Content</SubType>
+      <Name>PurchTableTemplateEventHandler_Urbasolar_Class_Extension</Name>
+      <Link>Classes\PurchTableTemplateEventHandler_Urbasolar_Class_Extension</Link>
+    </Content>
+    <Content Include="AxClass\PurchTable_Table_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>PurchTable_Table_Urbasolar_Extension</Name>
+      <Link>Classes\PurchTable_Table_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\SalesLineType_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>SalesLineType_Urbasolar_Extension</Name>
+      <Link>Classes\SalesLineType_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\SalesLine_Table_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>SalesLine_Table_Urbasolar_Extension</Name>
+      <Link>Classes\SalesLine_Table_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\SalesTable_Form_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>SalesTable_Form_Urbasolar_Extension</Name>
+      <Link>Classes\SalesTable_Form_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\SalesTable_Table_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>SalesTable_Table_Urbasolar_Extension</Name>
+      <Link>Classes\SalesTable_Table_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxClass\UBSPurchaseOrderToSalesOrderToolkit">
+      <SubType>Content</SubType>
+      <Name>UBSPurchaseOrderToSalesOrderToolkit</Name>
+      <Link>Classes\UBSPurchaseOrderToSalesOrderToolkit</Link>
+    </Content>
+    <Content Include="AxClass\VendPackingSlipJour_Table_Urbasolar_Extension">
+      <SubType>Content</SubType>
+      <Name>VendPackingSlipJour_Table_Urbasolar_Extension</Name>
+      <Link>Classes\VendPackingSlipJour_Table_Urbasolar_Extension</Link>
+    </Content>
+    <Content Include="AxFormExtension\CustParameters.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>CustParameters.Urbasolar</Name>
+      <Link>Form Extensions\CustParameters.Urbasolar</Link>
+    </Content>
+    <Content Include="AxFormExtension\PurchTable.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>PurchTable.Urbasolar</Name>
+      <Link>Form Extensions\PurchTable.Urbasolar</Link>
+    </Content>
+    <Content Include="AxFormExtension\SalesTable.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>SalesTable.Urbasolar</Name>
+      <Link>Form Extensions\SalesTable.Urbasolar</Link>
+    </Content>
+    <Content Include="AxLabelFile\UBS_en-US">
+      <SubType>Content</SubType>
+      <Name>UBS_en-US</Name>
+      <Link>Label Files\UBS_en-US</Link>
+    </Content>
+    <Content Include="AxLabelFile\UBS_fr">
+      <SubType>Content</SubType>
+      <Name>UBS_fr</Name>
+      <Link>Label Files\UBS_fr</Link>
+    </Content>
+    <Content Include="AxTableExtension\PurchTable.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>PurchTable.Urbasolar</Name>
+      <Link>Table Extensions\PurchTable.Urbasolar</Link>
+    </Content>
+    <Content Include="AxTableExtension\SalesLine.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>SalesLine.Urbasolar</Name>
+      <Link>Table Extensions\SalesLine.Urbasolar</Link>
+    </Content>
+    <Content Include="AxTableExtension\SalesParameters.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>SalesParameters.Urbasolar</Name>
+      <Link>Table Extensions\SalesParameters.Urbasolar</Link>
+    </Content>
+    <Content Include="AxTableExtension\SalesTable.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>SalesTable.Urbasolar</Name>
+      <Link>Table Extensions\SalesTable.Urbasolar</Link>
+    </Content>
+    <Content Include="AxView\UBSPurchSalesTableLink">
+      <SubType>Content</SubType>
+      <Name>UBSPurchSalesTableLink</Name>
+      <Link>Views\UBSPurchSalesTableLink</Link>
+    </Content>
+    <Content Include="UBS.en-US.label.txt">
+      <SubType>Content</SubType>
+      <Name>UBS.en-US.label.txt</Name>
+      <DependentUpon>AxLabelFile\UBS_en-US</DependentUpon>
+    </Content>
+    <Content Include="UBS.fr.label.txt">
+      <SubType>Content</SubType>
+      <Name>UBS.fr.label.txt</Name>
+      <DependentUpon>AxLabelFile\UBS_fr</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+  <Import Project="$(BuildTasksDirectory)\Microsoft.Dynamics.Framework.Tools.BuildTasks.17.0.targets" />
+</Project>

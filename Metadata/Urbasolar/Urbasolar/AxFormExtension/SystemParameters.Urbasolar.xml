@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>SystemParameters.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlhlxy41rf1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormTabPageControl">
+				<Name>Urbasolar</Name>
+				<Type>TabPage</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormGroupControl">
+						<Name>UBSStaticTextGroup</Name>
+						<Skip>Yes</Skip>
+						<Type>Group</Type>
+						<WidthMode>SizeToAvailable</WidthMode>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormStaticTextControl">
+								<Name>UBSStaticText</Name>
+								<Skip>Yes</Skip>
+								<Type>StaticText</Type>
+								<WidthMode>SizeToAvailable</WidthMode>
+								<FormControlExtension
+									i:nil="true" />
+								<Style>MainInstruction</Style>
+								<Text>@UBS:UBSUrbasolar</Text>
+							</AxFormControl>
+						</Controls>
+						<AllowUserSetup>No</AllowUserSetup>
+						<FrameType>None</FrameType>
+						<Style>TOCTitleContainer</Style>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormTabControl">
+						<Name>UBSTab</Name>
+						<Type>Tab</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormTabPageControl">
+								<Name>UBSTabPage</Name>
+								<Pattern>FieldsFieldGroups</Pattern>
+								<PatternVersion>1.1</PatternVersion>
+								<Type>TabPage</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Controls>
+									<AxFormControl xmlns=""
+										i:type="AxFormCheckBoxControl">
+										<Name>SystemParameters_UBSFormDataFilterFromUrlEnable</Name>
+										<Type>CheckBox</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSFormDataFilterFromUrlEnable</DataField>
+										<DataSource>SystemParameters</DataSource>
+									</AxFormControl>
+								</Controls>
+								<ColumnsMode>Fill</ColumnsMode>
+							</AxFormControl>
+						</Controls>
+						<Style>FastTabs</Style>
+					</AxFormControl>
+				</Controls>
+				<Caption>@UBS:UBSUrbasolar</Caption>
+			</FormControl>
+			<Parent>Tab</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

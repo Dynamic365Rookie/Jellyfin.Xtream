@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchReqTable_Form_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formStr(PurchReqTable))]
+final class PurchReqTable_Form_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>init</Name>
+				<Source><![CDATA[
+    public void init()
+    {
+        next init();
+
+        FormStringControl itemIdControl = this.design().controlName(formControlStr(PurchReqTable, PurchReqLine_ItemId));
+        itemIdControl.registerOverrideMethod(methodStr(FormDataObject,lookup),formMethodStr(PurchReqTable,overridenItemIdLookup));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setFieldAccess</Name>
+				<Source><![CDATA[
+    void setFieldAccess()
+    {
+        next setFieldAccess();
+
+        PurchReqTable puchReqTable = PurchReqTable_ds.cursor();
+        PurchReqLine  purchReqLine = PurchReqLine_ds.cursor();
+
+        boolean allowEdit = purchReqLine ? false : true;
+
+        PurchReqTable_ds.object(fieldNum(PurchReqTable,UBSRecurringServicePurchase)).allowEdit(allowEdit);
+
+        boolean allowEditMandatory = allowEdit && puchReqTable.UBSRecurringServicePurchase == NoYes::Yes;
+        
+        PurchReqTable_ds.object(fieldNum(PurchReqTable,UBSStartingMonth)).allowEdit(allowEditMandatory);
+        PurchReqTable_ds.object(fieldNum(PurchReqTable,UBSStartingMonth)).mandatory(allowEditMandatory);
+        PurchReqTable_ds.object(fieldNum(PurchReqTable,UBSPeriodNumber)).allowEdit(allowEditMandatory);
+        PurchReqTable_ds.object(fieldNum(PurchReqTable,UBSPeriodNumber)).mandatory(allowEditMandatory);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSPeriodNumber_OnModified</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check if field content is > 0
+    /// </summary>
+    /// <param name="sender">FormDataObject</param>
+    /// <param name="e">FormDataFieldEventArgs</param>
+    [FormDataFieldEventHandler(formDataFieldStr(PurchReqTable, PurchReqTable, UBSPeriodNumber), FormDataFieldEventType::Modified)]
+    public static void UBSPeriodNumber_OnModified(FormDataObject sender, FormDataFieldEventArgs e)
+    {
+        FormDataSource  formDataSource = sender.datasource();
+        PurchReqTable   purchReqTable  = formDataSource.cursor();
+
+        if(purchReqTable.UBSPeriodNumber <= 0)
+        {
+            throw Global::error("@UBS:UBSCheckPeriodNumber");
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>overridenItemIdLookup</Name>
+				<Source><![CDATA[
+    public void overridenItemIdLookup(FormStringControl _formControl)
+    {
+        QueryBuildDataSource qbdsErp, qbdsIt;
+
+        PurchReqTable   purchReqTable   = PurchReqTable_ds.cursor(); 
+        Query           query           = new Query();
+
+        qbdsErp = query.addDataSource(tableNum(EcoResProduct));
+        qbdsIt  = qbdsErp.addDataSource(tableNum(InventTable));
+        qbdsIt.joinMode(JoinMode::InnerJoin);
+        qbdsIt.relations(false);
+        qbdsIt.addLink(fieldNum(EcoResProduct,DisplayProductNumber),fieldNum(InventTable,ItemId));
+        
+        if(purchReqTable.UBSRecurringServicePurchase)
+        {
+            qbdsErp.addRange(fieldNum(EcoResProduct, ProductType)).value(queryValue(EcoResProductType::Service));
+        }
+
+        SysTableLookup sysTableLookup = SysTableLookup::newParameters(tableNum(EcoResProduct), _formControl);
+        sysTableLookup.addLookupfield(fieldNum(EcoResProduct, DisplayProductNumber));
+        sysTableLookup.addLookupfield(fieldNum(EcoResProduct, SearchName));
+        sysTableLookup.addLookupfield(fieldNum(EcoResProduct, ProductType));
+        sysTableLookup.parmQuery(query);
+        sysTableLookup.performFormLookup();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>VendAccount_OnModified</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Auto field the Vendor financial dimension
+    /// </summary>
+    /// <param name="sender">sender</param>
+    /// <param name="e">FormDataFieldEventArgs</param>
+    [FormDataFieldEventHandler(formDataFieldStr(PurchReqTable, PurchReqLine, VendAccount), FormDataFieldEventType::Modified)]
+    public static void VendAccount_OnModified(FormDataObject sender, FormDataFieldEventArgs e)
+    {
+        FormDataSource  formDataSource      = sender.datasource();
+        PurchReqLine    purchReqLine        = formDataSource.cursor();
+        str             dimAttributeName    = DimensionAttribute::UBSGetTableName(tableStr(VendTable),fieldStr(VendTable,AccountNum));
+
+        container conAttribute  = [dimAttributeName];
+        container conValue      = [purchReqLine.VendAccount];
+
+        DimensionDefault        newDim    = UBSDefaultDimensionToolKit::createDefaultDimension(conAttribute,conValue);
+        LedgerDimensionValueSet mergeDim  = UBSDefaultDimensionToolKit::setDimensionValueToDefaultDimension(purchReqLine.DefaultDimension,newDim,tableStr(VendTable), dimAttributeName);
+
+        purchReqLine.DefaultDimension = mergeDim;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>PurchReqTable_OnInitialized</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    [FormEventHandler(formStr(PurchReqTable), FormEventType::Initialized)]
+    public static void PurchReqTable_OnInitialized(xFormRun sender, FormEventArgs e)
+    {
+        DimensionEntryControl dimControl = sender.design().controlName(identifierStr(LineDimensionEntryControl));
+        str dimAttributeName              = DimensionAttribute::UBSGetTableName(tableStr(VendTable),fieldStr(VendTable,AccountNum));
+        str dimAttributeProject = 'Project';
+
+        UBSDefaultDimensionToolKit::disableSeveralDimensionsInForm(dimControl, dimAttributeName, dimAttributeProject);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>PurchReqTable_UBSProjectDim_OnLookup</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    [FormControlEventHandler(formControlStr(PurchReqTable, PurchReqTable_UBSProjectDim), FormControlEventType::Lookup)]
+    public static void PurchReqTable_UBSProjectDim_OnLookup(FormControl sender, FormControlEventArgs e)
+    {
+
+        UBSProjectDimensionValueLookup::projectDimensionLookup(sender, e);
+
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

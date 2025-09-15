@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSEndPointType</Name>
+	<EnumValues>
+		<AxEnumValue>
+			<Name>FinancialDimension</Name>
+			<Label>@SYS318800</Label>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>FinancialDimensionLegalEntity</Name>
+			<Label>@Dimension:FinancialDimensionValueLegalEntityOverrideV2Entity</Label>
+			<Value>1</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>VendorInvoice</Name>
+			<Label>@SYS3179</Label>
+			<Value>2</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>Vendor</Name>
+			<Label>@SYS9455</Label>
+			<Value>3</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>FNP_CCA</Name>
+			<Label>FNP_CCA</Label>
+			<Value>4</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>Stock</Name>
+			<Label>@RET3225</Label>
+			<Value>5</Value>
+		</AxEnumValue>
+	</EnumValues>
+</AxEnum>

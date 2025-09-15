@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxDataEntityView xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSPrintMgmtSettingsEntity</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class UBSPrintMgmtSettingsEntity extends common
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>postGetStagingData</Name>
+				<Source><![CDATA[
+    public static void postGetStagingData(DMFDefinitionGroupExecution _dmfDefinitionGroupExecution)
+    {
+
+        UBSPrintMgmtSettingsStaging staging;
+
+        while select forupdate staging where staging.DefinitionGroup == _dmfDefinitionGroupExecution.DefinitionGroup
+                && staging.ExecutionId == _dmfDefinitionGroupExecution.ExecutionId
+                && staging.TransferStatus == DMFTransferStatus::NotStarted
+        {
+            ttsbegin;
+            staging.PrintMgmtSettings_Description = "Default";
+            staging.doUpdate();
+            ttscommit;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>postTargetProcess</Name>
+				<Source><![CDATA[
+    public static void postTargetProcess(DMFDefinitionGroupExecution _dmfDefinitionGroupExecution)
+    {
+        //check if import job is finished
+        if (_dmfDefinitionGroupExecution.StagingStatus == DMFBatchJobStatus::Finished)
+        {
+            UBSPrintMgmtSettingsStaging staging;
+ 
+            //select all staging records that were processed by current execution job without errors.
+            while select staging
+            where staging.DefinitionGroup == _dmfDefinitionGroupExecution.DefinitionGroup
+               && staging.ExecutionId     == _dmfDefinitionGroupExecution.ExecutionId
+               && staging.TransferStatus  == DMFTransferStatus::Completed
+            {
+                
+                PrintMgmtSettings printMgmtSettings;
+                PrintMgmtDocInstance printMgmtDocInstance;
+
+                select firstonly forupdate printMgmtSettings
+                    join printMgmtDocInstance where printMgmtDocInstance.RecId == printMgmtSettings.ParentId
+                    && printMgmtDocInstance.DocumentType == staging.printMgmtDocInstance_DocumentType
+                    && printMgmtDocInstance.Name == staging.printMgmtDocInstance_Name
+                    && printMgmtSettings.PriorityId == staging.PrintMgmtSettings_PriorityId;
+
+                ERTextFormatTable textFormat;
+                ERFormatDestinationTable formatDestinationTable;
+                ERFormatDestinationNamedTable DestinationNameTable;
+
+                select firstonly DestinationNameTable
+                    join formatDestinationTable where DestinationNameTable.FormatDestination == formatDestinationTable.RecId
+                    join textFormat where formatDestinationTable.Format == textFormat.RecId
+                    && textFormat.Name == staging.Format_Name
+                    && textFormat.Solution == staging.Format_Solution
+                    && DestinationNameTable.Name == staging.DestinationNamedTable_Name;
+                
+                if(printMgmtSettings && DestinationNameTable)
+                {
+                    ttsbegin;
+                    printMgmtSettings.NamedDestination = DestinationNameTable.RecId;
+                    printMgmtSettings.doUpdate();
+                    ttscommit;
+                }
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>postLoad</Name>
+				<Source><![CDATA[
+    public void postLoad()
+    {
+        super();
+        this.DestinationNamedTable_Name = this.ERFormatDestinationNamedTable_Name;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<DataManagementEnabled>Yes</DataManagementEnabled>
+	<DataManagementStagingTable>UBSPrintMgmtSettingsStaging</DataManagementStagingTable>
+	<IsPublic>Yes</IsPublic>
+	<PrimaryCompanyContext>DataAreaId</PrimaryCompanyContext>
+	<PrimaryKey>EntityKey</PrimaryKey>
+	<PublicCollectionName>UBSPrintMgmtSettings</PublicCollectionName>
+	<PublicEntityName>UBSPrintMgmtSetting</PublicEntityName>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtDocInstance_BlockOverride_BR</Name>
+			<DataField>BlockOverride_BR</DataField>
+			<DataSource>PrintMgmtDocInstance</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtDocInstance_DocumentType</Name>
+			<DataField>DocumentType</DataField>
+			<DataSource>PrintMgmtDocInstance</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtDocInstance_Name</Name>
+			<Label>PrintMgmtDocInstance_Name</Label>
+			<DataField>Name</DataField>
+			<DataSource>PrintMgmtDocInstance</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtDocInstance_NodeType</Name>
+			<DataField>NodeType</DataField>
+			<DataSource>PrintMgmtDocInstance</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtDocInstance_PrintType</Name>
+			<DataField>PrintType</DataField>
+			<DataSource>PrintMgmtDocInstance</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtDocInstance_PriorityId</Name>
+			<DataField>PriorityId</DataField>
+			<DataSource>PrintMgmtDocInstance</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtDocInstance_Suppress</Name>
+			<DataField>Suppress</DataField>
+			<DataSource>PrintMgmtDocInstance</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtSettings_Description</Name>
+			<DataField>Description</DataField>
+			<DataSource>PrintMgmtSettings</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtSettings_NamedDestination</Name>
+			<AccessModifier>Private</AccessModifier>
+			<Label>Named destination</Label>
+			<DataField>NamedDestination</DataField>
+			<DataSource>PrintMgmtSettings</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtSettings_NumberOfCopies</Name>
+			<DataField>NumberOfCopies</DataField>
+			<DataSource>PrintMgmtSettings</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtSettings_ParentId</Name>
+			<DataField>ParentId</DataField>
+			<DataSource>PrintMgmtSettings</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtSettings_PrintJobSettings</Name>
+			<DataField>PrintJobSettings</DataField>
+			<DataSource>PrintMgmtSettings</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtSettings_QueryPacked</Name>
+			<DataField>QueryPacked</DataField>
+			<DataSource>PrintMgmtSettings</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtSettings_ReportFormat</Name>
+			<DataField>ReportFormat</DataField>
+			<DataSource>PrintMgmtSettings</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtSettings_Suppress</Name>
+			<DataField>Suppress</DataField>
+			<DataSource>PrintMgmtSettings</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtSettings_RecId</Name>
+			<AccessModifier>Internal</AccessModifier>
+			<DataField>RecId</DataField>
+			<DataSource>PrintMgmtSettings</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtReportFormat_Description</Name>
+			<DataField>Description</DataField>
+			<DataSource>PrintMgmtReportFormat</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtReportFormat_DocumentType</Name>
+			<DataField>DocumentType</DataField>
+			<DataSource>PrintMgmtReportFormat</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtReportFormat_Name</Name>
+			<Label>PrintMgmtReportFormat_Name</Label>
+			<DataField>Name</DataField>
+			<DataSource>PrintMgmtReportFormat</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtReportFormat_SSRS</Name>
+			<DataField>SSRS</DataField>
+			<DataSource>PrintMgmtReportFormat</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtReportFormat_System</Name>
+			<DataField>System</DataField>
+			<DataSource>PrintMgmtReportFormat</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtReportFormat_CountryRegionId</Name>
+			<DataField>CountryRegionId</DataField>
+			<DataSource>PrintMgmtReportFormat</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintMgmtSettings_PriorityId</Name>
+			<DataField>PriorityId</DataField>
+			<DataSource>PrintMgmtSettings</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>ERFormatDestinationNamedTable_Name</Name>
+			<AccessModifier>Private</AccessModifier>
+			<DataField>Name</DataField>
+			<DataSource>ERFormatDestinationNamedTable</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewUnmappedFieldString">
+			<Name>DestinationNamedTable_Name</Name>
+			<Mandatory>No</Mandatory>
+			<IsComputedField>No</IsComputedField>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>FormatDestination_Format</Name>
+			<AccessModifier>Private</AccessModifier>
+			<DataField>Format</DataField>
+			<DataSource>FormatDestination</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>Format_Name</Name>
+			<Label>Format_Name</Label>
+			<Mandatory>No</Mandatory>
+			<DataField>Name</DataField>
+			<DataSource>Format</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>Format_Solution</Name>
+			<Mandatory>No</Mandatory>
+			<DataField>Solution</DataField>
+			<DataSource>Format</DataSource>
+		</AxDataEntityViewField>
+	</Fields>
+	<Keys>
+		<AxDataEntityViewKey>
+			<Name>EntityKey</Name>
+			<Fields>
+				<AxDataEntityViewKeyField>
+					<DataField>PrintMgmtDocInstance_Name</DataField>
+				</AxDataEntityViewKeyField>
+				<AxDataEntityViewKeyField>
+					<DataField>PrintMgmtDocInstance_DocumentType</DataField>
+				</AxDataEntityViewKeyField>
+				<AxDataEntityViewKeyField>
+					<DataField>PrintMgmtSettings_ParentId</DataField>
+				</AxDataEntityViewKeyField>
+				<AxDataEntityViewKeyField>
+					<DataField>PrintMgmtSettings_PriorityId</DataField>
+				</AxDataEntityViewKeyField>
+			</Fields>
+		</AxDataEntityViewKey>
+	</Keys>
+	<Mappings />
+	<Ranges />
+	<Relations />
+	<StateMachines />
+	<ViewMetadata>
+		<Name>Metadata</Name>
+		<SourceCode>
+			<Methods>
+				<Method>
+					<Name>classDeclaration</Name>
+					<Source><![CDATA[
+[Query]
+public class Metadata extends QueryRun
+{
+}
+]]></Source>
+				</Method>
+			</Methods>
+		</SourceCode>
+		<DataSources>
+			<AxQuerySimpleRootDataSource>
+				<Name>PrintMgmtSettings</Name>
+				<DynamicFields>Yes</DynamicFields>
+				<Table>PrintMgmtSettings</Table>
+				<DataSources>
+					<AxQuerySimpleEmbeddedDataSource>
+						<Name>PrintMgmtDocInstance</Name>
+						<DynamicFields>Yes</DynamicFields>
+						<Table>PrintMgmtDocInstance</Table>
+						<DataSources />
+						<DerivedDataSources />
+						<Fields />
+						<Ranges />
+						<Relations>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation1</Name>
+								<Field>ParentId</Field>
+								<JoinDataSource>PrintMgmtSettings</JoinDataSource>
+								<RelatedField>RecId</RelatedField>
+							</AxQuerySimpleDataSourceRelation>
+						</Relations>
+					</AxQuerySimpleEmbeddedDataSource>
+					<AxQuerySimpleEmbeddedDataSource>
+						<Name>PrintMgmtReportFormat</Name>
+						<DynamicFields>Yes</DynamicFields>
+						<Table>PrintMgmtReportFormat</Table>
+						<DataSources />
+						<DerivedDataSources />
+						<Fields />
+						<Ranges />
+						<JoinMode>OuterJoin</JoinMode>
+						<Relations>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation1</Name>
+								<Field>ReportFormat</Field>
+								<JoinDataSource>PrintMgmtSettings</JoinDataSource>
+								<RelatedField>RecId</RelatedField>
+							</AxQuerySimpleDataSourceRelation>
+						</Relations>
+					</AxQuerySimpleEmbeddedDataSource>
+					<AxQuerySimpleEmbeddedDataSource>
+						<Name>ERFormatDestinationNamedTable</Name>
+						<DynamicFields>Yes</DynamicFields>
+						<IsReadOnly>Yes</IsReadOnly>
+						<Table>ERFormatDestinationNamedTable</Table>
+						<DataSources>
+							<AxQuerySimpleEmbeddedDataSource>
+								<Name>FormatDestination</Name>
+								<DynamicFields>Yes</DynamicFields>
+								<IsReadOnly>Yes</IsReadOnly>
+								<Table>ERFormatDestinationTable</Table>
+								<DataSources>
+									<AxQuerySimpleEmbeddedDataSource>
+										<Name>Format</Name>
+										<DynamicFields>Yes</DynamicFields>
+										<IsReadOnly>Yes</IsReadOnly>
+										<Table>ERTextFormatTable</Table>
+										<DataSources />
+										<DerivedDataSources />
+										<Fields />
+										<Ranges />
+										<JoinMode>OuterJoin</JoinMode>
+										<Relations>
+											<AxQuerySimpleDataSourceRelation>
+												<Name>Format</Name>
+												<JoinRelationName>Solution</JoinRelationName>
+											</AxQuerySimpleDataSourceRelation>
+										</Relations>
+									</AxQuerySimpleEmbeddedDataSource>
+								</DataSources>
+								<DerivedDataSources />
+								<Fields />
+								<Ranges />
+								<JoinMode>OuterJoin</JoinMode>
+								<Relations>
+									<AxQuerySimpleDataSourceRelation>
+										<Name>FormatDestination</Name>
+										<JoinDataSource>ERFormatDestinationNamedTable</JoinDataSource>
+										<JoinRelationName>FormatDestination</JoinRelationName>
+									</AxQuerySimpleDataSourceRelation>
+								</Relations>
+							</AxQuerySimpleEmbeddedDataSource>
+						</DataSources>
+						<DerivedDataSources />
+						<Fields />
+						<Ranges />
+						<JoinMode>OuterJoin</JoinMode>
+						<Relations>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation1</Name>
+								<JoinDataSource>PrintMgmtSettings</JoinDataSource>
+								<JoinRelationName>FormatDestinationNamed</JoinRelationName>
+							</AxQuerySimpleDataSourceRelation>
+						</Relations>
+					</AxQuerySimpleEmbeddedDataSource>
+				</DataSources>
+				<DerivedDataSources />
+				<Fields />
+				<Ranges>
+					<AxQuerySimpleDataSourceRange>
+						<Name>PriorityId</Name>
+						<Field>PriorityId</Field>
+						<Value>1</Value>
+					</AxQuerySimpleDataSourceRange>
+				</Ranges>
+				<GroupBy />
+				<Having />
+				<OrderBy />
+			</AxQuerySimpleRootDataSource>
+		</DataSources>
+	</ViewMetadata>
+</AxDataEntityView>

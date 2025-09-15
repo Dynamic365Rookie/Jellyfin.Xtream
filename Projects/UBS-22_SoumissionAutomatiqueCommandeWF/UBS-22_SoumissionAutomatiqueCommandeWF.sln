@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FC65038C-1B2F-41E1-A629-BED71D161FFF}") = "UBS-22_SoumissionAutomatiqueCommandeWF (VAR) [Urbasolar]", "UBS-22_SoumissionAutomatiqueCommandeWF\UBS-22_SoumissionAutomatiqueCommandeWF.rnrproj", "{2182158B-2C06-44E0-83F1-18B9E070C4E5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2182158B-2C06-44E0-83F1-18B9E070C4E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2182158B-2C06-44E0-83F1-18B9E070C4E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AFF80D82-E2F6-4579-80F2-161814AB13C8}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://dev.azure.com/urbasolard365finance
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = UBS-22_SoumissionAutomatiqueCommandeWF\\UBS-22_SoumissionAutomatiqueCommandeWF.rnrproj
+		SccProjectName1 = UBS-22_SoumissionAutomatiqueCommandeWF
+		SccLocalPath1 = UBS-22_SoumissionAutomatiqueCommandeWF
+	EndGlobalSection
+EndGlobal

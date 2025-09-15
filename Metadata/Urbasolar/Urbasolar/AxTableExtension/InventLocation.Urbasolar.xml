@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTableExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>InventLocation.Urbasolar</Name>
+	<FieldGroupExtensions />
+	<FieldGroups />
+	<FieldModifications />
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>UBSLocationManager</Name>
+			<ExtendedDataType>RefRecId</ExtendedDataType>
+			<Label>@UBS:UBSLocationManager</Label>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes />
+	<Mappings />
+	<PropertyModifications />
+	<RelationExtensions />
+	<RelationModifications />
+	<Relations>
+		<AxTableRelation xmlns=""
+			i:type="AxTableRelationForeignKey">
+			<Name>HCMWorker_UBSLocationManager</Name>
+			<Cardinality>ZeroMore</Cardinality>
+			<RelatedTable>HCMWorker</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelatedTableRole>HCMWorker</RelatedTableRole>
+			<RelationshipType>Association</RelationshipType>
+			<Role>DimensionAttributeValue</Role>
+			<UseDefaultRoleNames>No</UseDefaultRoleNames>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSLocationManager</Name>
+					<Field>UBSLocationManager</Field>
+					<RelatedField>RecId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+</AxTableExtension>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTableExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchParameters.Urbasolar</Name>
+	<FieldGroupExtensions />
+	<FieldGroups />
+	<FieldModifications />
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSPurchaseOrderAutoSubmissonWF</Name>
+			<Label>@UBS:UBSPurchaseOrderAutoSubmissonWF</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSCreationReason</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>ReasonCode</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@UBS:UBSCreationReasonCode</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSUpdateReason</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>ReasonCode</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@UBS:UBSUpdateReasonCode</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSApproveReason</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>ReasonCode</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@UBS:UBSApproveReason</Label>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes />
+	<Mappings />
+	<PropertyModifications />
+	<RelationExtensions />
+	<RelationModifications />
+	<Relations>
+		<AxTableRelation>
+			<Name>UBSCreationReason</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<RelatedTable>ReasonTable</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSCreationReason</Name>
+					<Field>UBSCreationReason</Field>
+					<RelatedField>Reason</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>UBSUpdateReason</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<RelatedTable>ReasonTable</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSUpdateReason</Name>
+					<Field>UBSUpdateReason</Field>
+					<RelatedField>Reason</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>UBSApproveReason</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<RelatedTable>ReasonTable</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSApproveReason</Name>
+					<Field>UBSApproveReason</Field>
+					<RelatedField>Reason</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+</AxTableExtension>

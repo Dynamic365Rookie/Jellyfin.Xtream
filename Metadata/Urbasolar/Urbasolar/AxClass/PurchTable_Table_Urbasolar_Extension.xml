@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchTable_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(PurchTable))]
+final class PurchTable_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>distributionUpdateNeededForTaxIntegration</Name>
+				<Source><![CDATA[
+    protected boolean distributionUpdateNeededForTaxIntegration(PurchTable _purchTableOrig)
+    {
+        boolean ret = next distributionUpdateNeededForTaxIntegration(_purchTableOrig);
+
+        ret = ret || (Tax::isTaxIntegrationEnabledforBusinessProcess(TaxIntegrationBusinessProcess::Purchase)
+            && (this.UBSTaxRecalcFlag != _purchTableOrig.UBSTaxRecalcFlag));
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>insert</Name>
+				<Source><![CDATA[
+    void  insert(boolean _interCompanySilent,
+                AccountingDate _accountingDate)
+    {
+        LedgerDimensionValueSet mergeDim;
+
+        str dimAttributeName    = DimensionAttribute::UBSGetTableName(tableStr(VendTable),fieldStr(VendTable,AccountNum));
+        container conAttribute  = [dimAttributeName];
+        container conValue      = [this.OrderAccount];
+
+        DimensionDefault newDim = UBSDefaultDimensionToolKit::createDefaultDimension(conAttribute,conValue);
+
+        if(this.DefaultDimension)
+        {
+            mergeDim  = UBSDefaultDimensionToolKit::setDimensionValueToDefaultDimension(this.DefaultDimension,newDim,tableStr(VendTable), dimAttributeName);
+        }
+   
+        this.DefaultDimension = this.DefaultDimension ? mergeDim : newDim;
+
+        if(this.UBSRequestedDate < this.DeliveryDate)
+        {
+            warning("@UBS:UBSRequestedDateCheckError");
+        }
+
+        next insert(_interCompanySilent,_accountingDate);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>update</Name>
+				<Source><![CDATA[
+    public void update(boolean _updateDistributions)
+    {
+        PurchTable orig = this.orig();
+
+        if(this.UBSRequestedDate < this.DeliveryDate)
+        {
+            warning("@UBS:UBSRequestedDateCheckError");
+        }
+
+        next update(_updateDistributions);
+
+        if(this.UBSProjectDim != orig.UBSProjectDim)
+        {
+            this.updateLinesProjectDimension();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateHeaderProjectDimension</Name>
+				<Source><![CDATA[
+    public void updateHeaderProjectDimension()
+    {
+        DimensionAttributeValue dimAttrValue = DimensionAttributeValue::find(this.UBSProjectDim);
+
+        if(dimAttrValue)
+        {
+            DimensionAttributeValueSetStorage storage = DimensionAttributeValueSetStorage::find(this.defaultDimension);
+            storage.addItem(dimAttrValue);
+            this.defaultDimension = storage.save();
+
+            DimensionAttrValueLedgerOverride override               = DimensionAttrValueLedgerOverride::findByDimensionAttrValueLedgerOverride(dimAttrValue.RecId,
+                                                                                                                                                   Ledger::current());
+            UBSInventSiteCrossCompany        inventSiteCrossCompany = UBSInventSiteCrossCompany::findByRecId(override.UBSInventSiteCCRecId);
+                
+            this.setInventSiteId(inventSiteCrossCompany.SiteId);
+            this.setAddressFromInventSiteId(inventSiteCrossCompany.SiteId);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateLinesProjectDimension</Name>
+				<Source><![CDATA[
+    public void updateLinesProjectDimension()
+    {
+        PurchLine                           purchLine;
+        DimensionAttributeValue             dimAttrValue = DimensionAttributeValue::find(this.UBSProjectDim);
+        
+        ttsbegin;
+        while select forupdate purchLine
+            where purchLine.PurchId == this.PurchId
+        {
+            DimensionAttributeValueSetStorage   storage = DimensionAttributeValueSetStorage::find(purchLine.defaultDimension);
+        
+            if(dimAttrValue)
+            {
+                storage.addItem(dimAttrValue);
+                purchLine.defaultDimension = storage.save();
+
+                DimensionAttrValueLedgerOverride    override                = DimensionAttrValueLedgerOverride::findByDimensionAttrValueLedgerOverride(dimAttrValue.RecId, 
+                                                                                                                                                       Ledger::current());
+                UBSInventSiteCrossCompany           inventSiteCrossCompany  = UBSInventSiteCrossCompany::findByRecId(override.UBSInventSiteCCRecId);
+                InventDim                           inventDim               = purchLine.inventDim(true);
+                
+                inventDim.InventSiteId = inventSiteCrossCompany.SiteId;
+                inventDim.update();
+
+                purchLine.modifyInventDim(inventDim,fieldNum(InventDim, InventSiteId), false);
+                purchLine.update();
+            }
+        }
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validateField</Name>
+				<Source><![CDATA[
+    boolean  validateField(FieldId  _fieldId)
+    {
+        boolean ok;
+
+        ok = next validateField(_fieldId);
+
+        ok = ok && this.validateFieldServer(_fieldId);
+
+        if (ok)
+        {
+            switch (_fieldId)
+            {
+                case fieldNum(PurchTable, UBSHoldbackPercentage) :
+
+                    ok = this.validateUBSHoldbackPercentage();
+                    break;
+            }
+        }
+
+        return ok;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validateUBSHoldbackPercentage</Name>
+				<Source><![CDATA[
+    private boolean validateUBSHoldbackPercentage()
+    {
+        if(this.UBSIsHoldbackApplied && (this.UBSHoldbackPercentage > 99 || this.UBSHoldbackPercentage < 1))
+        {
+            return checkFailed("@UBS:UBSHoldbackPercentageError");
+        }
+        return true; 
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>modifiedFieldWithUserInput</Name>
+				<Source><![CDATA[
+    public void modifiedFieldWithUserInput(
+        FieldId _fieldId,
+        boolean _isFieldSetExplicitlyByUser)
+    {
+        next modifiedFieldWithUserInput(_fieldId, _isFieldSetExplicitlyByUser);
+
+        if(_fieldId == fieldNum(PurchTable, UBSProjectDim))
+        {
+            this.updateHeaderProjectDimension();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSgetTotalLineAmount_PurchReq</Name>
+				<Source><![CDATA[
+    public Amount UBSgetTotalLineAmount_PurchReq()
+    {
+        PurchLine purchLine;
+
+        select sum(LineAmount) from purchLine
+            where purchLine.PurchId == this.PurchId
+            && purchLine.PurchReqId != "";
+
+        return purchLine.LineAmount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>displayTotalLineAmount</Name>
+				<Source><![CDATA[
+    public display Amount displayTotalLineAmount()
+    {
+        return this.getTotalLineAmount();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

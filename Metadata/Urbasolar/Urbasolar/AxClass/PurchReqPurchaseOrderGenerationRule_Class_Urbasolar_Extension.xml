@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchReqPurchaseOrderGenerationRule_Class_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(PurchReqPurchaseOrderGenerationRule))]
+final class PurchReqPurchaseOrderGenerationRule_Class_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>isAutoSubmitPurchaseOrderStatic</Name>
+				<Source><![CDATA[
+    public static boolean isAutoSubmitPurchaseOrderStatic(PurchReqLine _purchReqLine)
+    {
+        boolean isManualCreatePurchaseOrder(PurchReqPurchaseOrderGenerationRule     _purchReqPurchaseOrderGenerationRule)
+        {
+            boolean retManualPOCreation = false;
+
+            // If purchase requisition line can be consolidated, then it is manual PO creation
+            if (PurchReqPurchaseOrderGenerationRule::canConsolidateStatic(_purchReqLine))
+            {
+                retManualPOCreation = true;
+            }
+
+            if (_purchReqLine.IsPrepayment == NoYes::Yes && _purchReqPurchaseOrderGenerationRule.purchReqSourcingHoldRule().EnableHoldByPrePayment == NoYes::Yes)
+            {
+                retManualPOCreation = true;
+            }
+
+            if (!retManualPOCreation && _purchReqPurchaseOrderGenerationRule.hasPolicy())
+            {
+                switch (_purchReqPurchaseOrderGenerationRule.purchReqSourcingHoldRule().EnableManualHold)
+                {
+                    case PurchReqSourcingManualType::Always:
+                        retManualPOCreation = true;
+                        break;
+                }
+            }
+            else
+            {
+                // Always manual PO creation if no policy
+                retManualPOCreation = true;
+            }
+
+            return retManualPOCreation;
+        }
+        
+        PurchReqPurchaseOrderGenerationRule     purchReqPurchaseOrderGenerationRule;
+
+        purchReqPurchaseOrderGenerationRule = PurchReqPurchaseOrderGenerationRule::construct();
+        purchReqPurchaseOrderGenerationRule.parmPurchReqLine(_purchReqLine);
+        purchReqPurchaseOrderGenerationRule.initPolicy();
+
+        if(!purchReqPurchaseOrderGenerationRule.hasPolicy())
+        {
+            UBSPrTransformToPoLog::insertLog(_purchReqLine.purchReqTable(),strFmt('%1',_purchReqLine.LineNum),_purchReqLine.purchTable(),'@UBS:UBSErrorPOAutoSubmitHasNoPolicy');
+        }
+
+        return !isManualCreatePurchaseOrder(purchReqPurchaseOrderGenerationRule);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

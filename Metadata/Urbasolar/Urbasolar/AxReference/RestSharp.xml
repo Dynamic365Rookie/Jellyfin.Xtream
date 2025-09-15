@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxReference xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>RestSharp</Name>
+	<AssemblyName>RestSharp</AssemblyName>
+	<AssemblyDisplayName>RestSharp, Version=112.1.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75</AssemblyDisplayName>
+	<PublicKeyToken>598062e77f915f75</PublicKeyToken>
+	<Version>112.1.0.0</Version>
+</AxReference>

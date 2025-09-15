@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>SalesTableListPage.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControl3jgm2ha21</Name>
+			<FormControl xmlns=""
+				i:type="AxFormStringControl">
+				<Name>UBSLogisticsPostalAddressHeader_Address</Name>
+				<Type>String</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>Address</DataField>
+				<DataSource>UBSLogisticsPostalAddressHeader</DataSource>
+			</FormControl>
+			<Parent>Grid</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlllcep1jq1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormStringControl">
+				<Name>UBSLogisticsPostalAddressHeader_CountryRegionId</Name>
+				<Enabled>No</Enabled>
+				<Type>String</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>CountryRegionId</DataField>
+				<DataSource>UBSLogisticsPostalAddressHeader</DataSource>
+			</FormControl>
+			<Parent>Grid</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences>
+		<AxFormExtensionDataSourceReference xmlns="">
+			<Parent>SalesTable</Parent>
+			<FormDataSourceReferenced>
+				<Name>UBSLogisticsPostalAddressHeader</Name>
+				<Table>LogisticsPostalAddress</Table>
+				<Fields>
+					<AxFormDataSourceField>
+						<DataField>Address</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>Apartment_RU</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>Building_RU</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>BuildingCompliment</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>ChannelReferenceId</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>City</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>CityKana_JP</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>CityRecId</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>CountryRegionId</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>County</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>DEL_AddressWithoutCountryRecId</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>District</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>DistrictName</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>FlatId_RU</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>HouseId_RU</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>IsPrivate</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>IsSimplifiedAddress_RU</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>Latitude</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>LocalityRecId</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>Location</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>Longitude</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>ModifiedBy</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>ModifiedDateTime</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>Partition</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>PostBox</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>PrivateForParty</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>RecId</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>SettlementRecId</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>State</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>SteadId_RU</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>Street</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>StreetId_RU</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>StreetKana_JP</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>StreetNumber</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>TableId</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>TimeZone</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>ValidFrom</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>ValidTo</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>ZipCode</DataField>
+					</AxFormDataSourceField>
+					<AxFormDataSourceField>
+						<DataField>ZipCodeRecId</DataField>
+					</AxFormDataSourceField>
+				</Fields>
+				<ReferencedDataSources />
+				<JoinSource>SalesTable</JoinSource>
+				<LinkType>OuterJoin</LinkType>
+				<JoinRelation>DeliveryPostalAddress_FK</JoinRelation>
+			</FormDataSourceReferenced>
+		</AxFormExtensionDataSourceReference>
+	</DataSourceReferences>
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendInvoiceInfoTable_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(VendInvoiceInfoTable))]
+final class VendInvoiceInfoTable_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>insert</Name>
+				<Source><![CDATA[
+    public void insert(boolean _defaultRelatedTables)
+    {
+        this.updateMatchingStatus();
+        next insert(_defaultRelatedTables);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>update</Name>
+				<Source><![CDATA[
+    public void update()
+    {
+        this.updateMatchingStatus();
+        this.updateWarrantyRetention();
+
+        next update();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateMatchingStatus</Name>
+				<Source><![CDATA[
+    public void updateMatchingStatus()
+    {
+        UBSVendInvoiceBankInfoMatchingStatus matchingStatus = UBSVendInvoiceBankInfoMatchingStatus::Success;
+        VendBankAccount vendBankAccount;
+
+        vendBankAccount = VendBankAccount::find(this.InvoiceAccount, this.VendBankAccountID);
+
+        if(this.UBSBankIBAN != "")
+        {
+            if(vendBankAccount.BankIBAN != this.UBSBankIBAN || vendBankAccount.SWIFTNo != this.UBSSWIFTNo)
+            {
+                matchingStatus = UBSVendInvoiceBankInfoMatchingStatus::Error;
+            }
+        }
+        else
+        {
+            if(vendBankAccount.AccountNum != this.UBSAccountNum || vendBankAccount.SWIFTNo != this.UBSSWIFTNo)
+            {
+                matchingStatus = UBSVendInvoiceBankInfoMatchingStatus::Error;
+            }
+        }
+
+        this.UBSBankInfoMatchingStatus = matchingStatus;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateWarrantyRetention</Name>
+				<Source><![CDATA[
+    public void updateWarrantyRetention()
+    {
+        if(this.PurchId != "" && this.UBSIsPurchWarrantyImported == NoYes::No)
+        {
+            PurchTable purchTable = PurchTable::find(this.PurchId);
+
+            if(purchTable)
+            {
+                this.UBSHasWarrantyRetention = purchTable.UBSIsHoldbackApplied;
+                this.UBSWarrantyRate = purchTable.UBSHoldbackPercentage;
+
+                this.UBSIsPurchWarrantyImported = NoYes::Yes;
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendTable_Form_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formStr(VendTable))]
+final class VendTable_Form_Urbasolar_Extension
+{
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>VendTable_OnInitialized</Name>
+				<Source><![CDATA[
+    [FormEventHandler(formStr(VendTable), FormEventType::Initialized)]
+    public static void VendTable_OnInitialized(xFormRun sender, FormEventArgs e)
+    {
+        DimensionEntryControl dimControl = sender.design().controlName(identifierStr(DimensionEntryControl));
+        str                   dimAttributeName = DimensionAttribute::UBSGetTableName(tableStr(VendTable),fieldStr(VendTable,AccountNum));
+
+        UBSDefaultDimensionToolKit::disableDimensionInForm(dimControl,dimAttributeName);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canSubmitToWorkflow</Name>
+				<Source><![CDATA[
+    public boolean canSubmitToWorkflow()
+    {
+        boolean       ret           = next canSubmitToWorkflow();
+        boolean       validate      = ret;
+        VendTable     vendTable     = vendTable_ds.cursor();
+        DirPartyTable dirPartyTable = DirPartyTable_ds.cursor();
+       
+        UBSReferencingDocuments referencingDocuments;
+        UBSMandatoryDocuments   mandatoryDocuments;
+
+        if(vendTable.AccountNum)
+        {
+            ret = UBSReferencingDocuments::checkReferencingDocument(vendTable.Party);
+
+            if(ret)
+            {
+                ret = UBSMandatoryDocuments::checkMandatoryDocument(vendTable.Party,dirPartyTable);
+            }
+        }
+
+        if(!vendTable.BankAccount)
+        {
+            validate = checkFailed('@UBS:UBSVendTableBankAccountMandatory');
+        }
+        return ret && validate;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>DirPartyTable_UBSProcCategoryName_OnLookup</Name>
+				<Source><![CDATA[
+    [FormControlEventHandler(formControlStr(VendTable, DirPartyTable_UBSProcCategoryName), FormControlEventType::Lookup)]
+    public static void DirPartyTable_UBSProcCategoryName_OnLookup(FormControl sender, FormControlEventArgs e)
+    {
+        str procCategoryLvl = int2Str(UBSVendParametersCC::find().UBSProcCategoryLvl);
+        FormControlCancelableSuperEventArgs event = e as FormControlCancelableSuperEventArgs;
+
+        SysTableLookup sysTableLookup = SysTableLookup::newParameters(tableNum(EcoResCategory),sender);
+        sysTableLookup.addLookupField(fieldNum(EcoResCategory, Name));
+
+        Query                query  = new Query();
+        QueryBuildDataSource qds    = query.addDataSource(tableNum(EcoResCategory));
+        QueryBuildRange      qr     = qds.addRange(fieldNum(EcoResCategory,Level));
+        qr.value(procCategoryLvl);
+        QueryBuildRange      qr2    = qds.addRange(fieldNum(EcoResCategory,IsActive));
+        qr2.value('1');
+        sysTableLookup.parmQuery(query);
+        sysTableLookup.performFormLookup();
+        event.CancelSuperCall();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>DirPartyTable_UBSProcCategoryName_OnModified</Name>
+				<Source><![CDATA[
+    [FormControlEventHandler(formControlStr(VendTable, DirPartyTable_UBSProcCategoryName), FormControlEventType::Modified)]
+    public static void DirPartyTable_UBSProcCategoryName_OnModified(FormControl sender, FormControlEventArgs e)
+    {
+        FormStringControl   callerButton        = sender as FormStringControl;
+        FormRun             form                = callerButton.formRun();
+        FormDataSource      dirPartyTable_ds    = form.dataSource(formDataSourceStr(DirPartyTable, DirPartyTable)) as FormDataSource;
+        DirPartyTable       dirPartyTable       = dirPartyTable_ds.cursor();
+
+        dirPartyTable.UBSReferencing = UBSSupplierReferencing::findMinByProcCategory(dirPartyTable.UBSProcCategoryName).UBSReferencing;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

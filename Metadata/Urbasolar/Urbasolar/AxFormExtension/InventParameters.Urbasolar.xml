@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>InventParameters.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlp0pyxyuj1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormTabPageControl">
+				<Name>Urbasolar</Name>
+				<Type>TabPage</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormGroupControl">
+						<Name>UBSFormGroup</Name>
+						<Skip>Yes</Skip>
+						<Type>Group</Type>
+						<WidthMode>SizeToAvailable</WidthMode>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormStaticTextControl">
+								<Name>UBSFormStaticTextControl</Name>
+								<Skip>Yes</Skip>
+								<Type>StaticText</Type>
+								<WidthMode>SizeToAvailable</WidthMode>
+								<FormControlExtension
+									i:nil="true" />
+								<Style>MainInstruction</Style>
+								<Text>@UBS:UBSUrbasolar</Text>
+							</AxFormControl>
+						</Controls>
+						<AllowUserSetup>No</AllowUserSetup>
+						<FrameType>None</FrameType>
+						<Style>TOCTitleContainer</Style>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormGroupControl">
+						<Name>UBSFormGroupControl</Name>
+						<HeightMode>SizeToAvailable</HeightMode>
+						<Pattern>Custom</Pattern>
+						<Type>Group</Type>
+						<WidthMode>SizeToAvailable</WidthMode>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormGroupControl">
+								<Name>UBSFormSubGroupControl</Name>
+								<Type>Group</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Controls>
+									<AxFormControl xmlns=""
+										i:type="AxFormReferenceGroupControl">
+										<Name>InventParameters_UBSUserGroupInfo</Name>
+										<Type>ReferenceGroup</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<Controls />
+										<DataSource>InventParameters</DataSource>
+										<ReferenceField>UBSUserGroupInfo</ReferenceField>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>InventParameters_UBSAlertBody</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSAlertBody</DataField>
+										<DataSource>InventParameters</DataSource>
+										<MultiLine>Yes</MultiLine>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>InventParameters_UBSTemplateEmailId</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSTemplateEmailId</DataField>
+										<DataSource>InventParameters</DataSource>
+									</AxFormControl>
+								</Controls>
+								<ColumnsMode>Fill</ColumnsMode>
+								<DataSource>InventParameters</DataSource>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormGroupControl">
+								<Name>UBSFormGroupControlGrid</Name>
+								<Type>Group</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Controls>
+									<AxFormControl xmlns=""
+										i:type="AxFormButtonGroupControl">
+										<Name>UBSFormButtonGroupControl</Name>
+										<Type>ButtonGroup</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<Controls>
+											<AxFormControl xmlns=""
+												i:type="AxFormCommandButtonControl">
+												<Name>NewCommandButtonControl</Name>
+												<Type>CommandButton</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<Command>New</Command>
+											</AxFormControl>
+											<AxFormControl xmlns=""
+												i:type="AxFormCommandButtonControl">
+												<Name>DeleteFormCommandButtonControl</Name>
+												<Type>CommandButton</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<Command>DeleteRecord</Command>
+											</AxFormControl>
+										</Controls>
+										<ArrangeMethod>HorizontalRight</ArrangeMethod>
+										<HideIfEmpty>No</HideIfEmpty>
+										<DataSource>UBSInventParametersSites</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormGroupControl">
+										<Name>UBSGridFormGroupControl</Name>
+										<Height>1500</Height>
+										<Type>Group</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<Controls>
+											<AxFormControl xmlns=""
+												i:type="AxFormGridControl">
+												<Name>UBSInventParametersSitesGrid</Name>
+												<Height>350</Height>
+												<HeightMode>Manual</HeightMode>
+												<Type>Grid</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<Controls>
+													<AxFormControl xmlns=""
+														i:type="AxFormStringControl">
+														<Name>UBSInventParametersSites_SiteId</Name>
+														<Type>String</Type>
+														<FormControlExtension
+															i:nil="true" />
+														<DataField>SiteId</DataField>
+														<DataSource>UBSInventParametersSites</DataSource>
+													</AxFormControl>
+												</Controls>
+												<DataSource>UBSInventParametersSites</DataSource>
+											</AxFormControl>
+										</Controls>
+										<ArrangeMethod>None</ArrangeMethod>
+										<HideIfEmpty>No</HideIfEmpty>
+										<DataSource>UBSInventParametersSites</DataSource>
+									</AxFormControl>
+								</Controls>
+								<ColumnsMode>Fill</ColumnsMode>
+								<HideIfEmpty>No</HideIfEmpty>
+								<Caption>@SYS122446</Caption>
+								<DataSource>UBSInventParametersSites</DataSource>
+							</AxFormControl>
+						</Controls>
+						<ColumnsMode>Fill</ColumnsMode>
+						<HideIfEmpty>No</HideIfEmpty>
+						<FrameType>None</FrameType>
+					</AxFormControl>
+				</Controls>
+				<Caption>@UBS:UBSUrbasolar</Caption>
+			</FormControl>
+			<Parent>Tab</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources>
+		<AxFormDataSource xmlns="">
+			<Name>UBSInventParametersSites</Name>
+			<Table>UBSInventParametersSites</Table>
+			<Fields>
+				<AxFormDataSourceField>
+					<DataField>DataAreaId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>InventParameters</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>Partition</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>RecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>SiteId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>TableId</DataField>
+				</AxFormDataSourceField>
+			</Fields>
+			<ReferencedDataSources />
+			<JoinSource>InventParameters</JoinSource>
+			<DataSourceLinks />
+			<DerivedDataSources />
+		</AxFormDataSource>
+		<AxFormDataSource xmlns="">
+			<Name>InventSite</Name>
+			<Table>InventSite</Table>
+			<Fields>
+				<AxFormDataSourceField>
+					<DataField>DataAreaId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DefaultDimension</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DefaultInventStatusId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>IsReceivingWarehouseOverrideAllowed</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>Name</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>OrderEntryDeadlineGroupId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>Partition</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>RecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>SiteId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>TableId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>TaxBranchRefRecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>Timezone</DataField>
+				</AxFormDataSourceField>
+			</Fields>
+			<ReferencedDataSources />
+			<DataSourceLinks />
+			<DerivedDataSources />
+		</AxFormDataSource>
+	</DataSources>
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

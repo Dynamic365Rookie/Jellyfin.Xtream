@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>VendTableListPage.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlfexkxevm1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormStringControl">
+				<Name>VendOnHoldHistory_ReasonCode</Name>
+				<Type>String</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>ReasonCode</DataField>
+				<DataSource>VendOnHoldHistory</DataSource>
+			</FormControl>
+			<Parent>ListPageGrid</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControldxkxxstl1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormStringControl">
+				<Name>VendOnHoldHistory_ReasonComment</Name>
+				<Type>String</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>ReasonComment</DataField>
+				<DataSource>VendOnHoldHistory</DataSource>
+			</FormControl>
+			<Parent>ListPageGrid</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

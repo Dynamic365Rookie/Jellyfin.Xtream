@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>APSSysTableBrowserFormAdaptor</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+//Duplication of the standard class SysTableBrowserFormAdaptor
+class APSSysTableBrowserFormAdaptor extends FormAdaptor
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>attach</Name>
+				<Source><![CDATA[
+    public static APSSysTableBrowserFormAdaptor attach()
+    {
+        return new APSSysTableBrowserFormAdaptor(new FormAdaptorFactoryAttach('APSSysTableBrowser'));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ShowHideSystemFields</Name>
+				<Source><![CDATA[
+    public ButtonAdaptor ShowHideSystemFields()
+    {
+        return this.getButton("ShowHideSystemFields");
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>EnableSystemFields</Name>
+				<Source><![CDATA[
+    public GroupAdaptor EnableSystemFields()
+    {
+        return this.getGroup("EnableSystemFields");
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>AppBar</Name>
+				<Source><![CDATA[
+    public TabAdaptor AppBar()
+    {
+        return this.getTab("AppBar");
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>QuickFilterControl1</Name>
+				<Source><![CDATA[
+    public QuickFilterAdaptor QuickFilterControl1()
+    {
+        return this.adaptorActivateGroup("CustomFilter", False).getQuickFilter("QuickFilterControl1");
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>CustomFilter</Name>
+				<Source><![CDATA[
+    public GroupAdaptor CustomFilter()
+    {
+        return this.getGroup("CustomFilter");
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>AllFieldsGrid</Name>
+				<Source><![CDATA[
+    public GridAdaptor AllFieldsGrid()
+    {
+        return this.getGrid("AllFieldsGrid");
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

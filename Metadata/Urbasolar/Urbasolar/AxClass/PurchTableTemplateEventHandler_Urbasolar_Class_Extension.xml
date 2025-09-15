@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchTableTemplateEventHandler_Urbasolar_Class_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(PurchTableTemplateEventHandler))]
+
+public final class PurchTableTemplateEventHandler_Urbasolar_Class_Extension
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>completed</Name>
+				<Source><![CDATA[
+    public void completed(WorkflowEventArgs _workflowEventArgs)
+    {
+        PurchTable purchTable = PurchTable::findRecId(_workflowEventArgs.parmWorkflowContext().parmRecId(), true);
+
+        next completed(_workflowEventArgs);
+        UBSPurchaseOrderToSalesOrderToolkit::createOrUpdateSalesOrderFromPurchaseOrder(purchTable);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

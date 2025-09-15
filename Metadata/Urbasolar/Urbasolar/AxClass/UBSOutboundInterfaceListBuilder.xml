@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterfaceListBuilder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSOutboundInterfaceListBuilder
+{
+    
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>financialDimensionList</Name>
+				<Source><![CDATA[
+    public static System.Collections.ArrayList financialDimensionList(utcdatetime _lastSynchro)
+    {
+        System.Collections.ArrayList financialDimensionList = new System.Collections.ArrayList();
+
+        FinancialDimensionValueEntityView   FinancialDimensionValueEntityView;
+        FinancialDimensionValueEntity       financialDimensionValue;
+        DimensionAttributeValue             dimensionAttributeValue;
+
+        while select FinancialDimension, DimensionValue,
+                     Description, IsSuspended
+                from financialDimensionValue
+            join FinancialDimensionValueEntityView
+                where FinancialDimensionValueEntityView.DimensionValue == financialDimensionValue.DimensionValue
+            join dimensionAttributeValue
+                where dimensionAttributeValue.RecId == FinancialDimensionValueEntityView.DimensionAttributeValue &&
+                      (dimensionAttributeValue.ModifiedDateTime > _lastSynchro ||
+                       dimensionAttributeValue.CreatedDateTime  > _lastSynchro)
+        {
+            financialDimensionList.Add([financialDimensionValue.FinancialDimension,
+                                        financialDimensionValue.DimensionValue,
+                                        financialDimensionValue.Description,
+                                        enum2int(financialDimensionValue.IsSuspended)]);
+        }
+        return financialDimensionList;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>financialDimensionLegalEntityList</Name>
+				<Source><![CDATA[
+    public static System.Collections.ArrayList financialDimensionLegalEntityList(utcdatetime _lastSynchro)
+    {
+        System.Collections.ArrayList financialDimensionList = new System.Collections.ArrayList();
+    
+        FinancialDimensionValueLegalEntityOverrideV2Entity financialDimensionValueLegalEntity;
+
+        while select FinancialDimension, DimensionValue, 
+                     LegalEntityId, IsSuspended 
+            from financialDimensionValueLegalEntity
+                where financialDimensionValueLegalEntity.ModifiedDateTime > _lastSynchro || 
+                      financialDimensionValueLegalEntity.CreatedDateTime  > _lastSynchro
+        {
+            financialDimensionList.Add([financialDimensionValueLegalEntity.FinancialDimension,
+                                        financialDimensionValueLegalEntity.DimensionValue,
+                                        financialDimensionValueLegalEntity.LegalEntityId,
+                                        financialDimensionValueLegalEntity.IsSuspended]);
+        }
+        return financialDimensionList;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>vendorList</Name>
+				<Source><![CDATA[
+    public static System.Collections.ArrayList vendorList(utcdatetime _lastSynchro)
+    {
+        System.Collections.ArrayList vendorList = new System.Collections.ArrayList();
+        DMFExecutionId executionId = UBSExportVendors::exportVendors();
+        UBSVendVendorV2Staging staging;
+    
+        VendVendorBankAccountEntity vendVendorBankAccountEntity;
+
+        while select 
+            VendorAccountNumber,
+            VendorPartyType,
+            VendorOrganizationName,
+            PersonFirstName,
+            PersonLastName,
+            OrganizationNumber,
+            VendorDUNSNumber,
+            AddressDescription,
+            AddressLocationRoles,
+            AddressCountryRegionId,
+            AddressCountryRegionISOCode,
+            AddressZipCode,
+            AddressStreet,
+            AddressCity,
+            PrimaryEmailAddressDescription,
+            PrimaryEmailAddress,
+            OnHoldStatus,
+            CurrencyCode,
+            SiretNumber,
+            NafCode,
+            SalesTaxGroupCode,
+            taxExemptNumber,
+            DefaultPaymentTermsName,
+            DefaultVendorPaymentMethodName,
+            BankAccountId
+            from staging
+            where staging.ExecutionId == executionId
+        {
+
+            System.Collections.ArrayList bankAccountIdList = new System.Collections.ArrayList();
+
+            while select vendVendorBankAccountEntity where vendVendorBankAccountEntity.VendorAccountNumber == staging.VendorAccountNumber
+            {
+
+                str expirationDateStr = date2Str(DateTimeUtil::date(vendVendorBankAccountEntity.ExpirationDate),123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4);
+                str activeDateStr = date2Str(DateTimeUtil::date(vendVendorBankAccountEntity.ActiveDate),123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4);
+                
+
+                bankAccountIdList.Add([
+                    vendVendorBankAccountEntity.VendorAccountNumber,
+                    vendVendorBankAccountEntity.VendorBankAccountId,
+                    enum2Value(vendVendorBankAccountEntity.IsDefaultBankAccount),
+                    vendVendorBankAccountEntity.BankName,
+                    enum2Value(vendVendorBankAccountEntity.RoutingNumberType),
+                    vendVendorBankAccountEntity.RoutingNumber,
+                    vendVendorBankAccountEntity.BankAccountNumber,
+                    vendVendorBankAccountEntity.SWIFTCode,
+                    vendVendorBankAccountEntity.IBAN,
+                    activeDateStr,
+                    expirationDateStr,
+                    vendVendorBankAccountEntity.BankMessage,
+                    vendVendorBankAccountEntity.CurrentCurrencyCode,
+                    vendVendorBankAccountEntity.AddressDescription,
+                    vendVendorBankAccountEntity.AddressCountry,
+                    vendVendorBankAccountEntity.AddressCountryISOCode,
+                    vendVendorBankAccountEntity.AddressZipCode,
+                    vendVendorBankAccountEntity.AddressStreet,
+                    vendVendorBankAccountEntity.AddressCity
+                    ]);
+            }
+
+            vendorList.Add([
+                staging.VendorAccountNumber,
+                staging.VendorPartyType,
+                staging.VendorOrganizationName,
+                staging.PersonFirstName,
+                staging.PersonLastName,
+                staging.OrganizationNumber,
+                staging.VendorDUNSNumber,
+                staging.AddressDescription,
+                staging.AddressLocationRoles,
+                staging.AddressCountryRegionId,
+                staging.AddressCountryRegionISOCode,
+                staging.AddressZipCode,
+                staging.AddressStreet,
+                staging.AddressCity,
+                staging.PrimaryEmailAddressDescription,
+                staging.PrimaryEmailAddress,
+                enum2Value(staging.OnHoldStatus),
+                staging.CurrencyCode,
+                staging.SiretNumber,
+                staging.NafCode,
+                staging.SalesTaxGroupCode,
+                staging.taxExemptNumber,
+                staging.DefaultPaymentTermsName,
+                staging.DefaultVendorPaymentMethodName,
+                staging.BankAccountId,
+                bankAccountIdList
+                ]);
+        }
+        return vendorList;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>stockList</Name>
+				<Source><![CDATA[
+    public static System.Collections.ArrayList stockList(TransDate _period,DataAreaId _legalEntity = '')
+    {
+        System.Collections.ArrayList stockList = new System.Collections.ArrayList();
+    
+        UBSInterfaceStockEntryView stockEntryView;
+
+        LedgerFiscalCalendarPeriod period = LedgerFiscalCalendar::findLedgerPeriodByPeriodTypeDate(CompanyInfoHelper::fiscalCalendarRecId(),_period);
+        FiscalCalendarPeriod calendarPeriod = FiscalCalendarPeriod::find(period.FiscalCalendarPeriod);
+
+        while select crosscompany
+            MainAccountValue,
+            sum(AccountingCurrencyAmount),
+            sum(TransactionCurrencyAmount),
+            CostCenter,
+            ExpenseNature,
+            GroupChartOfAccount,
+            Project,
+            Vendor,
+            SubLedgerVoucherDataAreaId,
+            InventTransType,
+            TransactionCurrencyCode
+            from
+            stockEntryView
+            group by stockEntryView.MainAccountValue,stockEntryView.CostCenter,stockEntryView.ExpenseNature,stockEntryView.GroupChartOfAccount,
+                stockEntryView.Project,stockEntryView.Vendor,stockEntryView.SubledgerVoucherDataAreaId,stockEntryView.InventTransType
+                ,stockEntryView.TransactionCurrencyCode
+            where stockEntryView.AccountingDate >= calendarPeriod.StartDate &&
+                      stockEntryView.AccountingDate <= calendarPeriod.EndDate 
+                        && (_legalEntity == '' || stockEntryView.SubledgerVoucherDataAreaId == _legalEntity)
+        {
+            stockList.Add([
+                stockEntryView.MainAccountValue,
+                num2Str(stockEntryView.AccountingCurrencyAmount,1,2,1,0),
+                stockEntryView.CostCenter,
+                stockEntryView.ExpenseNature,
+                stockEntryView.GroupChartOfAccount,
+                stockEntryView.Project,
+                stockEntryView.Vendor,
+                date2Str(calendarPeriod.EndDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
+                stockEntryView.SubledgerVoucherDataAreaId,
+                stockEntryView.InventTransType,
+                num2Str(stockEntryView.TransactionCurrencyAmount,1,2,1,0),
+                stockEntryView.TransactionCurrencyCode
+                ]);
+        }
+        return stockList;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>accrualList</Name>
+				<Source><![CDATA[
+    public static System.Collections.ArrayList accrualList(TransDate _period,DataAreaId _legalEntity = '')
+    {
+        System.Collections.ArrayList accrualList = new System.Collections.ArrayList();
+    
+        UBSInterfaceCCAEntryView ccaEntryView;
+        UBSInterfaceAccrualsEntryView accrualEntryView;
+
+        LedgerFiscalCalendarPeriod period = LedgerFiscalCalendar::findLedgerPeriodByPeriodTypeDate(CompanyInfoHelper::fiscalCalendarRecId(),_period);
+        FiscalCalendarPeriod calendarPeriod = FiscalCalendarPeriod::find(period.FiscalCalendarPeriod);
+
+        while select crosscompany
+            MainAccountValue,
+            sum(AccountingCurrencyAmount),
+            sum(TransactionCurrencyAmount),
+            CostCenter,
+            ExpenseNature,
+            GroupChartOfAccount,
+            Project,
+            Vendor,
+            SubLedgerVoucherDataAreaId,
+            InvoiceId,
+            TransactionCurrencyCode
+            from
+            ccaEntryView
+            order by ccaEntryView.InvoiceId
+            group by ccaEntryView.MainAccountValue,ccaEntryView.CostCenter,ccaEntryView.ExpenseNature,ccaEntryView.GroupChartOfAccount,
+                ccaEntryView.Project,ccaEntryView.Vendor,ccaEntryView.SubledgerVoucherDataAreaId,ccaEntryView.InvoiceId,ccaEntryView.TransactionCurrencyCode
+            where ccaEntryView.AccountingDate >= calendarPeriod.StartDate &&
+                      ccaEntryView.AccountingDate <= calendarPeriod.EndDate
+                        && (_legalEntity == '' || ccaEntryView.SubledgerVoucherDataAreaId == _legalEntity)
+        {
+            accrualList.Add([
+                'CCA',
+                ccaEntryView.InvoiceId,
+                date2Str(calendarPeriod.EndDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
+                ccaEntryView.SubledgerVoucherDataAreaId,
+                ccaEntryView.MainAccountValue,
+                num2Str(ccaEntryView.AccountingCurrencyAmount,1,2,1,0),
+                ccaEntryView.CostCenter,
+                ccaEntryView.ExpenseNature,
+                ccaEntryView.GroupChartOfAccount,
+                ccaEntryView.Project,
+                ccaEntryView.Vendor,
+                num2Str(ccaEntryView.TransactionCurrencyAmount,1,2,1,0),
+                ccaEntryView.TransactionCurrencyCode
+                ]);
+        }
+
+        while select crosscompany
+            MainAccountValue,
+            sum(AccountingCurrencyAmount),
+            sum(TransactionCurrencyAmount),
+            CostCenter,
+            ExpenseNature,
+            GroupChartOfAccount,
+            Project,
+            Vendor,
+            SubLedgerVoucherDataAreaId,
+            PurchId,
+            PackingSlipId,
+            TransactionCurrencyCode
+            from
+            accrualEntryView
+            order by accrualEntryView.PurchId,accrualEntryView.PackingSlipId
+            group by accrualEntryView.MainAccountValue,accrualEntryView.CostCenter,accrualEntryView.ExpenseNature,accrualEntryView.GroupChartOfAccount,
+                accrualEntryView.Project,accrualEntryView.Vendor,accrualEntryView.SubledgerVoucherDataAreaId,accrualEntryView.PurchId,accrualEntryView.PackingSlipId,accrualEntryView.TransactionCurrencyCode
+            where  (_legalEntity == '' || accrualEntryView.SubledgerVoucherDataAreaId == _legalEntity)
+        {
+            accrualList.Add([
+                'FNP',
+                accrualEntryView.PurchId + "-" + accrualEntryView.PackingSlipId,
+                date2Str(calendarPeriod.EndDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
+                accrualEntryView.SubledgerVoucherDataAreaId,
+                accrualEntryView.MainAccountValue,
+                num2Str(accrualEntryView.AccountingCurrencyAmount,1,2,1,0),
+                accrualEntryView.CostCenter,
+                accrualEntryView.ExpenseNature,
+                accrualEntryView.GroupChartOfAccount,
+                accrualEntryView.Project,
+                accrualEntryView.Vendor,
+                num2Str(accrualEntryView.TransactionCurrencyAmount,1,2,1,0),
+                accrualEntryView.TransactionCurrencyCode
+                ]);
+        }
+
+        return accrualList;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>invoiceList</Name>
+				<Source><![CDATA[
+    public static System.Collections.ArrayList invoiceList(DataAreaId _legalEntity = '',boolean _reIncludeError = false)
+    {
+        System.Collections.ArrayList invoiceList = new System.Collections.ArrayList();
+        
+        UBSVendInvoiceSageExport invoiceSageExport;
+        UBSInterfaceVendInvoiceNoWarrantyView invoiceNoWarrantyView;
+        UBSInterfaceVendInvoiceWarrantyView invoiceWarrantyView;
+        UBSVendInvoicePrepaymentApplyView invoicePrepaymentView;
+        RefRecId currentInvoiceRecId;
+
+        invoiceSageExport.skipDataMethods(true);
+        invoiceSageExport.skipDatabaseLog(true);
+        invoiceSageExport.skipEvents(true);
+
+        if(_reIncludeError)
+        {
+            update_recordset crosscompany invoiceSageExport
+            setting UBSExportStatus = UBSExportStatus::InProcess,
+                   ErrorMessage = "",
+                    ExecutionDateTime = utcDateTimeNull()
+                where invoiceSageExport.UBSExportStatus == UBSExportStatus::Error
+                    && (_legalEntity == '' || invoiceSageExport.DataAreaId == _legalEntity);
+        }
+
+        update_recordset crosscompany invoiceSageExport
+            setting UBSExportStatus = UBSExportStatus::InProcess
+                where invoiceSageExport.UBSExportStatus == UBSExportStatus::ToProcess 
+                    && (_legalEntity == '' || invoiceSageExport.DataAreaId == _legalEntity);
+        
+       
+
+        while select crosscompany invoiceNoWarrantyView
+            order by invoiceNoWarrantyView.InvoiceRecId
+            where (_legalEntity == '' || invoiceNoWarrantyView.LegalEntity == _legalEntity)
+        {
+            invoiceList.Add([
+                invoiceNoWarrantyView.InvoiceId,
+                date2Str(invoiceNoWarrantyView.InvoiceDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
+                date2Str(invoiceNoWarrantyView.DueDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
+                invoiceNoWarrantyView.CurrencyCode,
+                invoiceNoWarrantyView.InvoiceAccount,
+                int642Str(invoiceNoWarrantyView.InvoiceRecId),
+                UBSOutboundInterfaceVendInvoiceService::generateInvoiceUrl(invoiceNoWarrantyView.InvoiceRecId,invoiceNoWarrantyView.LegalEntity), //url to build
+                invoiceNoWarrantyView.LegalEntity,
+                invoiceNoWarrantyView.Description,
+                invoiceNoWarrantyView.AccountNum,
+                invoiceNoWarrantyView.BankIBAN,
+                invoiceNoWarrantyView.SWIFTNo,
+                invoiceNoWarrantyView.MainAccountValue,
+                num2Str(invoiceNoWarrantyView.TransactionCurrencyAmount,1,2,1,0),
+                num2Str(invoiceNoWarrantyView.AccountingCurrencyAmount,1,2,1,0),
+                invoiceNoWarrantyView.CostCenter,
+                invoiceNoWarrantyView.ExpenseNature,
+                invoiceNoWarrantyView.GroupChartOfAccount,
+                invoiceNoWarrantyView.Project,
+                invoiceNoWarrantyView.Vendor,
+                invoiceNoWarrantyView.TaxCode,
+                invoiceNoWarrantyView.InvoiceType == PurchInvoiceType::VendorAdvance ? "Prepayment" : 
+                                    invoiceNoWarrantyView.InvoiceAmount < 0 ? "CreditNote" : "Invoice",
+                date2Str(invoiceNoWarrantyView.DocumentDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4)
+                ]);
+
+            if(currentInvoiceRecId != invoiceNoWarrantyView.InvoiceRecId)
+            {
+                currentInvoiceRecId = invoiceNoWarrantyView.InvoiceRecId;
+                while select crosscompany invoicePrepaymentView where invoicePrepaymentView.InvoiceRecId == invoiceNoWarrantyView.InvoiceRecId
+                {
+                        invoiceList.Add([
+                    invoiceNoWarrantyView.InvoiceId,
+                    date2Str(invoiceNoWarrantyView.InvoiceDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
+                    date2Str(invoiceNoWarrantyView.DueDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
+                    invoiceNoWarrantyView.CurrencyCode,
+                    invoiceNoWarrantyView.InvoiceAccount,
+                    int642Str(invoiceNoWarrantyView.InvoiceRecId),
+                    UBSOutboundInterfaceVendInvoiceService::generateInvoiceUrl(invoiceNoWarrantyView.InvoiceRecId,invoiceNoWarrantyView.LegalEntity), //url to build
+                    invoiceNoWarrantyView.LegalEntity,
+                    invoiceNoWarrantyView.Description,
+                    invoiceNoWarrantyView.AccountNum,
+                    invoiceNoWarrantyView.BankIBAN,
+                    invoiceNoWarrantyView.SWIFTNo,
+                    invoicePrepaymentView.MainAccountValue,
+                    num2Str(invoicePrepaymentView.TransactionCurrencyAmount,1,2,1,0),
+                    num2Str(invoicePrepaymentView.AccountingCurrencyAmount,1,2,1,0),
+                    invoicePrepaymentView.CostCenter,
+                    invoicePrepaymentView.ExpenseNature,
+                    invoicePrepaymentView.GroupChartOfAccount,
+                    invoicePrepaymentView.Project,
+                    invoicePrepaymentView.Vendor,
+                    invoicePrepaymentView.TaxCode,
+                    invoiceNoWarrantyView.InvoiceType == PurchInvoiceType::VendorAdvance ? "Prepayment" :
+                                        invoiceNoWarrantyView.InvoiceAmount < 0 ? "CreditNote" : "Invoice",
+                    date2Str(invoiceNoWarrantyView.DocumentDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4)
+                    ]);
+                }
+            }
+
+        }
+
+        while select crosscompany invoiceWarrantyView
+            order by invoiceWarrantyView.InvoiceRecId
+            where (_legalEntity == '' || invoiceWarrantyView.LegalEntity == _legalEntity)
+        {
+            invoiceList.Add([
+                invoiceWarrantyView.InvoiceId,
+                date2Str(invoiceWarrantyView.InvoiceDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
+                date2Str(invoiceWarrantyView.DueDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
+                invoiceWarrantyView.CurrencyCode,
+                invoiceWarrantyView.InvoiceAccount,
+                int642Str(invoiceWarrantyView.InvoiceRecId),
+                UBSOutboundInterfaceVendInvoiceService::generateInvoiceUrl(invoiceWarrantyView.InvoiceRecId,invoiceWarrantyView.LegalEntity), //url to build
+                invoiceWarrantyView.LegalEntity,
+                invoiceWarrantyView.Description,
+                invoiceWarrantyView.AccountNum,
+                invoiceWarrantyView.BankIBAN,
+                invoiceWarrantyView.SWIFTNo,
+                invoiceWarrantyView.MainAccountValue,
+                num2Str(invoiceWarrantyView.TransactionCurrencyAmount,1,2,1,0),
+                num2Str(invoiceWarrantyView.AccountingCurrencyAmount,1,2,1,0),
+                invoiceWarrantyView.CostCenter,
+                invoiceWarrantyView.ExpenseNature,
+                invoiceWarrantyView.GroupChartOfAccount,
+                invoiceWarrantyView.Project,
+                invoiceWarrantyView.Vendor,
+                invoiceWarrantyView.TaxCode,
+                invoiceWarrantyView.InvoiceType == PurchInvoiceType::VendorAdvance ? "Prepayment" :
+                invoiceWarrantyView.InvoiceAmount < 0 ? "CreditNote" : "Invoice",
+                date2Str(invoiceWarrantyView.DocumentDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4)
+                ]);
+
+            if(currentInvoiceRecId != invoiceNoWarrantyView.InvoiceRecId)
+            {
+                currentInvoiceRecId = invoiceNoWarrantyView.InvoiceRecId;
+                
+                while select crosscompany invoicePrepaymentView where invoicePrepaymentView.InvoiceRecId == invoiceWarrantyView.InvoiceRecId
+                {
+                    invoiceList.Add([
+                    invoiceNoWarrantyView.InvoiceId,
+                    date2Str(invoiceNoWarrantyView.InvoiceDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
+                    date2Str(invoiceNoWarrantyView.DueDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
+                    invoiceNoWarrantyView.CurrencyCode,
+                    invoiceNoWarrantyView.InvoiceAccount,
+                    int642Str(invoiceNoWarrantyView.InvoiceRecId),
+                    UBSOutboundInterfaceVendInvoiceService::generateInvoiceUrl(invoiceNoWarrantyView.InvoiceRecId,invoiceNoWarrantyView.LegalEntity), //url to build
+                    invoiceNoWarrantyView.LegalEntity,
+                    invoiceNoWarrantyView.Description,
+                    invoiceNoWarrantyView.AccountNum,
+                    invoiceNoWarrantyView.BankIBAN,
+                    invoiceNoWarrantyView.SWIFTNo,
+                    invoicePrepaymentView.MainAccountValue,
+                    num2Str(invoicePrepaymentView.TransactionCurrencyAmount,1,2,1,0),
+                    num2Str(invoicePrepaymentView.AccountingCurrencyAmount,1,2,1,0),
+                    invoicePrepaymentView.CostCenter,
+                    invoicePrepaymentView.ExpenseNature,
+                    invoicePrepaymentView.GroupChartOfAccount,
+                    invoicePrepaymentView.Project,
+                    invoicePrepaymentView.Vendor,
+                    invoicePrepaymentView.TaxCode,
+                    invoiceNoWarrantyView.InvoiceType == PurchInvoiceType::VendorAdvance ? "Prepayment" :
+                                        invoiceNoWarrantyView.InvoiceAmount < 0 ? "CreditNote" : "Invoice",
+                    date2Str(invoiceNoWarrantyView.DocumentDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4)
+                    ]);
+                }
+            }
+        }
+        
+        return invoiceList;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

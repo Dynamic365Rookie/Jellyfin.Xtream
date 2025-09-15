@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterfaceFinancialDimensionLegalEntityController</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSOutboundInterfaceFinancialDimensionLegalEntityController extends SysOperationServiceController
+{ 
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    protected void new()
+    {
+        super(classStr(UBSOutboundInterfaceFinancialDimensionLegalEntityService),
+              methodStr(UBSOutboundInterfaceFinancialDimensionLegalEntityService, Process),
+              SysOperationExecutionMode::Synchronous);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>defaultCaption</Name>
+				<Source><![CDATA[
+    public ClassDescription defaultCaption()
+    {
+        return "@UBS:UBSOutboundlnterfaceBatch_FinancialDimensionLegalEntity";
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static UBSOutboundInterfaceFinancialDimensionLegalEntityController construct(SysOperationExecutionMode _executionMode = SysOperationExecutionMode::Synchronous)
+    {
+        UBSOutboundInterfaceFinancialDimensionLegalEntityController controller = new UBSOutboundInterfaceFinancialDimensionLegalEntityController();
+        controller.parmExecutionMode(_executionMode);
+        return controller;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        UBSOutboundInterfaceFinancialDimensionLegalEntityController controller = UBSOutboundInterfaceFinancialDimensionLegalEntityController::construct();
+        controller.parmArgs(_args);
+        controller.startOperation();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

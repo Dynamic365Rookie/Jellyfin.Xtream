@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterfaceStockController</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSOutboundInterfaceStockController extends SysOperationServiceController
+{ 
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    protected void new()
+    {
+        super(classStr(UBSOutboundInterfaceStockService),
+              methodStr(UBSOutboundInterfaceStockService, Process),
+              SysOperationExecutionMode::Synchronous);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>defaultCaption</Name>
+				<Source><![CDATA[
+    public ClassDescription defaultCaption()
+    {
+        return "@UBS:UBSOutboundlnterfaceBatch_Stock";
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    public static UBSOutboundInterfaceStockController construct(SysOperationExecutionMode _executionMode = SysOperationExecutionMode::Synchronous)
+    {
+        UBSOutboundInterfaceStockController controller = new UBSOutboundInterfaceStockController();
+        controller.parmExecutionMode(_executionMode);
+        return controller;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args _args)
+    {
+        UBSOutboundInterfaceStockController controller = UBSOutboundInterfaceStockController::construct();
+        controller.parmArgs(_args);
+        controller.startOperation();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

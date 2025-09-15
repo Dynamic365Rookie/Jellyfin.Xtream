@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>CustParameters.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlk22m0gpc1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormGroupControl">
+				<Name>UBS</Name>
+				<Type>Group</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>SalesParameters_UBS_SAS_InventSiteId</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBS_SAS_InventSiteId</DataField>
+						<DataSource>SalesParameters</DataSource>
+					</AxFormControl>
+				</Controls>
+				<Caption>UBS</Caption>
+			</FormControl>
+			<Parent>SalesSetupTabPage</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

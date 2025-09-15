@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>PurchReqCreate.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlyclfb4br1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormReferenceGroupControl">
+				<Name>PurchReqTable_UBSProjectDim</Name>
+				<Type>ReferenceGroup</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls />
+				<DataSource>PurchReqTable</DataSource>
+				<ReferenceField>UBSProjectDim</ReferenceField>
+			</FormControl>
+			<Parent>DialogContent</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

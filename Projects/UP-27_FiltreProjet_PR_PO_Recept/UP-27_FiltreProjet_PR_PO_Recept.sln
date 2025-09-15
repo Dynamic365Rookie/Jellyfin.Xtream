@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FC65038C-1B2F-41E1-A629-BED71D161FFF}") = "UP-27_FiltreProjet_PR_PO_Recept (VAR) [Urbasolar]", "UP-27_FiltreProjet_PR_PO_Recept\UP-27_FiltreProjet_PR_PO_Recept.rnrproj", "{9B7FEF90-783C-4CAD-B559-37F9FF5C3E57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B7FEF90-783C-4CAD-B559-37F9FF5C3E57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B7FEF90-783C-4CAD-B559-37F9FF5C3E57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E981CF3E-120E-4E56-ADCE-E2F27A1BA2DD}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://dev.azure.com/labdevms
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = UP-27_FiltreProjet_PR_PO_Recept\\UP-27_FiltreProjet_PR_PO_Recept.rnrproj
+		SccProjectName1 = UP-27_FiltreProjet_PR_PO_Recept
+		SccLocalPath1 = UP-27_FiltreProjet_PR_PO_Recept
+	EndGlobalSection
+EndGlobal

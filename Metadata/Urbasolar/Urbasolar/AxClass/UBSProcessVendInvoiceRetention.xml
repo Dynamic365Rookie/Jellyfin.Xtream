@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSProcessVendInvoiceRetention</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSProcessVendInvoiceRetention
+{
+    VendInvoiceJour vendInvoiceJour;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>processVendInvoiceRetention</Name>
+				<Source><![CDATA[
+    public static void processVendInvoiceRetention(VendInvoiceJour _vendInvoiceJour)
+    {
+        UBSProcessVendInvoiceRetention invoiceRetention = new UBSProcessVendInvoiceRetention(_vendInvoiceJour);
+
+        invoiceRetention.process();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    protected void new(VendInvoiceJour _vendInvoiceJour)
+    {
+        vendInvoiceJour = _vendInvoiceJour;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>process</Name>
+				<Source><![CDATA[
+    protected void process()
+    {
+        VendParameters vendParameters = VendParameters::find();
+        boolean proceedToRetention = true;
+
+        // Warning checks and process abortion
+        if(vendParameters.UBSWarrantyRetentionJournalBase == 0)
+        {
+            proceedToRetention = false;
+            warning(strFmt("1%: 2%", "@UBS:UBSWarrantyRetentionCanceled", "@UBS:UBSWarrantyRetentionWarningJournalParam"));
+        }
+
+        if(vendParameters.UBSWarrantyRetentionCreditTransPostingProfile == 0)
+        {
+            proceedToRetention = false;
+            warning(strFmt("1%: 2%", "@UBS:UBSWarrantyRetentionCanceled", "@UBS:UBSWarrantyRetentionWarningPostingProfileParam"));
+        }
+        else
+        {
+            VendLedgerAccounts vendLedgerAccounts;
+            VendTable vendTable = VendTable::find(vendInvoiceJour.InvoiceAccount);
+            select firstonly vendLedgerAccounts where vendLedgerAccounts.Num == vendTable.VendGroup;
+            if(vendLedgerAccounts)
+            {
+                if(vendLedgerAccounts.SummaryLedgerDimension == 0)
+                {
+                    proceedToRetention = false;
+                    warning(strFmt("@UBS:UBSWarrantyRetentionCanceled: @UBS:UBSWarrantyRetentionWarningSummaryAccount", vendLedgerAccounts.PostingProfile, vendLedgerAccounts.Num));
+                }
+            }
+            else
+            {
+                proceedToRetention = false;
+                warning(strFmt("1%: 2%", "@UBS:UBSWarrantyRetentionCanceled", "@UBS:UBSWarrantyRetentionWarningVendorGroup"));
+            }
+        }
+
+        // Everything OK, proceed to retention process
+        if(proceedToRetention)
+        {
+            LedgerJournalTable ledgerJournalTable;
+            LedgerJournalTrans ledgerJournalTransDebit;
+            LedgerJournalTrans ledgerJournalTransCredit;
+
+            // Gathers invoice data
+            VendTransOpen vendTransOpen;
+            VendTrans vendTrans;
+            
+            select firstonly vendTrans where vendTrans.Invoice == vendInvoiceJour.InvoiceId
+                && vendTrans.AccountNum == vendInvoiceJour.InvoiceAccount;
+            select firstonly vendTransOpen where vendTrans.RecId == vendTransOpen.RefRecId;
+
+            // Creates retention journal for this invoice
+            ledgerJournalTable = this.UBSCreateInvoiceRetentionJournal(vendInvoiceJour.InvoiceId);
+            
+            ttsbegin;
+            vendInvoiceJour.selectForUpdate(true);
+            vendInvoiceJour.UBSWarrantyLedgerJournalId = ledgerJournalTable.JournalNum;
+            vendInvoiceJour.update();
+            ttscommit;
+
+            // Creates retention transactions in retention journal
+            this.UBSCreateInvoiceRetentionTransaction(ledgerJournalTable, vendInvoiceJour, vendTransOpen, true);
+            this.UBSCreateInvoiceRetentionTransaction(ledgerJournalTable, vendInvoiceJour, vendTransOpen, false);
+
+            // Posts retention journal, and thus validates the invoice amount retention
+            LedgerJournalPost::post(ledgerJournalTable, tableNum(LedgerJournalTable), NoYes::Yes);
+
+            info(strFmt("@UBS:UBSWarrantyRetentionSuccess"), vendInvoiceJour.InvoiceId);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSCreateInvoiceRetentionJournal</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Creates the retention journal that will contain retention transactions
+    /// </summary>
+    protected LedgerJournalTable UBSCreateInvoiceRetentionJournal(VendInvoiceId _invoiceId)
+    {
+        LedgerJournalTable ledgerJournalTable;
+        VendParameters vendParameters = VendParameters::find();
+        LedgerJournalName ledgerJournalName;
+        select firstonly ledgerJournalName where ledgerJournalName.RecId == vendParameters.UBSWarrantyRetentionJournalBase;
+
+        ttsbegin;
+        ledgerJournalTable.clear();
+        ledgerJournalTable.initValue();
+
+        ledgerJournalTable.JournalName = ledgerJournalName.JournalName;
+        ledgerJournalTable.initFromLedgerJournalName();
+        ledgerJournalTable.JournalNum = JournalTableData::newTable(ledgerJournalTable).nextJournalId();
+        ledgerJournalTable.Name = strFmt("%1 - %2",ledgerJournalTable.Name, _invoiceId);
+        ledgerJournalTable.insert();
+        ttscommit;
+
+        return ledgerJournalTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSCreateInvoiceRetentionTransaction</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Creates the retention transactions (account 1 > temporary account > account 2 used of retention) in a retention journal
+    /// </summary>
+    protected void UBSCreateInvoiceRetentionTransaction(LedgerJournalTable _invoiceRetentionJournal, VendInvoiceJour _vendInvoiceJour, VendTransOpen _vendTransOpen, boolean _isDebitTransaction)
+    {
+        LedgerJournalTrans ledgerJournalTrans;
+        VendParameters vendParameters = VendParameters::find();
+        real           tempAmountCur;
+
+        // TODO: Another development is currently ongoing and will grant the possibility to specify a custom amount percentage. In the time being, it remains fixed to 5 percents
+        real invoiceAmountPercentage = _vendInvoiceJour.UBSWarrantyRate/100;
+
+        ttsbegin;
+
+        LedgerJournalEngine ledgerJournalEngine = LedgerJournalEngine::construct(_invoiceRetentionJournal.JournalType);
+        ledgerJournalEngine.newJournalActive(_invoiceRetentionJournal);
+
+        ledgerJournalTrans.clear();
+        ledgerJournalTrans.initValue();
+        ledgerJournalEngine.initValue(ledgerJournalTrans);
+
+        if(_isDebitTransaction)
+        {
+            tempAmountCur = _vendInvoiceJour.InvoiceAmount * invoiceAmountPercentage;;
+            ledgerJournalTrans.AmountCurDebit = UBSProcessVendInvoiceRetention::roundWithPrecision(tempAmountCur);
+        }
+        else
+        {
+            tempAmountCur = _vendInvoiceJour.InvoiceAmount * invoiceAmountPercentage;
+            ledgerJournalTrans.AmountCurCredit = UBSProcessVendInvoiceRetention::roundWithPrecision(tempAmountCur);
+            ledgerJournalTrans.Invoice = strFmt("%1_%2", _vendInvoiceJour.InvoiceId, vendParameters.UBSWarrantyRetentionTransSuffix);
+        }
+
+        ledgerJournalEngine.accountModified(ledgerJournalTrans);
+        ledgerJournalTrans.JournalNum = _invoiceRetentionJournal.JournalNum;
+        ledgerJournalTrans.TransDate = _vendInvoiceJour.InvoiceDate;
+        ledgerJournalTrans.AccountType = LedgerJournalACType::Vend;
+        ledgerJournalTrans.modifiedField(fieldNum(LedgerJournalTrans, AccountType));
+        ledgerJournalTrans.LedgerDimension = LedgerDynamicAccountHelper::getDynamicAccountFromAccountNumber(_vendInvoiceJour.InvoiceAccount, LedgerJournalACType::Vend);
+        ledgerJournalTrans.modifiedField(fieldNum(LedgerJournalTrans, LedgerDimension));
+        ledgerJournalEngine.accountModified(ledgerJournalTrans);
+        ledgerJournalTrans.Txt = strFmt("@UBS:UBSWarrantyLineDesc", _vendInvoiceJour.InvoiceId);
+        ledgerJournalTrans.CurrencyCode = _vendInvoiceJour.CurrencyCode;
+        ledgerJournalEngine.currencyModified(ledgerJournalTrans);
+        ledgerJournalTrans.Approver = HcmWorker::userId2Worker(curUserId());
+        ledgerJournalTrans.Approved = NoYes::Yes;
+        ledgerJournalTrans.ExchRate = _vendInvoiceJour.ExchRate;
+        ledgerJournalTrans.UBSWarrantyRefInvoice = _vendInvoiceJour.RecId;
+
+        if(_isDebitTransaction)
+        {
+            ledgerJournalTrans.PostingProfile = _vendInvoiceJour.PostingProfile;
+        }
+        else
+        {
+            VendLedger vendLedger;
+
+            select firstonly vendLedger where vendLedger.RecId == vendParameters.UBSWarrantyRetentionCreditTransPostingProfile;
+            ledgerJournalTrans.PostingProfile = vendLedger.PostingProfile;
+        }
+        
+        ledgerJournalTrans.insert();
+        ledgerJournalEngine.write(ledgerJournalTrans);
+
+        ttscommit;
+
+        // Mark associated invoice
+        if(_isDebitTransaction)
+        {
+            SpecTransManager specTransManager;
+            boolean found;
+            SpecTrans specTrans;
+            CustVendOpenTransManager custVendOpenTransManager = CustVendOpenTransManager::construct(ledgerJournalTrans);
+
+            specTransManager = SpecTransManager::construct(ledgerJournalTrans);
+            found = SpecTrans::existByRef(_vendTransOpen.DataAreaID,tableNum(VendTransOpen),_vendTransOpen.RecId);
+
+            if(found == false)
+            {
+                custVendOpenTransManager.updateTransMarked(_vendTransOpen,NoYes::Yes);
+
+                ttsbegin;
+                specTrans = SpecTrans::findByRef(_vendTransOpen.DataAreaID,tableNum(VendTransOpen),_vendTransOpen.RecId,true);
+                specTrans.Balance01 = -ledgerJournalTrans.AmountCurDebit;
+                specTrans.update();
+                ledgerJournalTrans.SettleVoucher = SettlementType::SelectedTransact;
+                ledgerJournalTrans.update();
+                ttscommit;
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>roundWithPrecision</Name>
+				<Source><![CDATA[
+    private static real roundWithPrecision(real _value)
+    {
+        real precision  = LedgerParameters::find().MaxRoundingDifferenceMST;
+        real decimals   = -Log10(precision);
+        real ret        = decround(_value, abs(decimals));
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

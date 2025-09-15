@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>TransportationDocument_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(TransportationDocument))]
+final class TransportationDocument_Table_Urbasolar_Extension
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>update</Name>
+				<Source><![CDATA[
+    public void update()
+    {
+        boolean loadedAddressUpdated;
+
+        if(this.LoadedPostalAddress != this.orig().LoadedPostalAddress)
+        {
+            loadedAddressUpdated = true;
+        }
+
+        next update();
+
+        if(loadedAddressUpdated)
+        {
+            PurchTable purchTable;
+
+            select firstonly purchTable where purchTable.TransportationDocument == this.RecId;
+
+            if(purchTable.RecId)
+            {
+                purchTable.selectForUpdate(true);
+                purchTable.UBSTaxRecalcFlag = purchTable.UBSTaxRecalcFlag == NoYes::Yes ? NoYes::No : NoYes::Yes;
+                purchTable.update();
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

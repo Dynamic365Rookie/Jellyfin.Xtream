@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSDefaultDimensionToolKit</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSDefaultDimensionToolKit
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>createDefaultDimension</Name>
+				<Source><![CDATA[
+    public static DimensionDefault createDefaultDimension(container _attribute, container _attributeValue)
+    {
+        DimensionAttributeValueSetStorage   valueSetStorage = new DimensionAttributeValueSetStorage();
+        DimensionAttribute                  dimensionAttribute;
+        DimensionAttributeValue             dimensionAttributeValue;
+        DimensionDefault                    result;
+        str                                 dimValue;
+
+        for (int i = 1; i <= conLen(_attribute); i++)
+        {
+            dimensionAttribute = DimensionAttribute::findByName(conPeek(_attribute,i));
+
+            if (dimensionAttribute.RecId == 0)
+            {
+                continue;
+            }
+
+            dimValue = conPeek(_attributeValue,i);
+
+            if(!System.String::IsNullOrWhiteSpace(dimValue))
+            {
+                dimensionAttributeValue = dimensionAttributeValue::findByDimensionAttributeAndValue(dimensionAttribute,dimValue,false,true);
+                valueSetStorage.addItem(dimensionAttributeValue);
+            }
+        }
+
+        if(!System.String::IsNullOrWhiteSpace(dimValue))
+        {
+            result = valueSetStorage.save();
+        }
+
+        return result;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setDimensionValueToDefaultDimension</Name>
+				<Source><![CDATA[
+    public static LedgerDimensionValueSet setDimensionValueToDefaultDimension(LedgerDimensionValueSet   _originalDimension,
+                                                                              LedgerDimensionValueSet   _dimensionToReplace,
+                                                                              TableName                 _backingEntityTable,
+                                                                              str                       _dimensionName = "")
+    {
+        DimensionAttribute  dimAttr = DimensionAttribute::UBSFindByBackingEntity(_backingEntityTable, _DimensionName) ;
+
+        if (dimAttr.RecId != 0)
+        {
+            return LedgerDimensionDefaultFacade::serviceReplaceAttributeValue(_originalDimension, _dimensionToReplace, dimAttr.recid);
+        }
+        else
+        {
+            error(strFmt('@UBS:UBSMissingDefaultDimensionError', _dimensionName, _backingEntityTable)) ;
+            return _originalDimension ;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>disableDimensionInForm</Name>
+				<Source><![CDATA[
+    public static void disableDimensionInForm(DimensionEntryControl _dimensionEntryControl, str _dimensionToHide)
+    {
+        VendParameters vendParameters = VendParameters::find();
+        if(!vendParameters.UBSLockDim)
+        {
+            DimensionEnumeration         dimensionSetId = DimensionCache::getDimensionAttributeSetForLedger();
+            DimensionAttributeSetStorage dimensionAttributeSetStorage = new DimensionAttributeSetStorage();
+            DimensionAttribute           dimensionAttribute;
+            DimensionAttributeSetItem    dimAttrSetItem;
+
+            while select dimensionAttribute
+                where dimensionAttribute.Name != _dimensionToHide
+            join dimAttrSetItem
+                where dimAttrSetItem.DimensionAttribute    == dimensionAttribute.RecId &&
+                      dimAttrSetItem.DimensionAttributeSet == dimensionSetId
+            {
+                dimensionAttributeSetStorage.addItem(
+            dimensionAttribute.RecId,
+            dimensionAttribute.HashKey,
+            NoYes::Yes);
+            }
+
+            _dimensionEntryControl.parmEditableDimensionSet(dimensionAttributeSetStorage.save());
+        }
+        
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>disableSeveralDimensionsInForm</Name>
+				<Source><![CDATA[
+    public static void disableSeveralDimensionsInForm(DimensionEntryControl _dimensionEntryControl, str _dimensionToDisable1, str _dimensionToDisable2)
+    {
+        VendParameters vendParameters = VendParameters::find();
+        if(!vendParameters.UBSLockDim)
+        {
+            DimensionEnumeration         dimensionSetId = DimensionCache::getDimensionAttributeSetForLedger();
+            DimensionAttributeSetStorage dimensionAttributeSetStorage = new DimensionAttributeSetStorage();
+            DimensionAttribute           dimensionAttribute;
+            DimensionAttributeSetItem    dimAttrSetItem;
+
+            while select dimensionAttribute
+                where dimensionAttribute.Name != _dimensionToDisable1
+                && dimensionAttribute.Name != _dimensionToDisable2
+            join dimAttrSetItem
+                where dimAttrSetItem.DimensionAttribute    == dimensionAttribute.RecId &&
+                      dimAttrSetItem.DimensionAttributeSet == dimensionSetId
+            {
+                dimensionAttributeSetStorage.addItem(
+            dimensionAttribute.RecId,
+            dimensionAttribute.HashKey,
+            NoYes::Yes);
+            }
+
+            _dimensionEntryControl.parmEditableDimensionSet(dimensionAttributeSetStorage.save());
+        }
+        
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

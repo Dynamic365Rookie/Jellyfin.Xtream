@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxDataEntityViewExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>vendVendorParametersEntity.Urbasolar</Name>
+	<DataSources />
+	<FieldGroupExtensions />
+	<FieldGroups />
+	<FieldModifications />
+	<Fields>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSApproveReason</Name>
+			<DataField>UBSApproveReason</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSCreationReason</Name>
+			<DataField>UBSCreationReason</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSPurchaseOrderAutoSubmissonWF</Name>
+			<DataField>UBSPurchaseOrderAutoSubmissonWF</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSUpdateReason</Name>
+			<DataField>UBSUpdateReason</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>SubDelivery</Name>
+			<DataField>SubDelivery</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>OverDelivery</Name>
+			<DataField>OverDelivery</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>DecimalPrecisionCheckQty</Name>
+			<DataField>DecimalPrecisionCheckQty</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>AccesLevelInvoiced</Name>
+			<DataField>AccesLevelInvoiced</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>IsSupplierShipmentDatesEnabled</Name>
+			<DataField>IsSupplierShipmentDatesEnabled</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>CheckPackingSlip</Name>
+			<DataField>CheckPackingSlip</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>ProductReceiptCharges</Name>
+			<DataField>ProductReceiptCharges</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PurchRegisteredQuantitySelectionRule</Name>
+			<DataField>PurchRegisteredQuantitySelectionRule</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>OrderBatchTaskSize</Name>
+			<DataField>OrderBatchTaskSize</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>OrderBatchTaskSizeLines</Name>
+			<DataField>OrderBatchTaskSizeLines</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PurchaseType</Name>
+			<DataField>PurchaseType</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>ReturnActionDefault</Name>
+			<DataField>ReturnActionDefault</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PurchPoolId</Name>
+			<DataField>PurchPoolId</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PromptTransfer</Name>
+			<DataField>PromptTransfer</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PromptQty</Name>
+			<DataField>PromptQty</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>AutomaticFactBoxUpdateOnPO_PSN</Name>
+			<DataField>AutomaticFactBoxUpdateOnPO_PSN</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>DisallowLineRenumbering</Name>
+			<DataField>DisallowLineRenumbering</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>EnableBillToAddress</Name>
+			<DataField>EnableBillToAddress</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PSNCalculatePODeliveryDate</Name>
+			<DataField>PSNCalculatePODeliveryDate</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PSNWorkingCalendarId</Name>
+			<DataField>PSNWorkingCalendarId</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>DoSetReleasedPOToDraft</Name>
+			<DataField>DoSetReleasedPOToDraft</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PrintAmountOnPurchaseOrder</Name>
+			<DataField>PrintAmountOnPurchaseOrder</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>ChangeRequestEnabled</Name>
+			<DataField>ChangeRequestEnabled</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>ChangeRequestAllowOverride</Name>
+			<DataField>ChangeRequestAllowOverride</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>IntercompanyAgreementAutoSearch</Name>
+			<DataField>IntercompanyAgreementAutoSearch</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>SkipRereadOnUpdate</Name>
+			<DataField>SkipRereadOnUpdate</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>IsPurchUpdateSkipPurchLineEventsEnabled</Name>
+			<DataField>IsPurchUpdateSkipPurchLineEventsEnabled</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>IntercompanyUseNotActiveRelation</Name>
+			<DataField>IntercompanyUseNotActiveRelation</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>PurchLineDefaultAddressFromHeader</Name>
+			<DataField>PurchLineDefaultAddressFromHeader</DataField>
+			<DataSource>PurchParameters</DataSource>
+		</AxDataEntityViewField>
+	</Fields>
+	<Mappings />
+	<PropertyModifications />
+	<Relations />
+</AxDataEntityViewExtension>

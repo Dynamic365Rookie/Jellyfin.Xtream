@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>AccountingDistributionProcessor_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(AccountingDistributionProcessor))]
+final class AccountingDistributionProcessor_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>process</Name>
+				<Source><![CDATA[
+    public boolean process()
+    {
+        
+        AccountingDistribution                  accountingDistribution;
+        SourceDocumentLineItem                  sourceDocumentLineItem;
+        AccountingDistributionList              accountingDistributionList;
+        AccountingDistributionListEnumerator    accountingDistributionListEnumerator;
+        SourceDocumentLineItemListEnumerator    sourceDocumentLineItemListEnumerator = sourceDocumentLineItemList.getEnumerator();
+        
+        int infologLine = infolog.line();
+
+        boolean cutError;
+
+        boolean ret = next process();
+        
+        while (sourceDocumentLineItemListEnumerator.moveNext())
+        {
+            sourceDocumentLineItem = sourceDocumentLineItemListEnumerator.current();
+            accountingDistributionList = sourceDocumentLineItem.parmAccountingDistributionList();
+            accountingDistributionListEnumerator = accountingDistributionList.getEnumerator();
+
+            while (accountingDistributionListEnumerator.moveNext())
+            {
+                accountingDistribution = accountingDistributionListEnumerator.current();
+                accountingDistribution.reread();
+
+                if(accountingDistribution.ubsSubBillDeferralGetTransactionType() == SubBillDeferralTransactionType::VendInvoice)
+                {
+                    cutError = true;
+                    break;
+                }
+            }
+        }
+
+        if(cutError)
+        {
+            infolog.clear(infologLine);
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

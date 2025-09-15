@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxMenuItemAction xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V1">
+	<Name>UBSOutboundInterface_FinancialDimension</Name>
+	<Label>@UBS:UBSOutboundlnterfaceBatch_FinancialDimension</Label>
+	<Object>UBSOutboundInterfaceFinancialDimensionController</Object>
+	<ObjectType>Class</ObjectType>
+	<SubscriberAccessLevel>
+		<Read xmlns="">Allow</Read>
+	</SubscriberAccessLevel>
+</AxMenuItemAction>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendInvoiceJour_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(VendInvoiceJour))]
+internal final class VendInvoiceJour_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initFromVendInvoiceInfoTable</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Initializes the current <c>VendInvoiceJour</c> table record based on the data in the specified
+    /// <c>VendInvoiceInfoTable</c> table record.
+    /// </summary>
+    /// <param name="_vendInvoiceInfoTable">
+    /// The <c>VendInvoiceInfoTable</c> table record that contains the data to copy.
+    /// </param>
+    public void initFromVendInvoiceInfoTable(VendInvoiceInfoTable _vendInvoiceInfoTable)
+    {
+        next initFromVendInvoiceInfoTable(_vendInvoiceInfoTable);
+
+        this.UBSHasWarrantyRetention = _vendInvoiceInfoTable.UBSHasWarrantyRetention;
+        this.UBSWarrantyRate = _vendInvoiceInfoTable.UBSWarrantyRate;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initFromVendTrans</Name>
+				<Source><![CDATA[
+    void initFromVendTrans(VendTrans vendTrans)
+    {
+        next initFromVendTrans(vendTrans);
+
+        this.UBSWarrantyRefInvoice = vendTrans.UBSWarrantyRefInvoice;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findWarrantyRefInvoice</Name>
+				<Source><![CDATA[
+    public static VendInvoiceJour findWarrantyRefInvoice(RefRecId _refRecId)
+    {
+        VendInvoiceJour vendInvoiceJour;
+
+        select firstfast vendInvoiceJour 
+               where vendInvoiceJour.UBSWarrantyRefInvoice == _refRecId;
+
+        return vendInvoiceJour;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

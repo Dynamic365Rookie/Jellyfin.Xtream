@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendEditInvoice_Form_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formStr(VendEditInvoice))]
+final class VendEditInvoice_Form_Urbasolar_Extension
+{
+    
+    
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>VendEditInvoice_OnInitialized</Name>
+				<Source><![CDATA[
+    [FormEventHandler(formStr(VendEditInvoice), FormEventType::Initialized)]
+    public static void VendEditInvoice_OnInitialized(xFormRun sender, FormEventArgs e)
+    {
+        DimensionEntryControl dimControlLine    = sender.design().controlName(identifierStr(DimensionEntryControlLine));
+        DimensionEntryControl dimControlHeader  = sender.design().controlName(identifierStr(DimensionEntryControlHeader));
+        str                   dimAttributeName  = DimensionAttribute::UBSGetTableName(tableStr(VendTable),fieldStr(VendTable,AccountNum));
+
+        UBSDefaultDimensionToolKit::disableDimensionInForm(dimControlLine,dimAttributeName);
+        UBSDefaultDimensionToolKit::disableDimensionInForm(dimControlHeader,dimAttributeName);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>VendInvoiceInfoLine_OnCreated</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    [FormDataSourceEventHandler(formDataSourceStr(VendEditInvoice, VendInvoiceInfoLine), FormDataSourceEventType::Created)]
+    public static void VendInvoiceInfoLine_OnCreated(FormDataSource sender, FormDataSourceEventArgs e)
+    {
+        
+        VendinvoiceInfoLine  VendinvoiceInfoLine  = sender.cursor();
+        VendinvoiceInfoTable VendinvoiceInfoTable = VendinvoiceInfoLine.vendInvoiceInfoTable();
+        str                  dimAttributeName     = DimensionAttribute::UBSGetTableName(tableStr(VendTable),fieldStr(VendTable,AccountNum));
+
+        container conAttribute  = [dimAttributeName];
+        container conValue      = [VendinvoiceInfoTable.InvoiceAccount];
+
+        DimensionDefault        newDim    = UBSDefaultDimensionToolKit::createDefaultDimension(conAttribute,conValue);
+        LedgerDimensionValueSet mergeDim  = UBSDefaultDimensionToolKit::setDimensionValueToDefaultDimension(VendinvoiceInfoLine.DefaultDimension,newDim,tableStr(VendTable), dimAttributeName);
+
+        VendinvoiceInfoLine.DefaultDimension = mergeDim;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>invoiceAccountModified</Name>
+				<Source><![CDATA[
+    public void invoiceAccountModified()
+    {
+        next invoiceAccountModified();
+        
+        VendinvoiceInfoTable vendinvoiceInfoTable = VendInvoiceInfoTable_ds.cursor();
+
+        str dimAttributeName    = DimensionAttribute::UBSGetTableName(tableStr(VendTable),fieldStr(VendTable,AccountNum));
+        container conAttribute  = [dimAttributeName];
+        container conValue      = [vendinvoiceInfoTable.InvoiceAccount];
+
+        DimensionDefault        newDim    = UBSDefaultDimensionToolKit::createDefaultDimension(conAttribute,conValue);
+        LedgerDimensionValueSet mergeDim  = UBSDefaultDimensionToolKit::setDimensionValueToDefaultDimension(vendinvoiceInfoTable.DefaultDimension,newDim,tableStr(VendTable), dimAttributeName);
+
+        vendinvoiceInfoTable.DefaultDimension = mergeDim;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>enableHeaderActions</Name>
+				<Source><![CDATA[
+    public void enableHeaderActions()
+    {
+        next enableHeaderActions();
+
+        UBSRetention.visible(vendParameters.UBSWarrantyRetentionAutomated);
+        VendInvoiceInfoTable_UBSWarrantyRate.enabled(VendInvoiceInfoTable.UBSHasWarrantyRetention);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>VendInvoiceInfoTable_UBSHasWarrantyRetention_OnClicked</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    [FormControlEventHandler(formControlStr(VendEditInvoice, VendInvoiceInfoTable_UBSHasWarrantyRetention), FormControlEventType::Clicked)]
+    public void VendInvoiceInfoTable_UBSHasWarrantyRetention_OnClicked(FormControl sender, FormControlEventArgs e)
+    {
+        this.enableHeaderActions();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>WMSArrivalDetailTmp_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(WMSArrivalDetailTmp))]
+public final class WMSArrivalDetailTmp_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>insert</Name>
+				<Source><![CDATA[
+    public void insert()
+    {
+        if(this.InventTransType == InventTransType::Purch && this.InventTransId)
+        {
+            PurchLine purchLineLocal = PurchLine::findInventTransId(this.InventTransId);
+            this.UBSRequestedDate = purchLineLocal.UBSRequestedDate;
+        }
+
+        next  insert();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

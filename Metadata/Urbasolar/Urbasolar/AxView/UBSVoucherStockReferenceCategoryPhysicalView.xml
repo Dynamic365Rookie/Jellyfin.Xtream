@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxView xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSVoucherStockReferenceCategoryPhysicalView</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class UBSVoucherStockReferenceCategoryPhysicalView extends common
+{
+}
+
+]]></Declaration>
+		<Methods />
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>GeneralJournalEntryRecId</Name>
+			<DataField>RecId</DataField>
+			<DataSource>GeneralJournalEntry</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>ReferenceCategory</Name>
+			<DataField>ReferenceCategory</DataField>
+			<DataSource>InventTransOrigin</DataSource>
+		</AxViewField>
+	</Fields>
+	<Indexes />
+	<Mappings />
+	<Relations />
+	<StateMachines />
+	<ViewMetadata>
+		<Name>Metadata</Name>
+		<SourceCode>
+			<Methods />
+		</SourceCode>
+		<DataSources>
+			<AxQuerySimpleRootDataSource>
+				<Name>GeneralJournalEntry</Name>
+				<DynamicFields>Yes</DynamicFields>
+				<Table>GeneralJournalEntry</Table>
+				<DataSources>
+					<AxQuerySimpleEmbeddedDataSource>
+						<Name>InventTrans</Name>
+						<DynamicFields>Yes</DynamicFields>
+						<Table>InventTrans</Table>
+						<DataSources>
+							<AxQuerySimpleEmbeddedDataSource>
+								<Name>InventTransOrigin</Name>
+								<DynamicFields>Yes</DynamicFields>
+								<Table>InventTransOrigin</Table>
+								<DataSources />
+								<DerivedDataSources />
+								<Fields />
+								<Ranges />
+								<Relations>
+									<AxQuerySimpleDataSourceRelation>
+										<Name>QueryDataSourceRelation1</Name>
+										<JoinDataSource>InventTrans</JoinDataSource>
+										<JoinRelationName>InventTransOrigin</JoinRelationName>
+									</AxQuerySimpleDataSourceRelation>
+								</Relations>
+							</AxQuerySimpleEmbeddedDataSource>
+						</DataSources>
+						<DerivedDataSources />
+						<Fields />
+						<Ranges />
+						<Relations>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation1</Name>
+								<Field>SubledgerVoucherDataAreaId</Field>
+								<JoinDataSource>GeneralJournalEntry</JoinDataSource>
+								<RelatedField>DataAreaId</RelatedField>
+							</AxQuerySimpleDataSourceRelation>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation2</Name>
+								<Field>SubledgerVoucher</Field>
+								<JoinDataSource>GeneralJournalEntry</JoinDataSource>
+								<RelatedField>VoucherPhysical</RelatedField>
+							</AxQuerySimpleDataSourceRelation>
+						</Relations>
+					</AxQuerySimpleEmbeddedDataSource>
+				</DataSources>
+				<DerivedDataSources />
+				<Fields />
+				<Ranges />
+				<GroupBy>
+					<AxQuerySimpleGroupByField>
+						<Name>QueryGroupByField1</Name>
+						<DataSource>GeneralJournalEntry</DataSource>
+						<Field>RecId</Field>
+					</AxQuerySimpleGroupByField>
+					<AxQuerySimpleGroupByField>
+						<Name>QueryGroupByField2</Name>
+						<DataSource>InventTransOrigin</DataSource>
+						<Field>ReferenceCategory</Field>
+					</AxQuerySimpleGroupByField>
+				</GroupBy>
+				<Having />
+				<OrderBy />
+			</AxQuerySimpleRootDataSource>
+		</DataSources>
+	</ViewMetadata>
+</AxView>

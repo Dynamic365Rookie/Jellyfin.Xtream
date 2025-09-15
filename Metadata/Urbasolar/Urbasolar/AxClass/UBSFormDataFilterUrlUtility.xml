@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSFormDataFilterUrlUtility</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSFormDataFilterUrlUtility
+{
+    FormRun         formRun;
+    MenuItemName    menuItemName;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmFormRun</Name>
+				<Source><![CDATA[
+    public FormRun parmFormRun(FormRun _formRun = formRun)
+    {
+        formRun = _formRun;
+
+        return formRun;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmMenuItemName</Name>
+				<Source><![CDATA[
+    public MenuItemName parmMenuItemName(MenuItemName _menuItemName = menuItemName)
+    {
+        menuItemName = _menuItemName;
+
+        return menuItemName;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>filterData</Name>
+				<Source><![CDATA[
+    public static void filterData(FormRun _formRun)
+    {
+        #define.parameterSeperator(';')
+        #define.valueSeperator(':')
+        URLUtility              urlUtil    = new URLUtility();
+        str                     currentURL = URLUtility::getUrl();
+
+        if(currentURL)
+        {
+            str                     miStr      = urlUtil.getQueryParamValue('mi');
+            str                     filterStr  = urlUtil.getQueryParamValue('filter');
+            FormDataSource          formDS;
+            QueryBuildDataSource    qbds;
+            FieldName               fieldName;
+            str                     fieldValue;
+            TableId                 tableId;
+            FieldId                 fieldId;
+            GeneralJournalEntry     genJourEntry;
+      
+            if(_formRun.name() != formStr(SysQueryForm) && filterStr && UBSFormDataFilterUrlUtility::isMenuItemFilterableWithDirectUrl(miStr))
+            {
+                UBSFormDataFilterUrlUtility  formDataFilterUrlUtility = new UBSFormDataFilterUrlUtility();
+
+                formDataFilterUrlUtility.parmFormRun(_formRun);
+                formDataFilterUrlUtility.parmMenuItemName(miStr);
+
+                formDS  = formDataFilterUrlUtility.getFormDataSource();
+
+                if(formDS)
+                {
+                    qbds    = formDS.queryBuildDataSource();
+
+                    if(qbds)
+                    {
+                        tableId = qbds.table();
+
+                        container conParmFields  = str2con(filterStr, #parameterSeperator, false);
+                        container conFieldValues;
+
+                        for(int i = 1; i <= conLen(conParmFields); i++)
+                        {
+                            conFieldValues = str2con(conPeek(conParmFields, i), #valueSeperator, false);
+
+                            fieldName  = conPeek(conFieldValues, 1);
+                            fieldValue = conPeek(conFieldValues, 2);
+
+                            if(fieldName && fieldValue)
+                            {
+                                fieldId = fieldName2Id(tableId, fieldName);
+
+                                if(SysQuery::findField(qbds, fieldId) && fieldValue)
+                                {
+                                    SysQuery::findOrCreateRange(qbds, fieldId).value(queryValue(fieldValue));
+                                }
+
+                                if(tableId == tableNum(GeneralJournalEntry) && fieldId == fieldNum(GeneralJournalEntry, SubledgerVoucher))
+                                {
+                                    select genJourEntry where genJourEntry.SubledgerVoucher == fieldValue
+                                                           && genJourEntry.SubledgerVoucherDataAreaId == curExt();
+                                
+                                    if(genJourEntry)
+                                    {
+                                        _formRun.args().lookupRecord(genJourEntry);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFormDataSource</Name>
+				<Source><![CDATA[
+    private FormDataSource getFormDataSource()
+    {
+        FormDataSource formDataSource;
+
+        switch(menuItemName)
+        {
+            case menuItemDisplayStr(VendTableListPage):
+            case menuItemDisplayStr(VendTable):
+                formDataSource = formRun.dataSource(formDataSourceStr(VendTable, VendTable));
+                break;
+            case menuItemDisplayStr(CustTableListPage):
+            case menuItemDisplayStr(CustTable):
+                formDataSource = formRun.dataSource(formDataSourceStr(CustTable, CustTable));
+                break;
+            case menuItemDisplayStr(SalesTableListPage):
+            case menuItemDisplayStr(SalesTable):
+                formDataSource = formRun.dataSource(formDataSourceStr(SalesTable, SalesTable));
+                break;
+            case menuItemDisplayStr(PurchTableListPage):
+            case menuItemDisplayStr(PurchTable):
+                formDataSource = formRun.dataSource(formDataSourceStr(PurchTable, PurchTable));
+                break;
+            case menuItemDisplayStr(PurchReqTableAll):
+                formDataSource = formRun.dataSource(formDataSourceStr(PurchReqTableListPage, PurchReqTable));
+                break;
+            case menuItemDisplayStr(PurchReqTable):
+                formDataSource = formRun.dataSource(formDataSourceStr(PurchReqTable, PurchReqTable));
+                break;
+            case menuItemDisplayStr(LedgerTransVoucher):
+            case menuItemDisplayStr(LedgerTransVoucherQuery):
+            case menuItemDisplayStr(LedgerTransVoucher1):
+                formDataSource = formRun.dataSource(formDataSourceStr(LedgerTransVoucher, GeneralJournalEntry));
+                break;
+            case menuItemDisplayStr(VendInvoiceJournal):
+                formDataSource = formRun.dataSource(formDataSourceStr(VendInvoiceJournal,VendInvoiceJour));
+                break;
+            default:
+                formDataSource = formRun.dataSource();
+        }
+
+        return formDataSource;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>isMenuItemFilterableWithDirectUrl</Name>
+				<Source><![CDATA[
+    public static boolean isMenuItemFilterableWithDirectUrl(MenuItemName _menuItemName)
+    {
+        boolean ret = false;
+
+        switch(_menuItemName)
+        {
+            case menuItemDisplayStr(VendTableListPage):
+            case menuItemDisplayStr(VendTable):
+            case menuItemDisplayStr(CustTableListPage):
+            case menuItemDisplayStr(CustTable):
+            case menuItemDisplayStr(SalesTableListPage):
+            case menuItemDisplayStr(SalesTable):
+            case menuItemDisplayStr(PurchTableListPage):
+            case menuItemDisplayStr(PurchTable):
+            case menuItemDisplayStr(PurchReqTableAll):
+            case menuItemDisplayStr(PurchReqTable):
+            case menuItemDisplayStr(LedgerTransVoucher):
+            case menuItemDisplayStr(LedgerTransVoucherQuery):
+            case menuItemDisplayStr(LedgerTransVoucher1):
+            case menuItemDisplayStr(VendInvoiceJournal):
+                ret = true;
+                break;
+            default:
+                ret = false;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>WMSArrivalOverview.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlxymmp0ih1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormDateControl">
+				<Name>WMSArrivalOverviewTmp_UBSRequestedDate</Name>
+				<Type>Date</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>UBSRequestedDate</DataField>
+				<DataSource>WMSArrivalOverviewTmp</DataSource>
+			</FormControl>
+			<Parent>ExpectedGrid</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControltbiznk0l1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormDateControl">
+				<Name>WMSArrivalDetailTmp_UBSRequestedDate</Name>
+				<Type>Date</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>UBSRequestedDate</DataField>
+				<DataSource>WMSArrivalDetailTmp</DataSource>
+			</FormControl>
+			<Parent>DetailsGrid</Parent>
+			<PositionType>AfterItem</PositionType>
+			<PreviousSibling>DetailsGrid_DateStatus</PreviousSibling>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

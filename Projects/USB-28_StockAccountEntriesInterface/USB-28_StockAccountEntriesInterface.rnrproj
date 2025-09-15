@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <BuildTasksDirectory Condition=" '$(BuildTasksDirectory)' == ''">$(MSBuildProgramFiles32)\MSBuild\Microsoft\Dynamics\AX</BuildTasksDirectory>
+    <Model>Urbasolar</Model>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <OutputPath>bin</OutputPath>
+    <SchemaVersion>2.0</SchemaVersion>
+    <GenerateCrossReferences>True</GenerateCrossReferences>
+    <RunAppCheckerRules>False</RunAppCheckerRules>
+    <LogAppcheckerDiagsAsErrors>False</LogAppcheckerDiagsAsErrors>
+    <DeployOnline>False</DeployOnline>
+    <ProjectGuid>{dbc3684a-12fa-42ad-8630-a5277aef572c}</ProjectGuid>
+    <Name>USB-28_StockAccountEntriesInterface</Name>
+    <RootNamespace>USB-28_StockAccountEntriesInterface</RootNamespace>
+    <StartupType>Class</StartupType>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Configuration>Debug</Configuration>
+    <DBSyncInBuild>False</DBSyncInBuild>
+    <GenerateFormAdaptors>False</GenerateFormAdaptors>
+    <Company>
+    </Company>
+    <Partition>initial</Partition>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DataEntityExpandParentChildRelations>False</DataEntityExpandParentChildRelations>
+    <DataEntityUseLabelTextAsFieldName>False</DataEntityUseLabelTextAsFieldName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Action Menu Items\" />
+    <Folder Include="Base Enums\" />
+    <Folder Include="Classes\" />
+    <Folder Include="Data Entity Extensions\" />
+    <Folder Include="Display Menu Items\" />
+    <Folder Include="Forms\" />
+    <Folder Include="Label Files\" />
+    <Folder Include="Menu Extensions\" />
+    <Folder Include="Queries\" />
+    <Folder Include="Simple Queries\" />
+    <Folder Include="Tables\" />
+    <Folder Include="Views\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AxClass\UBSOutboundInterfaceBatchService_Vendor">
+      <SubType>Content</SubType>
+      <Name>UBSOutboundInterfaceBatchService_Vendor</Name>
+      <Link>Classes\UBSOutboundInterfaceBatchService_Vendor</Link>
+    </Content>
+    <Content Include="AxClass\UBSOutboundInterfaceFinancialDimensionLegalEntityService">
+      <SubType>Content</SubType>
+      <Name>UBSOutboundInterfaceFinancialDimensionLegalEntityService</Name>
+      <Link>Classes\UBSOutboundInterfaceFinancialDimensionLegalEntityService</Link>
+    </Content>
+    <Content Include="AxClass\UBSOutboundInterfaceFinancialDimensionService">
+      <SubType>Content</SubType>
+      <Name>UBSOutboundInterfaceFinancialDimensionService</Name>
+      <Link>Classes\UBSOutboundInterfaceFinancialDimensionService</Link>
+    </Content>
+    <Content Include="AxClass\UBSOutboundInterfaceIntegrator">
+      <SubType>Content</SubType>
+      <Name>UBSOutboundInterfaceIntegrator</Name>
+      <Link>Classes\UBSOutboundInterfaceIntegrator</Link>
+    </Content>
+    <Content Include="AxClass\UBSOutboundInterfaceListBuilder">
+      <SubType>Content</SubType>
+      <Name>UBSOutboundInterfaceListBuilder</Name>
+      <Link>Classes\UBSOutboundInterfaceListBuilder</Link>
+    </Content>
+    <Content Include="AxClass\UBSOutboundInterfaceStockContract">
+      <SubType>Content</SubType>
+      <Name>UBSOutboundInterfaceStockContract</Name>
+      <Link>Classes\UBSOutboundInterfaceStockContract</Link>
+    </Content>
+    <Content Include="AxClass\UBSOutboundInterfaceStockController">
+      <SubType>Content</SubType>
+      <Name>UBSOutboundInterfaceStockController</Name>
+      <Link>Classes\UBSOutboundInterfaceStockController</Link>
+    </Content>
+    <Content Include="AxClass\UBSOutboundInterfaceStockService">
+      <SubType>Content</SubType>
+      <Name>UBSOutboundInterfaceStockService</Name>
+      <Link>Classes\UBSOutboundInterfaceStockService</Link>
+    </Content>
+    <Content Include="AxClass\UBSOutboundInterfaceToolkit">
+      <SubType>Content</SubType>
+      <Name>UBSOutboundInterfaceToolkit</Name>
+      <Link>Classes\UBSOutboundInterfaceToolkit</Link>
+    </Content>
+    <Content Include="AxDataEntityViewExtension\DimensionCombinationEntity.DimensionIntegration">
+      <SubType>Content</SubType>
+      <Name>DimensionCombinationEntity.DimensionIntegration</Name>
+      <Link>Data Entity Extensions\DimensionCombinationEntity.DimensionIntegration</Link>
+    </Content>
+    <Content Include="AxDataEntityViewExtension\DimensionSetEntity.DimensionIntegration">
+      <SubType>Content</SubType>
+      <Name>DimensionSetEntity.DimensionIntegration</Name>
+      <Link>Data Entity Extensions\DimensionSetEntity.DimensionIntegration</Link>
+    </Content>
+    <Content Include="AxEnum\UBSEndPointType">
+      <SubType>Content</SubType>
+      <Name>UBSEndPointType</Name>
+      <Link>Base Enums\UBSEndPointType</Link>
+    </Content>
+    <Content Include="AxEnum\UBSInterfaceStatus">
+      <SubType>Content</SubType>
+      <Name>UBSInterfaceStatus</Name>
+      <Link>Base Enums\UBSInterfaceStatus</Link>
+    </Content>
+    <Content Include="AxForm\UBSInterfaceExecutionHistoryTable">
+      <SubType>Content</SubType>
+      <Name>UBSInterfaceExecutionHistoryTable</Name>
+      <Link>Forms\UBSInterfaceExecutionHistoryTable</Link>
+    </Content>
+    <Content Include="AxLabelFile\UBS_en-US">
+      <SubType>Content</SubType>
+      <Name>UBS_en-US</Name>
+      <Link>Label Files\UBS_en-US</Link>
+    </Content>
+    <Content Include="AxLabelFile\UBS_fr">
+      <SubType>Content</SubType>
+      <Name>UBS_fr</Name>
+      <Link>Label Files\UBS_fr</Link>
+    </Content>
+    <Content Include="AxMenuExtension\SystemAdministration.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>SystemAdministration.Urbasolar</Name>
+      <Link>Menu Extensions\SystemAdministration.Urbasolar</Link>
+    </Content>
+    <Content Include="AxMenuItemAction\UBSOutboundInterfaceStock">
+      <SubType>Content</SubType>
+      <Name>UBSOutboundInterfaceStock</Name>
+      <Link>Action Menu Items\UBSOutboundInterfaceStock</Link>
+    </Content>
+    <Content Include="AxMenuItemDisplay\UBSInterfaceExecutionHistoryTable">
+      <SubType>Content</SubType>
+      <Name>UBSInterfaceExecutionHistoryTable</Name>
+      <Link>Display Menu Items\UBSInterfaceExecutionHistoryTable</Link>
+    </Content>
+    <Content Include="AxQuery\UBSInterfaceAccrualsUnionQuery">
+      <SubType>Content</SubType>
+      <Name>UBSInterfaceAccrualsUnionQuery</Name>
+      <Link>Queries\UBSInterfaceAccrualsUnionQuery</Link>
+    </Content>
+    <Content Include="AxQuery\UBSVoucherStockReferenceCategoryQuery">
+      <SubType>Content</SubType>
+      <Name>UBSVoucherStockReferenceCategoryQuery</Name>
+      <Link>Simple Queries\UBSVoucherStockReferenceCategoryQuery</Link>
+    </Content>
+    <Content Include="AxTable\UBSInterfaceExecutionHistoryTable">
+      <SubType>Content</SubType>
+      <Name>UBSInterfaceExecutionHistoryTable</Name>
+      <Link>Tables\UBSInterfaceExecutionHistoryTable</Link>
+    </Content>
+    <Content Include="AxTable\UBSOutboundInterfaceLog">
+      <SubType>Content</SubType>
+      <Name>UBSOutboundInterfaceLog</Name>
+      <Link>Tables\UBSOutboundInterfaceLog</Link>
+    </Content>
+    <Content Include="AxView\UBSDimensionCombinationView">
+      <SubType>Content</SubType>
+      <Name>UBSDimensionCombinationView</Name>
+      <Link>Views\UBSDimensionCombinationView</Link>
+    </Content>
+    <Content Include="AxView\UBSInterfaceAccrualsEntryView">
+      <SubType>Content</SubType>
+      <Name>UBSInterfaceAccrualsEntryView</Name>
+      <Link>Views\UBSInterfaceAccrualsEntryView</Link>
+    </Content>
+    <Content Include="AxView\UBSInterfaceAccrualsInvoiceEntry">
+      <SubType>Content</SubType>
+      <Name>UBSInterfaceAccrualsInvoiceEntry</Name>
+      <Link>Views\UBSInterfaceAccrualsInvoiceEntry</Link>
+    </Content>
+    <Content Include="AxView\UBSInterfaceAccrualsPackingSlipEntryView">
+      <SubType>Content</SubType>
+      <Name>UBSInterfaceAccrualsPackingSlipEntryView</Name>
+      <Link>Views\UBSInterfaceAccrualsPackingSlipEntryView</Link>
+    </Content>
+    <Content Include="AxView\UBSInterfaceCCAEntryView">
+      <SubType>Content</SubType>
+      <Name>UBSInterfaceCCAEntryView</Name>
+      <Link>Views\UBSInterfaceCCAEntryView</Link>
+    </Content>
+    <Content Include="AxView\UBSInterfaceStockEntryView">
+      <SubType>Content</SubType>
+      <Name>UBSInterfaceStockEntryView</Name>
+      <Link>Views\UBSInterfaceStockEntryView</Link>
+    </Content>
+    <Content Include="AxView\UBSVoucherStockReferenceCategoryLedgerView">
+      <SubType>Content</SubType>
+      <Name>UBSVoucherStockReferenceCategoryLedgerView</Name>
+      <Link>Views\UBSVoucherStockReferenceCategoryLedgerView</Link>
+    </Content>
+    <Content Include="AxView\UBSVoucherStockReferenceCategoryPhysicalView">
+      <SubType>Content</SubType>
+      <Name>UBSVoucherStockReferenceCategoryPhysicalView</Name>
+      <Link>Views\UBSVoucherStockReferenceCategoryPhysicalView</Link>
+    </Content>
+    <Content Include="AxView\UBSVoucherStockReferenceCategoryView">
+      <SubType>Content</SubType>
+      <Name>UBSVoucherStockReferenceCategoryView</Name>
+      <Link>Views\UBSVoucherStockReferenceCategoryView</Link>
+    </Content>
+    <Content Include="UBS.en-US.label.txt">
+      <SubType>Content</SubType>
+      <Name>UBS.en-US.label.txt</Name>
+      <DependentUpon>AxLabelFile\UBS_en-US</DependentUpon>
+    </Content>
+    <Content Include="UBS.fr.label.txt">
+      <SubType>Content</SubType>
+      <Name>UBS.fr.label.txt</Name>
+      <DependentUpon>AxLabelFile\UBS_fr</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="UBSInterfaceToolkit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <Name>UBSInterfaceToolkit</Name>
+      <HintPath>K:\AosService\PackagesLocalDirectory\Urbasolar\bin\UBSInterfaceToolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+  <Import Project="$(BuildTasksDirectory)\Microsoft.Dynamics.Framework.Tools.BuildTasks.17.0.targets" />
+</Project>

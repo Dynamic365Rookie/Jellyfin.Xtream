@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSPurchOrderReceipt</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class UBSPurchOrderReceipt extends common
+{
+}
+]]></Declaration>
+		<Methods />
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<AllowRowVersionChangeTracking>Yes</AllowRowVersionChangeTracking>
+	<PrimaryIndex>Index</PrimaryIndex>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldDate">
+			<Name>IntegrationDate</Name>
+			<Label>@UBS:UBSIntegrationDate</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSPurchaseOrderNumber</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>PurchIdBase</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>UBSPurchaseOrderLineNumber</Name>
+			<Label>@UBS:UBSPurchaseOrderLine</Label>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>UBSPurchaseOrderReceiptQuantity</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>PurchQty</ExtendedDataType>
+			<Label>@UBS:UBSReceivedQty</Label>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldDate">
+			<Name>UBSPurchaseOrderReceiptDate</Name>
+			<Label>@UBS:UBSReceptionDate</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSPurchaseOrderReceiptNumber</Name>
+			<Label>@UBS:UBSPurchaseOrderReceiptNumber</Label>
+			<Mandatory>Yes</Mandatory>
+			<StringSize>50</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ReceiptErrorMsg</Name>
+			<Label>@UBS:UBSErrorDetail</Label>
+			<StringSize>500</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>OrderedQuantityOverReceipt</Name>
+			<ExtendedDataType>PurchQty</ExtendedDataType>
+			<Label>@UBS:UBSOverReceivedQty</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>UpdatedOrderedQuantityOverReceipt</Name>
+			<ExtendedDataType>PurchQty</ExtendedDataType>
+			<Label>@UBS:UBSUpdatedOverReceivedQty</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSPurchaseOrderReceiptStatus</Name>
+			<Label>@UBS:UBSReceiptStatus</Label>
+			<EnumType>UBSPurchaseOrderReceiptStatus</EnumType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>Index</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>UBSPurchaseOrderNumber</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>UBSPurchaseOrderLineNumber</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>IntegrationDate</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation xmlns=""
+			i:type="AxTableRelationForeignKey">
+			<Name>PurchLine</Name>
+			<Cardinality>ZeroMore</Cardinality>
+			<RelatedTable>PurchLine</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSPurchaseOrderNumber</Name>
+					<Field>UBSPurchaseOrderNumber</Field>
+					<RelatedField>PurchId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

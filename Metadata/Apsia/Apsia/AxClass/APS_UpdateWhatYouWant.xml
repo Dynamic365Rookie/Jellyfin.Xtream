@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>APS_UpdateWhatYouWant</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using System.IO;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using OfficeOpenXml.Table;
+using OfficeOpenXml.Drawing;
+
+class APS_UpdateWhatYouWant extends RunBaseBatch
+{
+
+    URL             urlFile;
+    ExcelWorksheet  worksheet;
+    ExcelRange      cells;
+    TableId         tableId;
+   
+    // Dialog fields
+    DialogField                         dlgDoOrNot;
+    private   FileUploadBuild           dialogBankStatementFileUpload;
+    protected Filename                  uploadFileName;
+    protected str                       uploadFileURL;
+    protected SharedServiceUnitFileID   uploadFileID;
+    private const str                   OkButtonName = 'OkButton';
+    private   Dialog                    dialog;
+    private const str                   FileUploadControlLabel = "@GLS221360";
+    boolean                             doOrDoNot;
+    System.IO.Stream                    stream;
+
+    #define.CurrentVersion(1)
+    #localmacro.CurrentList
+        urlFile
+    #endmacro
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>canGoBatchJournal</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///    Indicates whether the class is shown in the list of <c>Journal</c> types.
+    /// </summary>
+    /// <returns>
+    ///    true if the class is shown in the list of <c>Journal</c> types; otherwise, false.
+    /// </returns>
+    /// <remarks>
+    ///    A class that can be used in a batch journal is a class where the same parameters can be used
+    ///    repeatedly. The dialog box can be shown and the parameters can be changed, but parameters of some
+    ///    classes might build on data that is only valid for a short time. Running a class two times with the
+    ///    same parameters is not always possible. If the <c>RunBaseBatch.canGoBatch</c> method is false, this
+    ///    method will not have any effect.
+    /// </remarks>
+    public boolean canGoBatchJournal()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///    Returns a class that contains the methods that are described by the <c>RunBaseDialogable</c>
+    ///    interface.
+    /// </summary>
+    /// <returns>
+    ///    A class that contains the methods that are described by the <c>RunBaseDialogable</c> interface.
+    /// </returns>
+    /// <remarks>
+    ///    A dialog box can be either built by using the <c>Dialog</c> class or by using a class that is
+    ///    created in the Application Object Tree (AOT).
+    /// </remarks>
+    public Object dialog()
+    {
+        dialog = super();
+        
+        
+        FormBuildControl        formBuildControl;
+        FormBuildRadioControl   formBuildRadioControl;
+        DialogGroup             dlgGroup = dialog.addGroup("@SYS54759");
+
+        formBuildControl = dialog.formBuildDesign().control(dlgGroup.name());
+
+        formBuildRadioControl = formBuildControl.addControl(FormControlType::RadioButton,"Do not or do");
+        formBuildRadioControl.enumType(enumName2Id(enumStr(NoYes)));
+        formBuildRadioControl.caption("Do not or do");
+
+        dialogBankStatementFileUpload = formBuildControl.addControlEx(classstr(FileUpload), FileUploadControlLabel);
+        dialogBankStatementFileUpload.fileNameLabel("Excel file name");
+        
+        return dialog;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>uploadClickedEvent</Name>
+				<Source><![CDATA[
+    private void uploadClickedEvent(FormButtonControl _formButtonControl)
+    {
+        FileUploadTemporaryStorageResult result = Dynamics.AX.Application.File::GetFileFromUser() as FileUploadTemporaryStorageResult;
+        If (result && result.getUploadStatus())
+        {
+            result.getFileContentType();
+            urlFile = result.getDownloadUrl();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFormControl</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Get form control instance of dialog control.
+    /// </summary>
+    /// <param name = "_dialog">current dialog.</param>
+    /// <param name = "_controlName">name of the control.</param>
+    /// <returns>form control instance of the given dialog control.</returns>
+    protected FormControl getFormControl(DialogRunbase _dialog, str _controlName)
+    {
+        return _dialog.formRun().control(_dialog.formRun().controlId( _controlName));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFromDialog</Name>
+				<Source><![CDATA[
+    public boolean getFromDialog()
+    {
+
+        FileUpload fileUploadControl = this.getFormControl(dialog, FileUploadControlLabel);
+        FileUploadTemporaryStorageResult fileUploadResult = fileUploadControl.getFileUploadResult();
+
+        FormRadioControl radioControl = this.getFormControl(dialog,"Do not or do");
+
+
+        doOrDoNot = radioControl.selection();
+
+        if (fileUploadResult != null && fileUploadResult.getUploadStatus())
+        {
+            uploadFileURL = fileUploadResult.getDownloadUrl();
+            uploadFileName = fileUploadResult.getFileName();
+            uploadFileID = fileUploadResult.getFileId();
+            stream = fileUploadResult.openResult();
+        }
+
+        return super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    protected void new()
+    {
+        super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>pack</Name>
+				<Source><![CDATA[
+    public container pack()
+    {
+        return [#CurrentVersion,#CurrentList];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    server static APS_UpdateWhatYouWant construct()
+    {
+        return new APS_UpdateWhatYouWant();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runsImpersonated</Name>
+				<Source><![CDATA[
+    public boolean runsImpersonated()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>unpack</Name>
+				<Source><![CDATA[
+    public boolean unpack(container packedClass)
+    {
+        Version version = RunBase::getVersion(packedClass);
+        ;
+        switch (version)
+        {
+            case #CurrentVersion:
+                [version,#CurrentList] = packedClass;
+                break;
+            default:
+                return false;
+        }
+
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>description</Name>
+				<Source><![CDATA[
+    // Here goes a description of the class
+    static ClassDescription description()
+    {
+        return "APS Update what you want";
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    static void main(Args args)
+    {
+        APS_UpdateWhatYouWant    updateWhatYouWant = APS_UpdateWhatYouWant::construct();
+
+        if (updateWhatYouWant.prompt())
+            updateWhatYouWant.runOperation();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    protected boolean canRunInNewSession()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>uploadCompleted</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// After the file has been uploaded, the Ok button is enabled.
+    /// </summary>
+    protected void uploadCompleted()
+    {
+        FileUpload fileUpload = this.getFormControl(dialog, FileUploadControlLabel);
+        fileUpload.notifyUploadCompleted -= eventhandler(this.UploadCompleted);
+
+        this.setDialogOkButtonEnabled(dialog, true);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dialogPostRun</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Disables the dialog Ok button until the file upload is complete.
+    /// </summary>
+    /// <param name="_dialog">The <c>Runbase</c> dialog object.</param>
+    public void dialogPostRun(DialogRunbase _dialog)
+    {
+        FileUpload fileUpload = this.getFormControl(_dialog, FileUploadControlLabel);
+        fileUpload.notifyUploadCompleted += eventhandler(this.uploadCompleted);
+        this.setDialogOkButtonEnabled(_dialog, false);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setDialogOkButtonEnabled</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Enables or disables the dialog Ok button.
+    /// </summary>
+    /// <param name = "_dialog">The <c>Runbase</c> dialog object.</param>
+    /// <param name = "_isEnabled">Indicates to enable or disable the Ok button.</param>
+    protected void setDialogOkButtonEnabled(DialogRunbase _dialog, boolean _isEnabled)
+    {
+        FormControl okButtonControl = this.getFormControl(_dialog, OkButtonName);
+
+        if (okButtonControl)
+        {
+            okButtonControl.enabled(_isEnabled);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ImportXls</Name>
+				<Source><![CDATA[
+    public void ImportXls()
+    {
+        ExecutePermission permission;
+
+        // Download the file from the blob storage to the user-specified path and filename.
+        SharedServiceUnitURL localFilePath = DMFStagingWriter::getSharedFilePath(uploadFileID);
+
+        permission = new ExecutePermission();
+        permission.assert();
+
+
+        stream = Dynamics.AX.Application.File::UseFileFromURL(localFilePath);
+        this.readExcelData(stream);
+
+        
+        CodeAccessPermission::revertAssert();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>readExcelData</Name>
+				<Source><![CDATA[
+    protected void readExcelData(System.IO.Stream    _stream)
+    {
+        // using deal with create and dispose automatically
+        using (var package = new ExcelPackage(_stream))
+        {
+            try
+            {
+                if(package)
+                {
+                    worksheet   = package.get_Workbook().get_Worksheets().get_Item(1);
+                    cells       = worksheet.get_Cells();
+                    this.processData() ;
+                }
+            }
+            catch (Exception::CLRError)
+            {
+                System.Exception e = ClrInterop::getLastException();
+                while (e)
+                {
+                    info(e.get_Message());
+                    e = e.get_InnerException();
+                }
+
+                throw error("@SYS135884");
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processData</Name>
+				<Source><![CDATA[
+    protected void processData()
+    {
+        this.processHeader();
+
+        this.processLines();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processHeader</Name>
+				<Source><![CDATA[
+    protected void processHeader()
+    {
+        tableId = tableName2Id(cells.get_Item(1,1).Value);
+
+        if (tableId == 0)
+        {
+            throw error("Table not found");
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>processLines</Name>
+				<Source><![CDATA[
+    protected void processLines()
+    {
+
+
+        Common common;
+        DictTable dictTable;
+        int column;
+        int row = 3;
+        int columnFields;
+        Query query;
+        QueryBuildDataSource qbds;
+        QueryBuildRange qbr;
+        QueryRun qr;
+
+        FieldId fieldId;
+
+        dictTable = new DictTable(tableId);
+        common = dictTable.makeRecord();
+
+        while (cells.get_Item(row,1).Value != '')
+        {
+            try
+            {
+                query = new query();
+                qbds = query.addDataSource(tableId);
+                column = 1;
+
+                while(cells.get_Item(2,column).value != "")
+                {
+                    fieldId = fieldName2id(tableId,cells.get_Item(2,column).value);
+                    qbr = qbds.addRange(fieldId);
+                    qbr.value(cells.get_Item(row,column).value);
+                    column++;
+                }
+                columnFields = column+1;
+                qr = new QueryRun(query);
+                while(qr.next())
+                {
+                    ttsBegin;
+                    common = qr.get(tableId);
+                    common.selectForUpdate(true);
+                    column = columnFields;
+                    while(cells.get_Item(row,column).value!="")
+                    {
+                        if (dictTable.fieldObject(fieldName2id(common.TableId,cells.get_item(2,column).value)).baseType() == Types::Date)
+                        {
+                            common.(fieldName2id(common.TableId,cells.get_item(2,column).value)) = str2Date(cells.get_Item(row,column).Text,213);
+                        }
+                        else
+                        {
+                            common.(fieldName2id(common.TableId,cells.get_item(2,column).value)) = cells.get_Item(row,column).value;
+                        }
+                        column++;
+                    }
+
+                    if (doOrDoNot)
+                    {
+                        common.doUpdate();
+                    }
+                    else
+                    {
+                        common.update();
+                    }
+                    ttsCommit;
+                }
+                row++;
+            }
+            catch(Exception::Error)
+            {
+                info("ERRROR entry # " + int642str(common.RecId) + " not updated");
+                info("Caught 'Exception::Error'.");
+                row++;
+                //retry;
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        int                 lastRow;
+        SysOperationProgress localProgress;
+        #AviFiles
+        #Excel
+        #define.Star('*')
+        #define.Space(' ')
+        this.ImportXls();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxView xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSDirPersonUserHcmWorker</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class UBSDirPersonUserHcmWorker extends common
+{
+}
+
+]]></Declaration>
+		<Methods />
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<ValidTimeStateEnabled>Yes</ValidTimeStateEnabled>
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>User</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>User</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>User</Name>
+			<DataField>User</DataField>
+			<DataSource>DirPersonUser</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>ValidTo</Name>
+			<DataField>ValidTo</DataField>
+			<DataSource>DirPersonUser</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>ValidFrom</Name>
+			<DataField>ValidFrom</DataField>
+			<DataSource>DirPersonUser</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>DirPersonUserRecId</Name>
+			<DataField>RecId</DataField>
+			<DataSource>DirPersonUser</DataSource>
+		</AxViewField>
+	</Fields>
+	<Indexes />
+	<Mappings />
+	<Relations />
+	<StateMachines />
+	<ViewMetadata>
+		<Name>Metadata</Name>
+		<SourceCode>
+			<Methods />
+		</SourceCode>
+		<AllowCrossCompany>Yes</AllowCrossCompany>
+		<DataSources>
+			<AxQuerySimpleRootDataSource>
+				<Name>DirPersonUser</Name>
+				<DynamicFields>Yes</DynamicFields>
+				<Table>DirPersonUser</Table>
+				<DataSources>
+					<AxQuerySimpleEmbeddedDataSource>
+						<Name>HcmWorker</Name>
+						<DynamicFields>Yes</DynamicFields>
+						<Table>HcmWorker</Table>
+						<DataSources />
+						<DerivedDataSources />
+						<Fields />
+						<Ranges />
+						<Relations>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation1</Name>
+								<Field>PersonParty</Field>
+								<JoinDataSource>DirPersonUser</JoinDataSource>
+								<RelatedField>Person</RelatedField>
+							</AxQuerySimpleDataSourceRelation>
+						</Relations>
+					</AxQuerySimpleEmbeddedDataSource>
+				</DataSources>
+				<DerivedDataSources />
+				<Fields />
+				<Ranges />
+				<GroupBy />
+				<Having />
+				<OrderBy />
+			</AxQuerySimpleRootDataSource>
+		</DataSources>
+	</ViewMetadata>
+</AxView>

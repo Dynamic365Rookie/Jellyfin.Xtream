@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>InventSum_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(InventSum))]
+final class InventSum_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>concatInventSiteJoinUBSinventParametersSites</Name>
+				<Source><![CDATA[
+    public static str concatInventSiteJoinUBSinventParametersSites(ItemId _itemId)
+    {
+        InventSum                inventSum;
+        UBSInventParametersSites inventParametersSites;
+        container con;
+
+        while select InventSiteId from inventSum 
+            exists join inventParametersSites
+                group by inventSum.InventSiteId
+                    where inventSum.ItemId == _itemId &&
+                          inventSum.Closed == NoYes::No &&
+                          inventSum.ClosedQty == NoYes::No &&
+                          inventParametersSites.SiteId == inventSum.InventSiteId
+        {
+            con += inventSum.InventSiteId;
+        }
+                
+        return con2Str(con,", ");
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

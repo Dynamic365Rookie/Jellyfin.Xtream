@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendTable_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(VendTable))]
+final class VendTable_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>insert</Name>
+				<Source><![CDATA[
+    void insert()
+    {
+        this.Blocked = CustVendorBlocked::All;
+
+        next insert();
+
+        vendOnHoldHistory::createHistoryRecord(this.AccountNum, this.Blocked,PurchParameters::find().UBSCreationReason);
+
+        BatchHeader batchHeader;
+
+        UBSTriggerDimensionDefaulting dimensionDefaulting = UBSTriggerDimensionDefaulting::construct();
+        dimensionDefaulting.batchInfo().parmBatchExecute(NoYes::Yes);
+        dimensionDefaulting.batchInfo().parmCaption(strFmt("Sync default dimension for vendor %1",this.AccountNum));
+        dimensionDefaulting.parmSourceEntity(curExt());
+        dimensionDefaulting.parmVendorAccount(this.AccountNum);
+        
+        batchHeader = BatchHeader::construct();
+        batchHeader.addTask(dimensionDefaulting);
+        batchHeader.save();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSprimaryEmailDescription</Name>
+				<Source><![CDATA[
+    display str UBSprimaryEmailDescription()
+    {
+        LogisticsElectronicAddress electronicAddress;
+
+        electronicAddress = DirParty::primaryElectronicAddress(this.Party, LogisticsElectronicAddressMethodType::Email);
+
+        return electronicAddress ? electronicAddress.Description : '';
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validateWrite</Name>
+				<Source><![CDATA[
+    boolean  validateWrite()
+    {
+        boolean ret = next validateWrite();
+
+        if (ret)
+        {
+            if(!this.DirPartyTable().UBSProcCategoryName)
+            {
+                ret = checkFailed('@AccountsPayable:ProcurementCategoryWarning');
+            }
+        }
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

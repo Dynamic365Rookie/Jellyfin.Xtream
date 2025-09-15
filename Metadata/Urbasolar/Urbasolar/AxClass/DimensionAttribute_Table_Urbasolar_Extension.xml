@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>DimensionAttribute_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(DimensionAttribute))]
+final class DimensionAttribute_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>UBSFindByBackingEntity</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Find dimension attribute by Backing entity and Name if needed
+    /// </summary>
+    /// <param name = "_tableName">TableName of the dimension based on</param>
+    /// <param name = "_name">Name of the dimension (optionnal)</param>
+    /// <returns></returns>
+    public static DimensionAttribute UBSFindByBackingEntity(TableName _tableName, Name _name = "", boolean _forupdate = false)
+    {
+        DimensionAttribute dimAttr ;
+
+        dimAttr.selectForUpdate(_forupdate) ;
+
+        select firstonly dimAttr
+            where        dimAttr.BackingEntityTableName == _tableName
+            &&  (        dimAttr.Name                   == _name || !_name) ;
+
+        return dimAttr ;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSGetTableName</Name>
+				<Source><![CDATA[
+    public static str UBSGetTableName(str _backingEntityTableName, str _backingEntityValueFieldName)
+    {
+        DimensionAttribute dimAttr;
+
+        select Name from dimAttr
+            where dimAttr.BackingEntityTableName == _backingEntityTableName &&
+                  dimAttr.BackingEntityValueFieldName == _backingEntityValueFieldName &&
+                  dimAttr.Type == DimensionAttributeType::ExistingList;
+
+        return dimAttr.Name;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

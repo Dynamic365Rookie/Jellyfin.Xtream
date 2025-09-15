@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>EcoResCategory_Form_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formStr(EcoResCategory))]
+final class EcoResCategory_Form_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>EcoResCategory_CategoryProcurementManager_OnLookup</Name>
+				<Source><![CDATA[
+    [FormControlEventHandler(formControlStr(EcoResCategory, EcoResCategory_CategoryProcurementManager), FormControlEventType::Lookup)]
+    public static void EcoResCategory_CategoryProcurementManager_OnLookup(FormControl sender, FormControlEventArgs e)
+    {
+        FormRun formRun = sender.formRun();
+        formRun.procurementCategoryManager_OnLookup(sender);
+ 
+        FormControlCancelableSuperEventArgs cancelableArgs = e as FormControlCancelableSuperEventArgs;
+        cancelableArgs.CancelSuperCall();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>procurementCategoryManager_OnLookup</Name>
+				<Source><![CDATA[
+    public void procurementCategoryManager_OnLookup(FormControl _formControl)
+    {
+        Query           query           = new Query();
+        SysTableLookup  sysTableLookup  = SysTableLookup::newParameters(tableNum(UBSDirPersonUserHcmWorker), _formControl);
+ 
+        sysTableLookup.addLookupfield(fieldNum(UBSDirPersonUserHcmWorker,User));
+ 
+        QueryBuildDataSource queryBuildDataSource = query.addDataSource(tableNum(UBSDirPersonUserHcmWorker));
+        queryBuildDataSource.addSortField(fieldNum(UBSDirPersonUserHcmWorker,User),SortOrder::Ascending);
+ 
+        sysTableLookup.parmQuery(query);
+        sysTableLookup.performFormLookup();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSSubBillCommon</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSSubBillCommon
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>copyDimensionsToMainAccount</Name>
+				<Source><![CDATA[
+    internal static LedgerDimensionAccount copyDimensionsToMainAccount(LedgerDimensionAccount _sourceAccount, str _mainAccount)
+    {
+        if (!_sourceAccount)
+        {
+            return LedgerDefaultAccountHelper::getDefaultAccountFromMainAccountId(_mainAccount);
+        }
+
+        // Retreiving the dimension storage object for the Ledger Dimension Value
+        DimensionStorage getDimStorage = DimensionStorage::findById(_sourceAccount);
+
+        if (getDimStorage == null)
+        {
+            throw error("@SYS83964");
+        }
+
+        // Assigning the query for fetching the relevant dimensions through hierarchy.
+        Query query = new Query();
+        QueryBuildDataSource qbsValueGroupCombo = query.addDataSource(tableNum(DimensionAttributeValueGroupCombination));
+        QueryBuildDataSource qbsValueGroup = qbsValueGroupCombo.addDataSource(tableNum(DimensionAttributeValueGroup));
+
+        qbsValueGroup.relations(true);
+
+        qbsValueGroupCombo.addOrderByField(fieldNum(DimensionAttributeValueGroupCombination,Ordinal));
+        qbsValueGroupCombo.addRange(fieldNum(DimensionAttributeValueGroupCombination,DimensionAttributeValueCombination)).value(queryValue(_sourceAccount));
+
+        QueryRun queryRun = new queryRun(query);
+
+        DimensionAttributeValueGroup dimAttrGrpValue;
+        LedgerAccountContract ledgerAccountContract = new LedgerAccountContract();
+        List listValueContract = new List(Types::Class);
+        int segmentIndex, segmentTotal;
+        container segments;
+
+        while (queryRun.next())
+        {
+            if (queryRun.changed(tableNum(DimensionAttributeValueGroup)))
+            {
+                dimAttrGrpValue = queryRun.get(tableNum(DimensionAttributeValueGroup));
+            }
+
+            // Fetching all dimension values from their corresponding hierarchies.
+            for (segmentIndex = 1 ;segmentIndex <= dimAttrGrpValue.Levels; segmentIndex++)
+            {
+                RecId dimAttrReference = DimensionHierarchyLevel::findByDimensionHierarchyAndLevel(dimAttrGrpValue.DimensionHierarchy, segmentIndex).DimensionAttribute;
+
+                DimensionAttributeValue dimAttrValue;
+
+                select firstonly DimensionAttribute from dimAttrValue
+                    where dimAttrValue.DimensionAttribute == dimAttrReference;
+
+                DimensionAttribute dimAttr = DimensionAttribute::find(dimAttrReference);
+
+                if (!conFind(segments, dimAttr.RecId))
+                {
+                    if (DimensionAttribute::find(dimAttrReference).Type == DimensionAttributeType::MainAccount)
+                    {
+                        LedgerAccountContract.parmMainAccount(_mainAccount);
+                    }
+                    else
+                    {
+                        DimensionAttributeLevelValue dimAttrLevelValue;
+
+                        select firstonly DisplayValue from dimAttrLevelValue
+                            where dimAttrLevelValue.DimensionAttributeValueGroup == dimAttrGrpValue.RecId
+                                && dimAttrLevelValue.Ordinal == segmentIndex;
+
+                        if (dimAttrLevelValue)
+                        {
+                            DimensionAttributeValueContract valueContract = new DimensionAttributeValueContract();
+                            valueContract.parmName(dimAttr.Name);
+                            valueContract.parmValue(dimAttrLevelValue.DisplayValue);
+
+                            ListValueContract.addEnd(valueContract);
+                        }
+                    }
+
+                    segmentTotal++;
+                    segments = conIns(segments,segmentTotal,dimAttr.RecId);
+                }
+            }
+        }
+
+        LedgerAccountContract.parmValues(ListValueContract);
+        DimensionStorage dimStorage = DimensionServiceProvider::buildDimensionStorageForLedgerAccount(LedgerAccountContract);
+
+        return DimensionAttributeValueCombination::find(dimStorage.save()).RecId;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

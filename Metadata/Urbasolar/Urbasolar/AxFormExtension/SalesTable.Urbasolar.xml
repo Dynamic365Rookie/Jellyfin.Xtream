@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>SalesTable.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControl2hbsfer11</Name>
+			<FormControl xmlns=""
+				i:type="AxFormGroupControl">
+				<Name>UBS</Name>
+				<Type>Group</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormReferenceGroupControl">
+						<Name>SalesTable_UBSProjectDim</Name>
+						<Type>ReferenceGroup</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls />
+						<DataSource>SalesTable</DataSource>
+						<ReferenceField>UBSProjectDim</ReferenceField>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>SalesTable_UBSPurchId</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSPurchId</DataField>
+						<DataSource>SalesTable</DataSource>
+					</AxFormControl>
+				</Controls>
+			</FormControl>
+			<Parent>LineViewHeader</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

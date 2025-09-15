@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxQuery xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns=""
+	i:type="AxQuerySimple">
+	<Name>UBSInterfaceAccrualsUnionQuery</Name>
+	<SourceCode>
+		<Methods>
+			<Method>
+				<Name>classDeclaration</Name>
+				<Source><![CDATA[
+[Query]
+public class UBSInterfaceAccrualsUnionQuery extends QueryRun
+{
+}
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<QueryType>Union</QueryType>
+	<DataSources>
+		<AxQuerySimpleRootDataSource>
+			<Name>UBSInterfaceAccrualsPackingSlipEntryView</Name>
+			<Table>UBSInterfaceAccrualsPackingSlipEntryView</Table>
+			<DataSources />
+			<DerivedDataSources />
+			<Fields>
+				<AxQuerySimpleDataSourceField>
+					<Name>AccountingCurrencyAmount</Name>
+					<Field>AccountingCurrencyAmount</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>CostCenter</Name>
+					<Field>CostCenter</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>EntryType</Name>
+					<Field>EntryType</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>ExpenseNature</Name>
+					<Field>ExpenseNature</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>GroupChartOfAccount</Name>
+					<Field>GroupChartOfAccount</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>MainAccountValue</Name>
+					<Field>MainAccountValue</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>PackingSlipId</Name>
+					<Field>PackingSlipId</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>Project</Name>
+					<Field>Project</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>PurchId</Name>
+					<Field>PurchId</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>SourceDocumentHeader</Name>
+					<Field>SourceDocumentHeader</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>SubledgerVoucherDataAreaId</Name>
+					<Field>SubledgerVoucherDataAreaId</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>TransactionCurrencyAmount</Name>
+					<Field>TransactionCurrencyAmount</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>TransactionCurrencyCode</Name>
+					<Field>TransactionCurrencyCode</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>Vendor</Name>
+					<Field>Vendor</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>unionAllBranchId</Name>
+					<Field>unionAllBranchId</Field>
+				</AxQuerySimpleDataSourceField>
+			</Fields>
+			<Ranges />
+			<GroupBy />
+			<Having />
+			<OrderBy />
+		</AxQuerySimpleRootDataSource>
+		<AxQuerySimpleRootDataSource>
+			<Name>UBSInterfaceAccrualsInvoiceEntry</Name>
+			<Table>UBSInterfaceAccrualsInvoiceEntry</Table>
+			<UnionType>UnionAll</UnionType>
+			<DataSources />
+			<DerivedDataSources />
+			<Fields>
+				<AxQuerySimpleDataSourceField>
+					<Name>AccountingCurrencyAmount</Name>
+					<Field>AccountingCurrencyAmount</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>CostCenter</Name>
+					<Field>CostCenter</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>EntryType</Name>
+					<Field>EntryType</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>ExpenseNature</Name>
+					<Field>ExpenseNature</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>GroupChartOfAccount</Name>
+					<Field>GroupChartOfAccount</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>MainAccountValue</Name>
+					<Field>MainAccountValue</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>PackingSlipId</Name>
+					<Field>PackingSlipId</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>Project</Name>
+					<Field>Project</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>PurchId</Name>
+					<Field>PurchId</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>SourceDocumentHeader</Name>
+					<Field>SourceDocumentHeader</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>SubledgerVoucherDataAreaId</Name>
+					<Field>SubledgerVoucherDataAreaId</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>TransactionCurrencyAmount</Name>
+					<Field>TransactionCurrencyAmount</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>TransactionCurrencyCode</Name>
+					<Field>TransactionCurrencyCode</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>Vendor</Name>
+					<Field>Vendor</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>unionAllBranchId</Name>
+					<Field>unionAllBranchId</Field>
+				</AxQuerySimpleDataSourceField>
+			</Fields>
+			<Ranges />
+			<GroupBy />
+			<Having />
+			<OrderBy />
+		</AxQuerySimpleRootDataSource>
+	</DataSources>
+</AxQuery>

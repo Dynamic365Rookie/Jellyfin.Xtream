@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxForm xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>UBSReferencingDocuments</Name>
+	<SourceCode>
+		<Methods xmlns="">
+			<Method>
+				<Name>classDeclaration</Name>
+				<Source><![CDATA[
+[Form]
+public class UBSReferencingDocuments extends FormRun
+{
+    private str storedFileName;
+
+}
+]]></Source>
+			</Method>
+			<Method>
+				<Name>init</Name>
+				<Source><![CDATA[
+    public void init()
+    {
+        DirPartyTable           dirPartyTable;
+        UBSMandatoryDocuments   mandatoryDocuments;
+        UBSReferencingDocuments referencingDocuments;
+        UBSReferencingRank      referencingRank;
+        container               existedDocumentCon;
+        
+        super();
+
+        if(element.args())
+        {
+            if(element.args().record() &&
+               element.args().record().TableId == tableNum(DirPartyTable))
+            {
+                dirPartyTable = element.args().record();
+
+                while select UBSDocuments 
+                    from referencingDocuments 
+                    where referencingDocuments.Party == dirPartyTable.RecId
+                {
+                    existedDocumentCon += referencingDocuments.UBSDocuments;
+                }
+
+                int maxRank = UBSReferencingRank::findByReferencingDocument(dirPartyTable.UBSReferencing).UBSRank;
+
+                ttsbegin;
+                while select UBSDocuments from mandatoryDocuments
+                    exists join referencingRank
+                        where ReferencingRank.UBSReferencing == mandatoryDocuments.UBSReferencing &&
+                              ReferencingRank.UBSRank <= maxRank
+                {
+                        if(!conFind(existedDocumentCon,mandatoryDocuments.UBSDocuments))
+                        {
+                            referencingDocuments.Party        = dirPartyTable.RecId;
+                            referencingDocuments.UBSDocuments = mandatoryDocuments.UBSDocuments;
+                            referencingDocuments.insert();
+                        }
+                }
+                ttscommit;
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+		<DataSources xmlns="" />
+		<DataControls xmlns="">
+			<Control>
+				<Name>UBSFileUpload</Name>
+				<Type>Custom</Type>
+				<Methods>
+					<Method>
+						<Name>OnUploadCompleted</Name>
+						<Source><![CDATA[
+        public void OnUploadCompleted()
+        {
+            FileUploadTemporaryStorageResult result = this.getFileUploadResult() as FileUploadTemporaryStorageResult;
+
+            super();
+
+            UBSReferencingDocuments referencingDocuments = UBSReferencingDocuments_ds.cursor();
+
+            if(result && result.getUploadStatus())
+            {
+                str fileName    = result.getFileName();
+               
+                if(fileName != storedFileName)
+                {
+                    DocuRef docuRef;
+
+                    using(System.IO.MemoryStream stream = result.openResult() as System.IO.MemoryStream)
+                    {
+                        docuRef = DocumentManagement::attachFile(
+                            tableNum(UBSReferencingDocuments),
+                            referencingDocuments.RecId,
+                            curext(),
+                            DocuType::typeFile(),
+                            stream,
+                            fileName,
+                            null,
+                            fileName);
+                    }
+
+                    if(docuRef.Name)
+                    {
+                        ttsbegin;
+                        referencingDocuments.selectForUpdate();
+                        referencingDocuments.UBSDocumentName = fileName;
+                        referencingDocuments.update();
+                        ttscommit;
+                        storedFileName  = fileName;
+                    }
+
+                    Info(strFmt('@UBS:UBSFileUplaoded',fileName));
+                    this.fileName("");
+                }
+                else
+                {
+                    checkFailed('@UBS:UBSFileUploadCheckFailed');
+                }
+            }
+        }
+
+]]></Source>
+					</Method>
+				</Methods>
+			</Control>
+		</DataControls>
+		<Members xmlns="" />
+	</SourceCode>
+	<DataSources>
+		<AxFormDataSource xmlns="">
+			<Name>UBSReferencingDocuments</Name>
+			<Table>UBSReferencingDocuments</Table>
+			<Fields>
+				<AxFormDataSourceField>
+					<DataField>AccountNum</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DataAreaId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>Partition</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>RecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>TableId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSDocumentName</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSDocuments</DataField>
+				</AxFormDataSourceField>
+			</Fields>
+			<ReferencedDataSources />
+			<DataSourceLinks />
+			<DerivedDataSources />
+		</AxFormDataSource>
+	</DataSources>
+	<Design>
+		<Caption xmlns="">@UBS:UBSReferencingDocuments</Caption>
+		<Pattern xmlns="">SimpleList</Pattern>
+		<PatternVersion xmlns="">1.1</PatternVersion>
+		<ShowDeleteButton xmlns="">No</ShowDeleteButton>
+		<ShowNewButton xmlns="">No</ShowNewButton>
+		<Style xmlns="">SimpleList</Style>
+		<Controls xmlns="">
+			<AxFormControl xmlns=""
+				i:type="AxFormActionPaneControl">
+				<Name>FormActionPaneControl</Name>
+				<Type>ActionPane</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormButtonGroupControl">
+						<Name>FormButtonGroupControl</Name>
+						<Type>ButtonGroup</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormCommandButtonControl">
+								<Name>NewCommandButtonControl</Name>
+								<Type>CommandButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Command>New</Command>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormCommandButtonControl">
+								<Name>DeleteCommandButtonControl</Name>
+								<Type>CommandButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Command>DeleteRecord</Command>
+							</AxFormControl>
+						</Controls>
+						<DataSource>UBSReferencingDocuments</DataSource>
+					</AxFormControl>
+				</Controls>
+				<Caption>@UBS:UBSDocuments</Caption>
+			</AxFormControl>
+			<AxFormControl xmlns=""
+				i:type="AxFormGroupControl">
+				<Name>FormGroupControl</Name>
+				<Pattern>CustomAndQuickFilters</Pattern>
+				<PatternVersion>1.1</PatternVersion>
+				<Type>Group</Type>
+				<WidthMode>SizeToAvailable</WidthMode>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl>
+						<Name>QuickFilterControl</Name>
+						<FormControlExtension>
+							<Name>QuickFilterControl</Name>
+							<ExtensionComponents />
+							<ExtensionProperties>
+								<AxFormControlExtensionProperty>
+									<Name>targetControlName</Name>
+									<Type>String</Type>
+								</AxFormControlExtensionProperty>
+								<AxFormControlExtensionProperty>
+									<Name>placeholderText</Name>
+									<Type>String</Type>
+								</AxFormControlExtensionProperty>
+								<AxFormControlExtensionProperty>
+									<Name>defaultColumnName</Name>
+									<Type>String</Type>
+								</AxFormControlExtensionProperty>
+							</ExtensionProperties>
+						</FormControlExtension>
+					</AxFormControl>
+				</Controls>
+				<ArrangeMethod>HorizontalLeft</ArrangeMethod>
+				<FrameType>None</FrameType>
+				<Style>CustomFilter</Style>
+				<ViewEditMode>Edit</ViewEditMode>
+			</AxFormControl>
+			<AxFormControl xmlns=""
+				i:type="AxFormGridControl">
+				<Name>FormGridControl</Name>
+				<Type>Grid</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>UBSReferencingDocuments_UBSDocuments</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSDocuments</DataField>
+						<DataSource>UBSReferencingDocuments</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>UBSReferencingDocuments_UBSDocumentName</Name>
+						<AllowEdit>No</AllowEdit>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSDocumentName</DataField>
+						<DataSource>UBSReferencingDocuments</DataSource>
+					</AxFormControl>
+					<AxFormControl>
+						<Name>UBSFileUpload</Name>
+						<FormControlExtension>
+							<Name>FileUpload</Name>
+							<ExtensionComponents />
+							<ExtensionProperties>
+								<AxFormControlExtensionProperty>
+									<Name>fileTypesAccepted</Name>
+									<Type>String</Type>
+								</AxFormControlExtensionProperty>
+								<AxFormControlExtensionProperty>
+									<Name>fileNameLabel</Name>
+									<Type>String</Type>
+								</AxFormControlExtensionProperty>
+								<AxFormControlExtensionProperty>
+									<Name>browseText</Name>
+									<Type>String</Type>
+								</AxFormControlExtensionProperty>
+								<AxFormControlExtensionProperty>
+									<Name>style</Name>
+									<Type>Enum</Type>
+									<TypeName>FileUploadStyle</TypeName>
+								</AxFormControlExtensionProperty>
+								<AxFormControlExtensionProperty>
+									<Name>baseFileUploadStrategyClassName</Name>
+									<Type>String</Type>
+									<Value>FileUploadTemporaryStorageStrategy</Value>
+								</AxFormControlExtensionProperty>
+								<AxFormControlExtensionProperty>
+									<Name>imageMaxWidth</Name>
+									<Type>Int32</Type>
+									<Value>0</Value>
+								</AxFormControlExtensionProperty>
+								<AxFormControlExtensionProperty>
+									<Name>imageMaxHeight</Name>
+									<Type>Int32</Type>
+									<Value>0</Value>
+								</AxFormControlExtensionProperty>
+							</ExtensionProperties>
+						</FormControlExtension>
+					</AxFormControl>
+				</Controls>
+				<DataSource>UBSReferencingDocuments</DataSource>
+				<Style>Tabular</Style>
+			</AxFormControl>
+		</Controls>
+	</Design>
+	<Parts />
+</AxForm>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>DimensionValueDetails.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>Copy4bbqbb051</Name>
+			<FormControl xmlns=""
+				i:type="AxFormReferenceGroupControl">
+				<Name>UBSConducteurTravaux</Name>
+				<Type>ReferenceGroup</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls />
+				<DataSource>DimensionAttributeValue</DataSource>
+				<Label>@UBS:UBSSiteManager</Label>
+				<ReferenceField>UBSConducteurTravaux</ReferenceField>
+				<ReplacementFieldGroup>PersonnelNumber</ReplacementFieldGroup>
+			</FormControl>
+			<Parent>Administration</Parent>
+			<PositionType>AfterItem</PositionType>
+			<PreviousSibling>Extension_Owner</PreviousSibling>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlztuc0fnq1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormReferenceGroupControl">
+				<Name>DimensionAttributeValueLedgerOverride_UBSInventSiteCCRecId</Name>
+				<Type>ReferenceGroup</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls />
+				<DataSource>DimensionAttributeValueLedgerOverride</DataSource>
+				<ReferenceField>UBSInventSiteCCRecId</ReferenceField>
+			</FormControl>
+			<Parent>LegalEntityOverrides</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

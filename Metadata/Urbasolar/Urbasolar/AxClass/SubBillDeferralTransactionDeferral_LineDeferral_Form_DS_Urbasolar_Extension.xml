@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SubBillDeferralTransactionDeferral_LineDeferral_Form_DS_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formDatasourceStr(SubBillDeferralTransactionDeferral,SubBillDeferralTransactionLineDeferral))]
+internal final class SubBillDeferralTransactionDeferral_LineDeferral_Form_DS_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>linkActive</Name>
+				<Source><![CDATA[
+    public void linkActive()
+    {
+        next linkActive();
+
+        if (element.args().dataset()==tableNum(AccountingDistribution))
+        {
+            element.ubsAccountingDistribution = element.args().record();
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

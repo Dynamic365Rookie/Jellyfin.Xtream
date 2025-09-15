@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendBankAccounts_Form_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formStr(VendBankAccounts))]
+final class VendBankAccounts_Form_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>canSubmitToWorkflow</Name>
+				<Source><![CDATA[
+    public boolean canSubmitToWorkflow()
+    {
+        boolean         ret             = next canSubmitToWorkflow();
+        boolean         validate        = ret;
+        VendBankAccount vendBankAccount = VendBankAccount_ds.cursor();
+        VendTable       vendtable       = VendTable::find(vendBankAccount.VendAccount);
+        DocuRef         docuref         = DocuRef::findTableIdRecId(vendBankAccount.DataAreaId,
+                                                                    vendBankAccount.TableId,vendBankAccount.RecId);
+
+        if(!docuref)
+        {
+            ret = checkFailed('@UBS:UBSAttachDocToBankAccount');
+        }
+
+        if(vendtable)
+        {
+            validate = UBSReferencingDocuments::checkReferencingDocument(vendtable.Party);
+
+            if(validate)
+            {
+                DirPartyTable dirpartytable = vendtable.DirPartyTable();
+
+                validate = UBSMandatoryDocuments::checkMandatoryDocument(vendtable.Party, dirpartytable);
+            }
+        }
+
+        return ret && validate;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

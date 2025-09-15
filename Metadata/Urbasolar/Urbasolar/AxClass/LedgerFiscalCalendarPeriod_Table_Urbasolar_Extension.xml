@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>LedgerFiscalCalendarPeriod_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(LedgerFiscalCalendarPeriod))]
+final class LedgerFiscalCalendarPeriod_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>ubsCheckPeriodIsOpened</Name>
+				<Source><![CDATA[
+    public static boolean ubsCheckPeriodIsOpened(TransDate _accountingDate)
+    {
+        RecId                   calendarRecId;
+        boolean                 ret;
+        FiscalCalendarPeriod    fiscalCalendarPeriod;
+
+        calendarRecId = Ledger::fiscalCalendar(CompanyInfo::current());
+            
+        fiscalCalendarPeriod = LedgerFiscalCalendar::findPeriodByPeriodCodeDate(calendarRecId,
+                                                                                _accountingDate,
+                                                                                FiscalPeriodType::Operating);
+
+        return fiscalCalendarPeriod.currentLedgerPeriodStatus() == FiscalPeriodStatus::Open;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

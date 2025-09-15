@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>DimensionValueDetails_Form_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formstr(DimensionValueDetails))]
+
+public final class DimensionValueDetails_Form_Urbasolar_Extension
+{
+    
+
+    
+
+}
+
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>init</Name>
+				<Source><![CDATA[
+    public void init()
+    {
+        next init();
+
+        if(dimAttr.Name != "Project")
+        {
+            DimensionAttributeValue_ds.object(fieldNum(DimensionAttributeValue, UBSConducteurTravaux)).allowEdit(false);
+            UBSConducteurTravaux.enabled(false);
+            UBSConducteurTravaux.visible(false);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>DimensionAttributeValueLedgerOverride_UBSInventSiteCCRecId_OnLookup</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    /*[FormControlEventHandler(formControlStr(DimensionValueDetails, DimensionAttributeValueLedgerOverride_UBSInventSiteCCRecId), FormControlEventType::Lookup)]
+    public static void DimensionAttributeValueLedgerOverride_UBSInventSiteCCRecId_OnLookup(FormControl sender, FormControlEventArgs e)    
+    {
+       FormRun                              element;
+       FormControl                         formCtrl;
+       Query                                   query;
+       QueryBuildDataSource        InventSiteQBDS;
+       SysTableLookup                  sysTableLookup;
+        
+       element  = sender.formRun();
+       formCtrl = element.design().controlName(formControlStr(DimensionValueDetails, LedgerOverride_LegalEntity));
+        sysTableLookup = SysTableLookup::newParameters(tableNum(UBSInventSiteCrossCompany), sender);
+        
+       query = new Query();
+        InventSiteQBDS = query.addDataSource(tableNum(UBSInventSiteCrossCompany));
+        sysTableLookup.addLookupfield(fieldNum(UBSInventSiteCrossCompany, SiteId));
+        sysTableLookup.addLookupfield(fieldNum(UBSInventSiteCrossCompany, SiteDataAreaId));
+        InventSiteQBDS.addRange(fieldNum(UBSInventSiteCrossCompany, SiteDataAreaId)).value(formCtrl.valueStr());
+
+       sysTableLookup.parmQuery(query);
+       sysTableLookup.performFormLookup();
+
+       FormControlCancelableSuperEventArgs event = e as FormControlCancelableSuperEventArgs;
+       event.CancelSuperCall();
+
+
+    }*/
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    ///
+    [FormControlEventHandler(formControlStr(DimensionValueDetails, DimensionAttributeValueLedgerOverride_UBSInventSiteCCRecId), FormControlEventType::Lookup)]
+    public static void DimensionAttributeValueLedgerOverride_UBSInventSiteCCRecId_OnLookup(FormControl sender, FormControlEventArgs e)
+    {
+
+        SysReferenceTableLookup sysTableLookup = SysReferenceTableLookup::newParameters(tableNum(UBSInventSiteCrossCompany), sender);
+        Query query = new Query();
+        QueryBuildDataSource        InventSiteQBDS;
+        FormRun                              element;
+        FormControl                         formCtrl;
+        
+        element  = sender.formRun();
+        formCtrl = element.design().controlName(formControlStr(DimensionValueDetails, LedgerOverride_LegalEntity));
+
+        //QueryBuildDataSource subServiceDs = query.addDataSource(tableNum(SubService));
+        sysTableLookup.addLookupfield(fieldNum(UBSInventSiteCrossCompany, SiteId));
+        InventSiteQBDS = query.addDataSource(tableNum(UBSInventSiteCrossCompany));
+        InventSiteQBDS.addRange(fieldNum(UBSInventSiteCrossCompany, SiteDataAreaId)).value(formCtrl.valueStr());
+
+        sysTableLookup.parmQuery(query);
+        sysTableLookup.performFormLookup();
+ 
+        //InventSite inventSite = sender.dataSource().cursor();
+        /*DimensionAttrValueLedgerOverride dimAttrValOverride = inventSite = sender.dataSource().cursor();
+        qbds.addRange(fieldNum(SubService, ServiceRecId)).value(queryValue(inventSite.ServiceRecId));
+
+        tableLookup.parmQuery(query);
+        tableLookup.addLookupField(fieldNum(SubService, OneField));
+        tableLookup.addLookupField(fieldNum(SubService, AnotherField));
+
+        tableLookup.performFormLookup();*/
+
+        FormControlCancelableSuperEventArgs ce = e as FormControlCancelableSuperEventArgs;
+        ce.CancelSuperCall();
+
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

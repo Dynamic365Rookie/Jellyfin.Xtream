@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSTriggerDimensionDefaultingContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContractAttribute]
+internal final class UBSTriggerDimensionDefaultingContract
+{
+    DataAreaId legalEntity;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmLegalEntity</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Original Legal entity for update
+    /// </summary>
+    /// <param name = "_legalEntity">legalEntity</param>
+    /// <returns>legalEntity</returns>
+    [DataMemberAttribute]
+    public DataAreaId parmLegalEntity(DataAreaId _legalEntity = legalEntity)
+    {
+        legalEntity = _legalEntity ;
+        return legalEntity ;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

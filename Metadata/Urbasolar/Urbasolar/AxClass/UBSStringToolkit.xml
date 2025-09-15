@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSStringToolkit</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSStringToolkit
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>removeDuplicateWords</Name>
+				<Source><![CDATA[
+    public static str removeDuplicateWords(str input, str separator)
+    {
+        container   wordsContainer;
+        Map         seenWords = new Map(Types::String, Types::Enum);
+        container   result;
+        str         word;
+        int         i;
+
+        //Split the string
+        wordsContainer = str2con(input, separator);
+    
+        // loop the word and add it when not doublon
+        for (i = 1; i <= conLen(wordsContainer); i++)
+        {
+            word = conPeek(wordsContainer, i);
+
+            if (!seenWords.exists(word))
+            {
+                result += word;
+                seenWords.insert(word, true);
+            }
+        }
+
+        //rebuild the string
+        return con2Str(result,separator);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

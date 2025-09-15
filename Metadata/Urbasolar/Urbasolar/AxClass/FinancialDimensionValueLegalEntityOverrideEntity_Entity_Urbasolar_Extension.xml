@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>FinancialDimensionValueLegalEntityOverrideEntity_Entity_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tablestr(FinancialDimensionValueLegalEntityOverrideEntity))]
+public final class FinancialDimensionValueLegalEntityOverrideEntity_Entity_Urbasolar_Extension
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>updateEntityDataSource</Name>
+				<Source><![CDATA[
+    public boolean updateEntityDataSource(DataEntityRuntimeContext _entityCtx, DataEntityDataSourceRuntimeContext _dataSourceCtx)
+    {
+        boolean ret;
+
+        switch (_dataSourceCtx.name())
+        {
+            case dataEntityDataSourceStr(FinancialDimensionValueLegalEntityOverrideEntity, DimensionAttrValueLedgerOverride):
+
+                DimensionAttrValueLedgerOverride override = _dataSourceCtx.getBuffer();
+                UBSInventSiteCrossCompany UBSInventSiteCrossCompany = UBSInventSiteCrossCompany::find(this.SiteId, this.LegalEntityId);
+                if(this.SiteId && !UBSInventSiteCrossCompany)
+                {
+                    throw error(strFmt("@UBS:UBSSiteIdDoesNotExist", this.SiteId, this.LegalEntityId));
+                }
+
+                override.UBSInventSiteCCRecId = UBSInventSiteCrossCompany.RecId;
+                break;
+        }
+
+        ret = next updateEntityDataSource(_entityCtx,_dataSourceCtx);
+        
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>insertEntityDataSource</Name>
+				<Source><![CDATA[
+    public boolean insertEntityDataSource(DataEntityRuntimeContext _entityCtx, DataEntityDataSourceRuntimeContext _dataSourceCtx)
+    {
+        boolean ret;
+
+        switch (_dataSourceCtx.name())
+        {
+            case dataEntityDataSourceStr(FinancialDimensionValueLegalEntityOverrideEntity, DimensionAttrValueLedgerOverride):
+
+                DimensionAttrValueLedgerOverride override = _dataSourceCtx.getBuffer();
+                UBSInventSiteCrossCompany UBSInventSiteCrossCompany = UBSInventSiteCrossCompany::find(this.SiteId, this.LegalEntityId);
+                if(this.SiteId && !UBSInventSiteCrossCompany)
+                {
+                    throw error(strFmt("@UBS:UBSSiteIdDoesNotExist", this.SiteId, this.LegalEntityId));
+                }
+
+                override.UBSInventSiteCCRecId = UBSInventSiteCrossCompany.RecId;
+                break;
+        }
+
+        ret = next insertEntityDataSource(_entityCtx,_dataSourceCtx);
+        
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>postLoad</Name>
+				<Source><![CDATA[
+    public void postLoad()
+    {
+        UBSInventSiteCrossCompany inventSiteCC;
+        next postLoad();
+
+        if(this.UBSInventSiteCCRecId)
+        {
+            inventSiteCC = UBSInventSiteCrossCompany::findByRecId(this.UBSInventSiteCCRecId);
+            this.SiteId = inventSiteCC.SiteId;
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

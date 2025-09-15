@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSSReferencingDocumentBatchService</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSSReferencingDocumentBatchService extends SysOperationServiceBase
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Process</Name>
+				<Source><![CDATA[
+    public void Process()
+    {
+        changecompany(UBSMainCompanyTable::find())
+        {
+            VendTable               vendTable;
+            DirPartyTable           dirPartyTable;
+            DataArea                dataArea;
+            UBSSupplierReferencing  referencing;
+            UBSReferencingRank      referencingRank;
+
+            while select forupdate vendTable
+                    join dirPartyTable
+                        where vendTable.Party == dirPartyTable.RecId
+            {
+                int maxReferencing;
+                int minReferencing = maxInt();
+                str bestReferencing, worstReferencing;
+
+                real sumInvoiceAmount   = this.sumInvoiceAmountCrossCompany(vendTable);
+                int  sumPurchTable      = this.sumPurchTableCrossCompany(vendTable);
+
+                while select referencingRank
+                        exists join referencing
+                            where referencing.UBSProcCategoryName     == dirPartyTable.UBSProcCategoryName &&
+                                  (referencing.UBSMaximumVolume       <= sumPurchTable ||
+                                  referencing.UBSMaximumPurchaseValue <= sumInvoiceAmount) &&
+                                  referencingRank.UBSReferencing      == referencing.UBSReferencing
+                {
+                    if(referencingRank.UBSRank > maxReferencing)
+                    {
+                        maxReferencing  = referencingRank.UBSRank;
+                        bestReferencing = referencingRank.UBSReferencing;
+                    }
+
+                    if(minReferencing > referencingRank.UBSRank)
+                    {
+                        minReferencing   = referencingRank.UBSRank;
+                        worstReferencing = referencingRank.UBSReferencing;
+                    }
+                }
+
+                if (sumPurchTable == 0 && sumInvoiceAmount == 0 && !System.String::IsNullOrWhiteSpace(worstReferencing))
+                {
+                    bestReferencing = worstReferencing;
+                }
+
+                if(bestReferencing != dirPartyTable.UBSReferencing && !System.String::IsNullOrWhiteSpace(bestReferencing))
+                {
+                    VendPriceToleranceGroupId vendPriceToleranceGroupId = this.findOrCreateVendPriceToleranceGroup(bestReferencing);
+                    str                       updateReason              = PurchParameters::find().UBSUpdateReason;
+
+                    ttsbegin;
+                    dirPartyTable.selectForUpdate(true);
+                    dirPartyTable.UBSReferencing = bestReferencing;
+                    dirPartyTable.update();
+                    ttscommit;
+
+                    while select dataArea
+                    {
+                        changecompany(dataArea.Id)
+                        {
+                            VendTable vendTableCC = VendTable::findByPartyRecId(dirPartyTable.RecId, true);
+
+                            if(vendTableCC)
+                            {
+                                ttsbegin;
+                                vendTableCC.Blocked                   = CustVendorBlocked::Requisition;
+                                vendTableCC.VendPriceToleranceGroupId = vendPriceToleranceGroupId;
+                                vendTableCC.update();
+                                ttscommit;
+
+                                vendOnHoldHistory::createHistoryRecord(vendTableCC.AccountNum,
+                                                                       vendTableCC.Blocked,
+                                                                       updateReason);
+
+                                if(vendTableCC.canModifyChangeProposal())
+                                {
+                                    VendTable originalTableCC = vendTableCC.orig();
+
+                                    ttsbegin;
+                                    // create or update an approval entry
+                                    VendTableChangeProposal change = VendTableChangeProposal::findOrCreate(vendTableCC.RecId, true);
+                                    change.(fieldNum(VendTableChangeProposal,VendPriceToleranceGroupId)) = vendTableCC.(fieldNum(VendTable,VendPriceToleranceGroupId));
+                                    change.setFlagForChangedField(VendTableChangeProposalField::VendPriceToleranceGroupId);
+                                    change.update();
+
+                                    vendTableCC.VendPriceToleranceGroupId = originalTableCC.VendPriceToleranceGroupId;
+                                    vendTableCC.update();
+                                    ttscommit;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findOrCreateVendPriceToleranceGroup</Name>
+				<Source><![CDATA[
+    private VendPriceToleranceGroupId findOrCreateVendPriceToleranceGroup(UBSReferencing  _ubsReferencing)
+    {
+        VendPriceToleranceGroup vendPriceToleranceGroup = VendPriceToleranceGroup::find(_ubsReferencing);
+
+        if(!vendPriceToleranceGroup)
+        {
+            ttsbegin;
+            vendPriceToleranceGroup.selectForUpdate();
+            vendPriceToleranceGroup.VendPriceToleranceGroupId = _ubsReferencing;
+            vendPriceToleranceGroup.Name = _ubsReferencing;
+            vendPriceToleranceGroup.insert();
+            ttscommit;
+        }
+
+        return vendPriceToleranceGroup.VendPriceToleranceGroupId;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>sumInvoiceAmountCrossCompany</Name>
+				<Source><![CDATA[
+    private real sumInvoiceAmountCrossCompany(VendTable _vendTable)
+    {
+        VendInvoiceJour vendInvoiceJour;
+
+        select crosscompany
+            sum(InvoiceAmountMST), OrderAccount
+                        from vendInvoiceJour
+                            group by OrderAccount
+                                where vendInvoiceJour.OrderAccount == _vendTable.AccountNum;
+
+        return vendInvoiceJour.InvoiceAmountMST;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>sumPurchTableCrossCompany</Name>
+				<Source><![CDATA[
+    private int sumPurchTableCrossCompany(VendTable _vendTable)
+    {
+        PurchTable purchTable;
+
+        select crosscompany
+            count(recid)
+                from purchTable
+                   where purchTable.OrderAccount == _vendTable.AccountNum;
+        
+        return purchTable.RecId;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

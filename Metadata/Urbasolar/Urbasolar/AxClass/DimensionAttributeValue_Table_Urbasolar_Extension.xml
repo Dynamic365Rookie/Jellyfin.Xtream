@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>DimensionAttributeValue_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(DimensionAttributeValue))]
+
+public final class DimensionAttributeValue_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>UBSdescription</Name>
+				<Source><![CDATA[
+    public display Description UBSdescription()
+    {
+        DimensionFinancialTag dimFinTag;
+        select Description from dimFinTag where dimFinTag.Value == this.DisplayValue;
+
+        return dimFinTag.Description;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

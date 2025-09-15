@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSInventSiteCrossCompany</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class UBSInventSiteCrossCompany extends common
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>find</Name>
+				<Source><![CDATA[
+    public static UBSInventSiteCrossCompany find(InventSiteId _siteId, DataAreaId _dataAreaId)
+    {
+        UBSInventSiteCrossCompany inventSiteCC;
+        select inventSiteCC where inventSiteCC.SiteId == _siteId && inventSiteCC.SiteDataAreaId == _dataAreaId;
+        return inventSiteCC;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findByRecId</Name>
+				<Source><![CDATA[
+    public static UBSInventSiteCrossCompany findByRecId(RecId _recId)
+    {
+        UBSInventSiteCrossCompany inventSiteCC;
+        select inventSiteCC where inventSiteCC.RecId == _recId;
+        return inventSiteCC;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>createRecord</Name>
+				<Source><![CDATA[
+    public static UBSInventSiteCrossCompany createRecord(InventSiteId _siteId, DataAreaId _dataAreaId)
+    {
+        UBSInventSiteCrossCompany inventSiteCC;
+        inventSiteCC.SiteId = _siteId;
+        inventSiteCC.SiteDataAreaId = _dataAreaId;
+        inventSiteCC.insert();
+        return inventSiteCC;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>deleteRecord</Name>
+				<Source><![CDATA[
+    public static void deleteRecord(InventSiteId _siteId, DataAreaId _dataAreaId)
+    {
+        UBSInventSiteCrossCompany inventSiteCC;
+        ttsbegin;
+        delete_from inventSiteCC
+            where inventSiteCC.SiteId == _siteId
+            &&  inventSiteCC.SiteDataAreaId == _dataAreaId;
+
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<ConfigurationKey>LogisticsBasic</ConfigurationKey>
+	<DeveloperDocumentation>@SYS124082</DeveloperDocumentation>
+	<FormRef>InventSite</FormRef>
+	<Label>@SYS103211</Label>
+	<TableGroup>Group</TableGroup>
+	<TitleField1>SiteId</TitleField1>
+	<TitleField2>SiteDataAreaId</TitleField2>
+	<AllowRowVersionChangeTracking>Yes</AllowRowVersionChangeTracking>
+	<CacheLookup>Found</CacheLookup>
+	<ClusteredIndex>SiteIdx</ClusteredIndex>
+	<Modules>Inventory</Modules>
+	<PrimaryIndex>SiteIdx</PrimaryIndex>
+	<ReplacementKey>SiteIdx</ReplacementKey>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<TableContents>BaseDefaultData</TableContents>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>SiteId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>SiteId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>SiteId</DataField>
+				</AxTableFieldGroupField>
+				<AxTableFieldGroupField>
+					<DataField>SiteDataAreaId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Dimension</Name>
+			<Label>@SYS5951</Label>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>Identification</Name>
+			<Label>@SYS5711</Label>
+			<Fields>
+				<AxTableFieldGroupField>
+					<DataField>SiteId</DataField>
+				</AxTableFieldGroupField>
+			</Fields>
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>SiteId</Name>
+			<AllowEdit>No</AllowEdit>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>InventSiteId</ExtendedDataType>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>SiteDataAreaId</Name>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>SiteIdx</Name>
+			<AlternateKey>Yes</AlternateKey>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>SiteId</DataField>
+				</AxTableIndexField>
+				<AxTableIndexField>
+					<DataField>SiteDataAreaId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations />
+	<StateMachines />
+</AxTable>

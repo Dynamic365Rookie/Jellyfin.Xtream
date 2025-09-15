@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxView xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSDimensionCombinationView</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class UBSDimensionCombinationView extends common
+{
+    
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getValueColumnForDimensionAttributeSql</Name>
+				<Source><![CDATA[
+    private static str getValueColumnForDimensionAttributeSql()
+    {
+        return DimensionSchemaAndDataSynchronizationUtility::getDataEntityDimensionAttributeValueColumnSql(
+            tableStr(DimensionCombinationEntity),
+            tableNum(DimensionAttributeValueCombination),
+            tableStaticMethodStr(DimensionCombinationEntity, getValueColumnForDimensionAttributeSql));
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>DisplayValue</Name>
+			<DataField>DisplayValue</DataField>
+			<DataSource>DimensionAttributeValueCombination</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>AccountStructure</Name>
+			<DataField>AccountStructure</DataField>
+			<DataSource>DimensionAttributeValueCombination</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>RecordId</Name>
+			<DataField>RecId</DataField>
+			<DataSource>DimensionAttributeValueCombination</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>SystemGeneratedJournalAccount</Name>
+			<DataField>SystemGeneratedJournalAccount</DataField>
+			<DataSource>DimensionAttributeValueCombination</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>SystemGeneratedJournalAccountType</Name>
+			<DataField>SystemGeneratedJournalAccountType</DataField>
+			<DataSource>DimensionAttributeValueCombination</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>SystemGeneratedJournalAccountValue</Name>
+			<DataField>SystemGeneratedJournalAccountValue</DataField>
+			<DataSource>DimensionAttributeValueCombination</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>MainAccountValue</Name>
+			<DataField>MainAccountValue</DataField>
+			<DataSource>DimensionAttributeValueCombination</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldComputedString">
+			<Name>CostCenter</Name>
+			<ViewMethod>getValueColumnForDimensionAttributeSql</ViewMethod>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldComputedString">
+			<Name>ExpenseNature</Name>
+			<ViewMethod>getValueColumnForDimensionAttributeSql</ViewMethod>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldComputedString">
+			<Name>GroupChartOfAccount</Name>
+			<ViewMethod>getValueColumnForDimensionAttributeSql</ViewMethod>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldComputedString">
+			<Name>Project</Name>
+			<ViewMethod>getValueColumnForDimensionAttributeSql</ViewMethod>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldComputedString">
+			<Name>Vendor</Name>
+			<ViewMethod>getValueColumnForDimensionAttributeSql</ViewMethod>
+		</AxViewField>
+	</Fields>
+	<Indexes />
+	<Mappings />
+	<Relations />
+	<StateMachines />
+	<ViewMetadata>
+		<Name>Metadata</Name>
+		<SourceCode>
+			<Methods />
+		</SourceCode>
+		<DataSources>
+			<AxQuerySimpleRootDataSource>
+				<Name>DimensionAttributeValueCombination</Name>
+				<AllowAdd>No</AllowAdd>
+				<DynamicFields>Yes</DynamicFields>
+				<Table>DimensionAttributeValueCombination</Table>
+				<DataSources>
+					<AxQuerySimpleEmbeddedDataSource>
+						<Name>AccountStructure</Name>
+						<DynamicFields>Yes</DynamicFields>
+						<Table>DimensionHierarchy</Table>
+						<DataSources />
+						<DerivedDataSources />
+						<Fields />
+						<Ranges />
+						<JoinMode>OuterJoin</JoinMode>
+						<Relations>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation1</Name>
+								<JoinRelationName>AccountStructure</JoinRelationName>
+							</AxQuerySimpleDataSourceRelation>
+						</Relations>
+					</AxQuerySimpleEmbeddedDataSource>
+				</DataSources>
+				<DerivedDataSources />
+				<Fields />
+				<Ranges />
+				<GroupBy />
+				<Having />
+				<OrderBy />
+			</AxQuerySimpleRootDataSource>
+		</DataSources>
+	</ViewMetadata>
+</AxView>

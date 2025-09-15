@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchCreateOrder_Form_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formStr(PurchCreateOrder))]
+
+public final class PurchCreateOrder_Form_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>PurchTable_UBSProjectDim_OnLookup</Name>
+				<Source><![CDATA[
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    [FormControlEventHandler(formControlStr(PurchCreateOrder, PurchTable_UBSProjectDim), FormControlEventType::Lookup)]
+    public static void PurchTable_UBSProjectDim_OnLookup(FormControl sender, FormControlEventArgs e)
+    {
+
+        UBSProjectDimensionValueLookup::projectDimensionLookup(sender, e);
+
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

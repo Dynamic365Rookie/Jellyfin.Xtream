@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendPackingSlipJour_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(VendPackingSlipJour))]
+public final class VendPackingSlipJour_Table_Urbasolar_Extension
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>UBSgetTaxAmountFromAccountingDistribution</Name>
+				<Source><![CDATA[
+    public Amount UBSgetTaxAmountFromAccountingDistribution()
+    {
+        AccountingDistribution distribution;
+        select firstonly sum(TransactionCurrencyAmount) from distribution where distribution.SourceDocumentHeader == this.SourceDocumentHeader
+            && distribution.MonetaryAmount == MonetaryAmount::Tax;
+
+        return distribution.TransactionCurrencyAmount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSgetTotalAmountFromAccountingDistribution</Name>
+				<Source><![CDATA[
+    public Amount UBSgetTotalAmountFromAccountingDistribution()
+    {
+        AccountingDistribution distribution;
+        select firstonly sum(TransactionCurrencyAmount) from distribution where distribution.SourceDocumentHeader == this.SourceDocumentHeader
+            && distribution.MonetaryAmount == MonetaryAmount::ExtendedPrice;
+
+        return distribution.TransactionCurrencyAmount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSgetTotalAmountFromAccountingDistribution_PurchReq</Name>
+				<Source><![CDATA[
+    public Amount UBSgetTotalAmountFromAccountingDistribution_PurchReq()
+    {
+        AccountingDistribution distribution;
+        PurchLine PurchLine;
+        VendPackingSlipTrans VendPackingSlipTrans;
+
+        select firstonly sum(TransactionCurrencyAmount) from distribution
+            join VendPackingSlipTrans where VendPackingSlipTrans.SourceDocumentLine == distribution.SourceDocumentLine
+            join PurchLine where PurchLine.InventTransId == VendPackingSlipTrans.InventTransId
+
+            && distribution.SourceDocumentHeader == this.SourceDocumentHeader
+            && PurchLine.PurchReqId != ''
+            && distribution.MonetaryAmount == MonetaryAmount::ExtendedPrice;
+
+
+        return distribution.TransactionCurrencyAmount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSgetPreviousPackingSlip</Name>
+				<Source><![CDATA[
+    public VendPackingSlipJour UBSgetPreviousPackingSlip()
+    {
+        VendPackingSlipJour previousPackingSlipJour;
+        VendPackingSlipTrans vendPackingSlipTrans;
+
+        select firstonly previousPackingSlipJour
+            order by RecId desc
+            join vendPackingSlipTrans where vendPackingSlipTrans.PackingSlipId == previousPackingSlipJour.PackingSlipId
+            && VendPackingSlipTrans.Qty != 0
+            && previousPackingSlipJour.PurchId == this.PurchId
+            && previousPackingSlipJour.RecId < this.RecId
+            ;
+        return previousPackingSlipJour;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSgetPackingSlipNumber</Name>
+				<Source><![CDATA[
+    public int UBSgetPackingSlipNumber()
+    {
+        VendPackingSlipJour VendPackingSlipJour;
+        Map vendPackingSlipJourMapping = new Map(Types::Int64, Types::Integer);
+        int counter = 1;
+
+        while select VendPackingSlipJour
+            order by RecId asc
+            where VendPackingSlipJour.PurchId == this.PurchId
+        {
+            if(!VendPackingSlipJour.isCanceled())
+            {
+                vendPackingSlipJourMapping.insert(VendPackingSlipJour.RecId, counter);
+                counter++;
+            }
+        }
+
+        return vendPackingSlipJourMapping.lookup(this.RecId);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSgetMonthTaxAmount</Name>
+				<Source><![CDATA[
+    public Amount UBSgetMonthTaxAmount()
+    {
+        VendPackingSlipJour VendPackingSlipJour;
+        Amount monthTaxAmount = 0;
+        date monthStartDate = dateStartMth(this.DeliveryDate);
+        date monthEndDate = endMth(this.DeliveryDate);
+
+        while select VendPackingSlipJour where VendPackingSlipJour.DeliveryDate >= monthStartDate && VendPackingSlipJour.DeliveryDate <= monthEndDate
+            && VendPackingSlipJour.PurchId == this.PurchId
+        {
+            monthTaxAmount += VendPackingSlipJour.UBSgetTaxAmountFromAccountingDistribution();
+        }
+        return monthTaxAmount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSgetMonthTotalAmount</Name>
+				<Source><![CDATA[
+    public Amount UBSgetMonthTotalAmount()
+    {
+        VendPackingSlipJour VendPackingSlipJour;
+        Amount monthTotalAmount = 0;
+        date monthStartDate = dateStartMth(this.DeliveryDate);
+        date monthEndDate = endMth(this.DeliveryDate);
+
+        while select VendPackingSlipJour where VendPackingSlipJour.DeliveryDate >= monthStartDate && VendPackingSlipJour.DeliveryDate <= monthEndDate
+            && VendPackingSlipJour.PurchId == this.PurchId
+        {
+            monthTotalAmount += VendPackingSlipJour.UBSgetTotalAmountFromAccountingDistribution();
+        }
+        return monthTotalAmount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSgetMonthTotalAmount_PurchReq</Name>
+				<Source><![CDATA[
+    public Amount UBSgetMonthTotalAmount_PurchReq()
+    {
+        VendPackingSlipJour VendPackingSlipJour;
+        Amount monthTotalAmount = 0;
+        date monthStartDate = dateStartMth(this.DeliveryDate);
+        date monthEndDate = endMth(this.DeliveryDate);
+
+        while select VendPackingSlipJour where VendPackingSlipJour.DeliveryDate >= monthStartDate && VendPackingSlipJour.DeliveryDate <= monthEndDate
+            && VendPackingSlipJour.PurchId == this.PurchId
+        {
+            monthTotalAmount += VendPackingSlipJour.UBSgetTotalAmountFromAccountingDistribution_PurchReq();
+        }
+        return monthTotalAmount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSgetCumulatedTaxAmount</Name>
+				<Source><![CDATA[
+    public Amount UBSgetCumulatedTaxAmount()
+    {
+        VendPackingSlipJour VendPackingSlipJour;
+        Amount taxAmount = 0;
+        date monthStartDate = dateStartMth(this.DeliveryDate);
+        date monthEndDate = endMth(this.DeliveryDate);
+
+        while select VendPackingSlipJour where VendPackingSlipJour.RecId <= this.RecId && VendPackingSlipJour.PurchId == this.PurchId
+        {
+            taxAmount += VendPackingSlipJour.UBSgetTaxAmountFromAccountingDistribution();
+        }
+        return taxAmount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSgetCumulatedTotalAmount</Name>
+				<Source><![CDATA[
+    public Amount UBSgetCumulatedTotalAmount()
+    {
+        VendPackingSlipJour VendPackingSlipJour;
+        Amount totalAmount = 0;
+        date monthStartDate = dateStartMth(this.DeliveryDate);
+        date monthEndDate = endMth(this.DeliveryDate);
+
+        while select VendPackingSlipJour where VendPackingSlipJour.RecId <= this.RecId && VendPackingSlipJour.PurchId == this.PurchId
+        {
+            totalAmount += VendPackingSlipJour.UBSgetTotalAmountFromAccountingDistribution();
+        }
+        return totalAmount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSgetCumulatedTotalAmount_PurchReq</Name>
+				<Source><![CDATA[
+    public Amount UBSgetCumulatedTotalAmount_PurchReq()
+    {
+        VendPackingSlipJour VendPackingSlipJour;
+        Amount totalAmount = 0;
+        date monthStartDate = dateStartMth(this.DeliveryDate);
+        date monthEndDate = endMth(this.DeliveryDate);
+
+        while select VendPackingSlipJour where VendPackingSlipJour.RecId <= this.RecId && VendPackingSlipJour.PurchId == this.PurchId
+        {
+            totalAmount += VendPackingSlipJour.UBSgetTotalAmountFromAccountingDistribution_PurchReq();
+        }
+        return totalAmount;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

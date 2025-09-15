@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>FormletterService_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(FormletterService))]
+final class FormletterService_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>postPurchaseOrderPackingSlip</Name>
+				<Source><![CDATA[
+    FormletterOutputContract postPurchaseOrderPackingSlip(PurchFormLetterPackingSlipContract _contract)
+    {
+        FormletterOutputContract ret = next postPurchaseOrderPackingSlip(_contract);
+        
+        if(_contract.parmVersioningUpdateType() != VersioningUpdateType::Initial)
+        {
+            return ret;
+        }
+
+        VendPackingSlipJour vendPackingSlipJour = this.parmJournal() as VendPackingSlipJour;
+        VendPackingSlipTrans receiptTrans;
+        SalesTable salesTable;
+        PurchLine purchLine;
+        SalesLine salesLine;
+        SalesFormLetter_PackingSlip salesFormLetter_PackingSlip;
+        salesFormletterParmData salesFormLetterParmData;
+
+        SalesParmTable salesParmTable;
+        SalesParmLine salesParmLine;
+        salesParmUpdate salesParmUpdate;
+        CustPackingSlipJour custPackingSlipJour;
+        SalesParameters salesParameters = SalesParameters::find();
+        PurchParmLine purchParmLine;
+        InventDim inventDim;
+        InventTrans inventTrans;
+        InventTransOrigin inventTransOrigin;
+
+        select firstonly salesTable where salesTable.UBSPurchId == vendPackingSlipJour.PurchId;
+
+        try
+        {
+            if(salesTable)
+            {
+                // Create CustPackingSlipJour
+            
+                //Code starts from here
+                if (salestable.SalesStatus == SalesStatus::Backorder)
+                {
+                    ttsbegin;
+                    salesFormLetterParmData = salesFormletterParmData::newData(DocumentStatus::PackingSlip, VersioningUpdateType::Initial);
+
+                    salesFormLetterParmData.parmOnlyCreateParmUpdate(true);
+                    salesFormLetterParmData.createData(false);
+                    salesParmUpdate = salesFormLetterParmData.parmParmUpdate();
+
+                    salesParmTable.clear();
+                    salesParmTable.TransDate                = today();
+                    salesParmTable.Ordering                 = DocumentStatus::PackingSlip;
+                    salesParmTable.ParmJobStatus            = ParmJobStatus::Waiting;
+                    salesParmTable.salesId                  = salesTable.salesId;
+
+                    salesParmTable.salesName                = salesTable.salesName;
+                    salesParmTable.DeliveryName             = salesTable.DeliveryName;
+                    salesParmTable.DeliveryPostalAddress    = salesTable.DeliveryPostalAddress;
+                    salesParmTable.CustAccount              = salesTable.CustAccount;
+                    salesParmTable.CurrencyCode             = salesTable.CurrencyCode;
+                    salesParmTable.InvoiceAccount           = salesTable.InvoiceAccount;
+                    salesParmTable.ParmId                   = salesParmUpdate.ParmId;
+                    salesParmTable.insert();
+
+                    // Create CustPackingSlipTrans
+                    while select receiptTrans where receiptTrans.VendPackingSlipJour == vendPackingSlipJour.RecId
+                    {
+                        select firstonly purchLine where purchLine.PurchId == vendPackingSlipJour.PurchId
+                            && purchLine.LineNumber == receiptTrans.PurchaseLineLineNumber;
+                        select salesLine where salesLine.UBSPurchLineRecId == purchLine.RecId
+                            && salesLine.SalesId == salesTable.SalesId;
+                        select firstonly purchParmLine order by purchParmLine.ParmId desc
+                            where purchParmLine.PurchLineRecId == purchLine.RecId;
+
+                        while(salesLine && InventDim::find(salesLine.InventDimId).InventSiteId == salesParameters.UBS_SAS_InventSiteId)
+                        {
+                            next salesLine;
+                        }
+
+                        if(!salesLine)
+                        {
+                            Error("@UBS:UBSNoLineRetrieved");
+                            break;
+                        }
+
+                        salesParmLine.clear();
+
+                        if(purchParmLine && purchParmLine.RemainAfter == 0)
+                        {
+                            salesParmLine.closed = purchParmLine.closed;
+                        }
+
+                        salesParmLine.InitFromsalesLine(salesLine);
+                        salesParmLine.DeliverNow    = min(salesLine.QtyOrdered, receiptTrans.Qty);
+                        salesParmLine.InventNow     = salesParmLine.DeliverNow;
+                        salesParmLine.RemainBefore = salesLine.RemainSalesPhysical;
+                        salesParmLine.RemainBeforeInvent = salesLine.RemainInventPhysical;
+
+                        select firstonly inventTrans order by inventTrans.ModifiedDateTime desc
+                            join inventTransOrigin 
+                            where inventTrans.InventTransOrigin == inventTransOrigin.RecId
+                            && inventTransOrigin.InventTransId == purchParmLine.InventTransId;
+
+                        if(inventTrans && inventTrans.inventDim())
+                        {
+                            inventDim.InventSiteId = inventTrans.inventDim().InventSiteId;
+                            inventDim.InventLocationId = inventTrans.inventDim().InventLocationId;
+                            inventDim.inventBatchId = inventTrans.inventDim().inventBatchId;
+                            inventDim.inventSerialId = inventTrans.inventDim().inventSerialId;
+                            inventDim.wMSLocationId = inventTrans.inventDim().wMSLocationId;
+                            inventDim.InventStatusId = inventTrans.inventDim().InventStatusId;
+                        }
+                        salesParmLine.InventDimId = InventDim::findOrCreate(inventDim).inventDimId;
+
+                        select firstonly forupdate inventTrans order by inventTrans.ModifiedDateTime desc
+                            join inventTransOrigin
+                            where inventTrans.InventTransOrigin == inventTransOrigin.RecId
+                            && inventTransOrigin.InventTransId == salesParmLine.InventTransId;
+
+                        if(inventTrans)
+                        {
+                            inventTrans.InventDimId = salesParmLine.InventDimId;
+                            inventTrans.update();
+                        }
+                        
+                        if(salesParmLine.closed)
+                        {
+                            salesParmLine.RemainAfter   = 0;
+                            salesParmLine.RemainAfterInvent = 0;
+                        }
+                        else
+                        {
+                            salesParmLine.setQty(DocumentStatus::PackingSlip, true, true);
+                        }
+
+                        salesParmLine.ParmId        = salesParmTable.ParmId;
+                        salesParmLine.TableRefId    = salesParmTable.TableRefId;
+                        salesParmLine.setLineAmount(salesLine);
+                        salesParmLine.insert();
+                    }
+
+                    salesFormLetter_PackingSlip = salesFormLetter::construct(DocumentStatus::PackingSlip);
+                    salesFormLetter_PackingSlip.transDate(today());
+                    salesFormLetter_PackingSlip.proforma(false);
+                    salesFormLetter_PackingSlip.specQty(salesUpdate::All);
+                    salesFormLetter_PackingSlip.salesTable(salesTable);
+                    salesFormLetter_PackingSlip.parmId(salesParmTable.ParmId);
+                    salesFormLetter_PackingSlip.salesParmUpdate(salesFormLetterParmData.parmParmUpdate());
+                    salesFormLetter_PackingSlip.run();
+           
+                    if (salesFormLetter_PackingSlip.parmJournalRecord().TableId == tableNum(custPackingSlipJour))
+                    {
+                        custPackingSlipJour = salesFormLetter_PackingSlip.parmJournalRecord();
+                    }
+
+                    ttscommit;
+                }
+            }
+
+        }
+        catch(Exception::Error)
+        {
+            ttsabort;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

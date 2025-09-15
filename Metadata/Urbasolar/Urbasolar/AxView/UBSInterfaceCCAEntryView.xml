@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxView xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSInterfaceCCAEntryView</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class UBSInterfaceCCAEntryView extends common
+{
+}
+]]></Declaration>
+		<Methods />
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>InvoiceId</Name>
+			<DataField>InvoiceId</DataField>
+			<DataSource>SubBillDeferralScheduleTable</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>AccountingDate</Name>
+			<DataField>AccountingDate</DataField>
+			<DataSource>GeneralJournalEntry</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>SubledgerVoucherDataAreaId</Name>
+			<DataField>SubledgerVoucherDataAreaId</DataField>
+			<DataSource>GeneralJournalEntry</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>MainAccountValue</Name>
+			<DataField>MainAccountValue</DataField>
+			<DataSource>UBSDimensionCombinationView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>AccountingCurrencyAmount</Name>
+			<DataField>AccountingCurrencyAmount</DataField>
+			<DataSource>GeneralJournalAccountEntry</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>CostCenter</Name>
+			<DataField>CostCenter</DataField>
+			<DataSource>UBSDimensionCombinationView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>ExpenseNature</Name>
+			<DataField>ExpenseNature</DataField>
+			<DataSource>UBSDimensionCombinationView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>GroupChartOfAccount</Name>
+			<DataField>GroupChartOfAccount</DataField>
+			<DataSource>UBSDimensionCombinationView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Project</Name>
+			<DataField>Project</DataField>
+			<DataSource>UBSDimensionCombinationView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Vendor</Name>
+			<DataField>Vendor</DataField>
+			<DataSource>UBSDimensionCombinationView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>TransactionCurrencyAmount</Name>
+			<DataField>TransactionCurrencyAmount</DataField>
+			<DataSource>GeneralJournalAccountEntry</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>TransactionCurrencyCode</Name>
+			<DataField>TransactionCurrencyCode</DataField>
+			<DataSource>GeneralJournalAccountEntry</DataSource>
+		</AxViewField>
+	</Fields>
+	<Indexes />
+	<Mappings />
+	<Relations />
+	<StateMachines />
+	<ViewMetadata>
+		<Name>Metadata</Name>
+		<SourceCode>
+			<Methods />
+		</SourceCode>
+		<DataSources>
+			<AxQuerySimpleRootDataSource>
+				<Name>GeneralJournalAccountEntry</Name>
+				<DynamicFields>Yes</DynamicFields>
+				<Table>GeneralJournalAccountEntry</Table>
+				<DataSources>
+					<AxQuerySimpleEmbeddedDataSource>
+						<Name>GeneralJournalEntry</Name>
+						<DynamicFields>Yes</DynamicFields>
+						<Table>GeneralJournalEntry</Table>
+						<DataSources>
+							<AxQuerySimpleEmbeddedDataSource>
+								<Name>SubBillDeferralAuditTrail</Name>
+								<DynamicFields>Yes</DynamicFields>
+								<Table>SubBillDeferralAuditTrail</Table>
+								<DataSources>
+									<AxQuerySimpleEmbeddedDataSource>
+										<Name>SubBillDeferralScheduleTable</Name>
+										<DynamicFields>Yes</DynamicFields>
+										<Table>SubBillDeferralScheduleTable</Table>
+										<DataSources />
+										<DerivedDataSources />
+										<Fields />
+										<Ranges />
+										<Relations>
+											<AxQuerySimpleDataSourceRelation>
+												<Name>QueryDataSourceRelation1</Name>
+												<JoinDataSource>SubBillDeferralAuditTrail</JoinDataSource>
+												<JoinRelationName>SubBillDeferralScheduleTable</JoinRelationName>
+											</AxQuerySimpleDataSourceRelation>
+										</Relations>
+									</AxQuerySimpleEmbeddedDataSource>
+								</DataSources>
+								<DerivedDataSources />
+								<Fields />
+								<Ranges />
+								<Relations>
+									<AxQuerySimpleDataSourceRelation>
+										<Name>QueryDataSourceRelation1</Name>
+										<Field>SubledgerVoucher</Field>
+										<JoinDataSource>GeneralJournalEntry</JoinDataSource>
+										<RelatedField>VoucherEvent</RelatedField>
+									</AxQuerySimpleDataSourceRelation>
+									<AxQuerySimpleDataSourceRelation>
+										<Name>QueryDataSourceRelation2</Name>
+										<Field>AccountingDate</Field>
+										<JoinDataSource>GeneralJournalEntry</JoinDataSource>
+										<RelatedField>TransDateEvent</RelatedField>
+									</AxQuerySimpleDataSourceRelation>
+									<AxQuerySimpleDataSourceRelation>
+										<Name>QueryDataSourceRelation3</Name>
+										<Field>SubledgerVoucherDataAreaId</Field>
+										<JoinDataSource>GeneralJournalEntry</JoinDataSource>
+										<RelatedField>DataAreaId</RelatedField>
+									</AxQuerySimpleDataSourceRelation>
+								</Relations>
+							</AxQuerySimpleEmbeddedDataSource>
+						</DataSources>
+						<DerivedDataSources />
+						<Fields />
+						<Ranges />
+						<Relations>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation1</Name>
+								<JoinDataSource>GeneralJournalAccountEntry</JoinDataSource>
+								<JoinRelationName>GeneralJournalEntry</JoinRelationName>
+							</AxQuerySimpleDataSourceRelation>
+						</Relations>
+					</AxQuerySimpleEmbeddedDataSource>
+					<AxQuerySimpleEmbeddedDataSource>
+						<Name>UBSDimensionCombinationView</Name>
+						<DynamicFields>Yes</DynamicFields>
+						<Table>UBSDimensionCombinationView</Table>
+						<DataSources />
+						<DerivedDataSources />
+						<Fields />
+						<Ranges />
+						<Relations>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation1</Name>
+								<Field>LedgerDimension</Field>
+								<JoinDataSource>GeneralJournalAccountEntry</JoinDataSource>
+								<RelatedField>RecordId</RelatedField>
+							</AxQuerySimpleDataSourceRelation>
+						</Relations>
+					</AxQuerySimpleEmbeddedDataSource>
+				</DataSources>
+				<DerivedDataSources />
+				<Fields />
+				<Ranges />
+				<GroupBy />
+				<Having />
+				<OrderBy />
+			</AxQuerySimpleRootDataSource>
+		</DataSources>
+	</ViewMetadata>
+</AxView>

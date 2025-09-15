@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSProjectDimensionValueLookup</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public final class UBSProjectDimensionValueLookup
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>projectDimensionLookup</Name>
+				<Source><![CDATA[
+    public static void projectDimensionLookup(FormControl sender, FormControlEventArgs e)
+    {
+
+        SysReferenceTableLookup sysTableLookup = SysReferenceTableLookup::newParameters(tableNum(DimensionAttributeValue), sender);
+        Query query = new Query();
+        QueryBuildDataSource        DimensionAttributeValueQBDS, overrideQBDS, LedgerQBDS, DimensionFinancialTagQBDS;
+        DimensionAttribute projectDimensionAttribute = DimensionAttribute::findByName('Project');
+        
+        sysTableLookup.addLookupfield(fieldNum(DimensionAttributeValue, DisplayValue));
+        sysTableLookup.addLookupMethod(tableMethodStr(DimensionAttributeValue, UBSdescription));
+
+        DimensionAttributeValueQBDS = query.addDataSource(tableNum(DimensionAttributeValue));
+        DimensionAttributeValueQBDS.addRange(fieldNum(DimensionAttributeValue, DimensionAttribute)).value(queryValue(projectDimensionAttribute.RecId));
+        DimensionAttributeValueQBDS.addRange(fieldNum(DimensionAttributeValue, IsDeleted)).value(queryValue(NoYes::No));
+        DimensionAttributeValueQBDS.addRange(fieldNum(DimensionAttributeValue, IsBlockedForManualEntry)).value(queryValue(NoYes::No));
+        DimensionAttributeValueQBDS.addRange(fieldNum(DimensionAttributeValue, IsSuspended)).value(queryValue(NoYes::No));
+
+        overrideQBDS = DimensionAttributeValueQBDS.addDataSource(tableNum(DimensionAttrValueLedgerOverride));
+        overrideQBDS.relations(true);
+        overrideQBDS.joinMode(JoinMode::NoExistsJoin);
+        overrideQBDS.addRange(fieldNum(DimensionAttrValueLedgerOverride, IsSuspended)).value(queryValue(NoYes::Yes));
+
+        LedgerQBDS = overrideQBDS.addDataSource(tableNum(Ledger)); // filter to current company
+        LedgerQBDS.relations(false);
+        LedgerQBDS.addLink(FieldNum(DimensionAttrValueLedgerOverride, Ledger),FieldNum(Ledger, RecId));
+        LedgerQBDS.joinMode(JoinMode::InnerJoin);
+        LedgerQBDS.addRange(fieldNum(Ledger, Name)).value(curExt());
+
+        sysTableLookup.parmQuery(query);
+        sysTableLookup.performFormLookup();
+
+        FormControlCancelableSuperEventArgs ce = e as FormControlCancelableSuperEventArgs;
+        ce.CancelSuperCall();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

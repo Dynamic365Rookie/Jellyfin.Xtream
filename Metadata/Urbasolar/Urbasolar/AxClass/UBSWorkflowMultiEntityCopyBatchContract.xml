@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSWorkflowMultiEntityCopyBatchContract</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[DataContractAttribute]
+internal final class UBSWorkflowMultiEntityCopyBatchContract
+{
+    DataAreaId legalEntity;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>parmLegalEntity</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Legal entity for the export
+    /// </summary>
+    /// <param name = "_legalEntity">legalEntity</param>
+    /// <returns>legalEntity</returns>
+    [DataMemberAttribute,
+     SysOperationLabelAttribute(literalStr("@UBS:UBSWorkflowMultiEntityCopyBatchContractParmDataArea"))]
+    public DataAreaId parmLegalEntity(DataAreaId _legalEntity = legalEntity)
+    {
+        legalEntity = _legalEntity ;
+        return legalEntity ;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

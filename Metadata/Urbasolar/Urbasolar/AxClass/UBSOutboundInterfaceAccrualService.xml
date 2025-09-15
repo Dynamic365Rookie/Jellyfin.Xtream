@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterfaceAccrualService</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSOutboundInterfaceAccrualService extends SysOperationServiceBase
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Process</Name>
+				<Source><![CDATA[
+    public void Process(UBSOutboundInterfaceAccrualContract _stockContract)
+    {
+        UBSInterfaceExecutionHistoryTable execution;
+        boolean ret;
+
+        execution = UBSInterfaceExecutionHistoryTable::insertExecution(UBSEndPointType::FNP_CCA,_stockContract.parmLegalEntity());
+        
+        try
+        {
+            if(UBSInterfaceExecutionHistoryTable::existsRunningInstanceForScope(UBSEndPointType::FNP_CCA,execution.RecId,_stockContract.parmLegalEntity()))
+            {
+                execution.updateStatus(UBSInterfaceStatus::Failed,"@UBS:UBSExportAlreadyRunning");
+                return;
+            }
+
+            str bearer = UBSOutboundInterfaceToolkit::getBearer();
+
+            ret = UBSOutboundInterfaceIntegrator::postInterface(
+                UBSOutboundInterfaceEndPoint::findByEndPointType(UBSEndPointType::FNP_CCA),
+                bearer,execution,
+                [_stockContract.parmPeriodDate(),_stockContract.parmLegalEntity()]
+                );
+
+            if(ret)
+            {
+                execution.updateStatus(UBSInterfaceStatus::Processed);
+            }
+            else
+            {
+                execution.updateStatus(UBSInterfaceStatus::Failed);
+            }
+        }
+        catch
+        {
+            System.Exception ex = CLRInterop::getLastException();
+
+            if(ex)
+            {
+                execution.updateStatus(UBSInterfaceStatus::Failed,ex.InnerException.ToString());
+            }
+            else
+            {
+                execution.updateStatus(UBSInterfaceStatus::Failed,"Unknown error");
+            }
+        }
+
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

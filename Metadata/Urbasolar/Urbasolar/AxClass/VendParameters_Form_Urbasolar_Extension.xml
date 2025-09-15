@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendParameters_Form_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formStr(VendParameters))]
+final class VendParameters_Form_Urbasolar_Extension
+{
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>UBSSupplierReferencing_UBSProcCategoryName_OnLookup</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Override UBSProcCategoryName lookup
+    /// </summary>
+    /// <param name="sender">FormControl</param>
+    /// <param name="e">FormControlEventArgs</param>
+    [FormControlEventHandler(formControlStr(VendParameters, UBSSupplierReferencing_UBSProcCategoryName), FormControlEventType::Lookup)]
+    public static void UBSSupplierReferencing_UBSProcCategoryName_OnLookup(FormControl sender, FormControlEventArgs e)
+    {   
+        str procCategoryLvl = int2Str(UBSVendParametersCC::find().UBSProcCategoryLvl);
+        FormControlCancelableSuperEventArgs event = e as FormControlCancelableSuperEventArgs;
+
+        SysTableLookup sysTableLookup = SysTableLookup::newParameters(tableNum(EcoResCategory),sender);
+        sysTableLookup.addLookupField(fieldNum(EcoResCategory, Name));
+
+        Query                query  = new Query();
+        QueryBuildDataSource qds    = query.addDataSource(tableNum(EcoResCategory));
+        QueryBuildRange      qr     = qds.addRange(fieldNum(EcoResCategory,Level));
+        qr.value(procCategoryLvl);
+        QueryBuildRange      qr2    = qds.addRange(fieldNum(EcoResCategory,IsActive));
+        qr2.value('1');
+        sysTableLookup.parmQuery(query);
+        sysTableLookup.performFormLookup();
+        event.CancelSuperCall();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>NumberSequencesReferenceV2Entity_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(NumberSequencesReferenceV2Entity))]
+final class NumberSequencesReferenceV2Entity_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>findEntityDataSource</Name>
+				<Source><![CDATA[
+    public Common findEntityDataSource(DataEntityRuntimeContext _entityCtx, DataEntityDataSourceRuntimeContext _dataSourceCtx)
+    {
+        Common ret = next findEntityDataSource(_entityCtx, _dataSourceCtx);
+    
+        if (ret)
+        {
+            return ret;
+        }
+
+        switch (_dataSourceCtx.name())
+        {
+            case dataEntityDataSourceStr(NumberSequencesReferenceV2Entity, NumberSequenceTableV2Entity) :
+                NumberSequenceTableV2Entity NumberSequenceTableV2Entity = null;
+                
+                select forUpdate firstOnly NumberSequenceTableV2Entity
+                    where (NumberSequenceTableV2Entity.ScopeType == this.ScopeType && NumberSequenceTableV2Entity.ScopeValue == '' &&
+                    NumberSequenceTableV2Entity.NumberSequenceCode == this.NumberSequenceCode);
+
+                ret = NumberSequenceTableV2Entity;
+
+                break;
+
+            default :
+                return ret;
+        }
+    
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>PurchReqTable.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlyhlfv52u1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormCheckBoxControl">
+				<Name>PurchReqTable_UBSRecurringServicePurchase</Name>
+				<Type>CheckBox</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>UBSRecurringServicePurchase</DataField>
+				<DataSource>PurchReqTable</DataSource>
+			</FormControl>
+			<Parent>HeaderBusinessJustification</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControl3wl1qrkx1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormDateControl">
+				<Name>PurchReqTable_UBSStartingMonth</Name>
+				<Type>Date</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>UBSStartingMonth</DataField>
+				<DataSource>PurchReqTable</DataSource>
+			</FormControl>
+			<Parent>HeaderBusinessJustification</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlghfn4duu1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormIntegerControl">
+				<Name>PurchReqTable_UBSPeriodNumber</Name>
+				<Type>Integer</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>UBSPeriodNumber</DataField>
+				<DataSource>PurchReqTable</DataSource>
+			</FormControl>
+			<Parent>HeaderBusinessJustification</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlxeatq2no1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormDateControl">
+				<Name>PurchReqLine_UBSAutomaticReceptionDate</Name>
+				<Type>Date</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>UBSAutomaticReceptionDate</DataField>
+				<DataSource>PurchReqLine</DataSource>
+			</FormControl>
+			<Parent>LineGrid</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlahtaio2g1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormGroupControl">
+				<Name>UBS</Name>
+				<Type>Group</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormReferenceGroupControl">
+						<Name>PurchReqTable_UBSProjectDim</Name>
+						<Type>ReferenceGroup</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls />
+						<DataSource>PurchReqTable</DataSource>
+						<ReferenceField>UBSProjectDim</ReferenceField>
+					</AxFormControl>
+				</Controls>
+			</FormControl>
+			<Parent>LineViewHeaderDetailsTab</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControleny3uezs1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormDateControl">
+				<Name>PurchReqTable_UBSRequestedDate</Name>
+				<Type>Date</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>UBSRequestedDate</DataField>
+				<DataSource>PurchReqTable</DataSource>
+			</FormControl>
+			<Parent>HeaderDates</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterfaceIntegrator</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSOutboundInterfaceIntegrator
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>postInterface</Name>
+				<Source><![CDATA[
+    public static boolean postInterface(UBSOutboundInterfaceEndPoint _outboundInterfaceEndPoint,str _bearer,UBSInterfaceExecutionHistoryTable executionHistory = null,container parms = conNull())
+    {
+        UBSOutboundInterface         outboundInterface = UBSOutboundInterface::findUBSOutboundInterface();
+        System.Collections.ArrayList outbountList;
+        System.Object[]              returnedCode;
+
+        int debugMod = UBSOutboundInterface::findUBSOutboundInterface().UBSDebugMode;
+
+        switch(_outboundInterfaceEndPoint.UBSEndPointType)
+        {
+            case UBSEndPointType::FinancialDimension:
+                    outbountList =
+                            UBSOutboundInterfaceListBuilder::financialDimensionList(_outboundInterfaceEndPoint.UBSLastSynchronisationDateTime);
+
+                if(outbountList.Count > 0)
+                {
+                    returnedCode =  UBSInterfaceToolkit.EndPoint::BuildRequest(outboundInterface.UBSResource,
+                                                                           outboundInterface.UBSResourceRequest,
+                                                                           _outboundInterfaceEndPoint.UBSEndPoint,
+                                                                           _bearer,
+                                                                           outbountList,
+                                                                           enum2int(_outboundInterfaceEndPoint.UBSEndPointType),
+                                                                            debugMod);
+
+                    if(returnedCode.GetValue(0) == 200)
+                    {
+                        UBSOutboundInterfaceEndPoint::updateUBSOutboundInterfaceEndPointSynchronisationDate(UBSEndPointType::FinancialDimension);
+                    }
+                    else
+                    {
+                        if(executionHistory)
+                        {
+                            executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSOutboundInterfaceAPIIssue");
+                        }
+
+                        UBSOutboundInterfaceLog::insertLog(outboundInterface.UBSResource,
+                                                           outboundInterface.UBSResourceRequest,
+                                                           _outboundInterfaceEndPoint.UBSEndPoint,
+                                                           _outboundInterfaceEndPoint.UBSEndPointType,
+                                                           returnedCode.GetValue(0),returnedCode.GetValue(1),executionHistory.RecId);
+
+                        return false;
+                    }
+                }
+                else
+                {
+                    if(executionHistory)
+                    {
+                        executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSNoRecordToProcess");
+                    }
+                }
+                break;
+        
+            case UBSEndPointType::FinancialDimensionLegalEntity:
+                    outbountList =
+                            UBSOutboundInterfaceListBuilder::financialDimensionLegalEntityList(_outboundInterfaceEndPoint.UBSLastSynchronisationDateTime);
+
+                if(outbountList.Count > 0)
+                {
+                    returnedCode =  UBSInterfaceToolkit.EndPoint::BuildRequest(outboundInterface.UBSResource,
+                                                                               outboundInterface.UBSResourceRequest,
+                                                                               _outboundInterfaceEndPoint.UBSEndPoint,
+                                                                               _bearer,
+                                                                               outbountList,
+                                                                               enum2int(_outboundInterfaceEndPoint.UBSEndPointType),
+                                                                                debugMod);
+
+                    if(returnedCode.GetValue(0) == 200)
+                    {
+                        UBSOutboundInterfaceEndPoint::updateUBSOutboundInterfaceEndPointSynchronisationDate(_outboundInterfaceEndPoint.UBSEndPointType);
+                    }
+                    else
+                    {
+                        if(executionHistory)
+                        {
+                            executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSOutboundInterfaceAPIIssue");
+                        }
+
+                        UBSOutboundInterfaceLog::insertLog(outboundInterface.UBSResource,
+                                                           outboundInterface.UBSResourceRequest,
+                                                           _outboundInterfaceEndPoint.UBSEndPoint,
+                                                           _outboundInterfaceEndPoint.UBSEndPointType,
+                                                           returnedCode.GetValue(0),returnedCode.GetValue(1),executionHistory.RecId);
+
+                        return false;
+                    }
+                }
+                else
+                {
+                    if(executionHistory)
+                    {
+                        executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSNoRecordToProcess");
+                    }
+                }
+                break;
+            case UBSEndPointType::Vendor:
+                outbountList =
+                            UBSOutboundInterfaceListBuilder::vendorList(_outboundInterfaceEndPoint.UBSLastSynchronisationDateTime);
+
+                if(outbountList.Count > 0)
+                {
+                    returnedCode =  UBSInterfaceToolkit.EndPoint::BuildRequest(outboundInterface.UBSResource,
+                                                                               outboundInterface.UBSResourceRequest,
+                                                                               _outboundInterfaceEndPoint.UBSEndPoint,
+                                                                               _bearer,
+                                                                               outbountList,
+                                                                               enum2int(_outboundInterfaceEndPoint.UBSEndPointType),
+                                                                               debugMod);
+
+                    if(returnedCode.GetValue(0) == 200)
+                    {
+                        UBSOutboundInterfaceEndPoint::updateUBSOutboundInterfaceEndPointSynchronisationDate(_outboundInterfaceEndPoint.UBSEndPointType);
+                    }
+                    else
+                    {
+                        if(executionHistory)
+                        {
+                            executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSOutboundInterfaceAPIIssue");
+                        }
+
+                        UBSOutboundInterfaceLog::insertLog(outboundInterface.UBSResource,
+                                                           outboundInterface.UBSResourceRequest,
+                                                           _outboundInterfaceEndPoint.UBSEndPoint,
+                                                           _outboundInterfaceEndPoint.UBSEndPointType,
+                                                           returnedCode.GetValue(0),returnedCode.GetValue(1),executionHistory.RecId);
+
+                        return false;
+                    }
+                }
+                else
+                {
+                    if(executionHistory)
+                    {
+                        executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSNoRecordToProcess");
+                    }
+                }
+                break;
+            case UBSEndPointType::VendorInvoice:
+                if(conLen(parms)<2)
+                {
+                    if(executionHistory)
+                    {
+                        executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSMissingMandatoryParameters");
+                        return false;
+                    }
+                    else
+                    {
+                        throw Error("@UBS:UBSMissingMandatoryParameters");
+                    }
+                }
+                outbountList =
+                    UBSOutboundInterfaceListBuilder::invoiceList(conPeek(parms,1),conPeek(parms,2));
+
+                if(outbountList.Count > 0)
+                {
+                    returnedCode =  UBSInterfaceToolkit.EndPoint::BuildRequest(outboundInterface.UBSResource,
+                                                                               outboundInterface.UBSResourceRequest,
+                                                                               _outboundInterfaceEndPoint.UBSEndPoint,
+                                                                               _bearer,
+                                                                               outbountList,
+                                                                               enum2int(_outboundInterfaceEndPoint.UBSEndPointType),
+                                                                               debugMod);
+
+                    if(returnedCode.GetValue(0) == 200)
+                    {
+                        UBSOutboundInterfaceEndPoint::updateUBSOutboundInterfaceEndPointSynchronisationDate(_outboundInterfaceEndPoint.UBSEndPointType);
+                    }
+                    else
+                    {
+                        if(executionHistory)
+                        {
+                            executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSOutboundInterfaceAPIIssue");
+                        }
+
+                        UBSOutboundInterfaceLog::insertLog(outboundInterface.UBSResource,
+                                                           outboundInterface.UBSResourceRequest,
+                                                           _outboundInterfaceEndPoint.UBSEndPoint,
+                                                           _outboundInterfaceEndPoint.UBSEndPointType,
+                                                           returnedCode.GetValue(0),returnedCode.GetValue(1),executionHistory.RecId);
+
+                        return false;
+                    }
+                }
+                else
+                {
+                    if(executionHistory)
+                    {
+                        executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSNoRecordToProcess");
+                    }
+                }
+
+                break;
+            case UBSEndPointType::FNP_CCA:
+                if(conLen(parms)<2)
+                {
+                    if(executionHistory)
+                    {
+                        executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSMissingMandatoryParameters");
+                        return false;
+                    }
+                    else
+                    {
+                        throw Error("@UBS:UBSMissingMandatoryParameters");
+                    }
+                }
+
+                outbountList =
+                    UBSOutboundInterfaceListBuilder::accrualList(conPeek(parms,1),conPeek(parms,2));
+
+                if(outbountList.Count > 0)
+                {
+                    returnedCode =  UBSInterfaceToolkit.EndPoint::BuildRequest(outboundInterface.UBSResource,
+                                                                               outboundInterface.UBSResourceRequest,
+                                                                               _outboundInterfaceEndPoint.UBSEndPoint,
+                                                                               _bearer,
+                                                                               outbountList,
+                                                                               enum2int(_outboundInterfaceEndPoint.UBSEndPointType),
+                                                                               debugMod);
+
+                    if(returnedCode.GetValue(0) == 200)
+                    {
+                        UBSOutboundInterfaceEndPoint::updateUBSOutboundInterfaceEndPointSynchronisationDate(_outboundInterfaceEndPoint.UBSEndPointType);
+                    }
+                    else
+                    {
+                        if(executionHistory)
+                        {
+                            executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSOutboundInterfaceAPIIssue");
+                        }
+
+                        UBSOutboundInterfaceLog::insertLog(outboundInterface.UBSResource,
+                                                           outboundInterface.UBSResourceRequest,
+                                                           _outboundInterfaceEndPoint.UBSEndPoint,
+                                                           _outboundInterfaceEndPoint.UBSEndPointType,
+                                                           returnedCode.GetValue(0),returnedCode.GetValue(1),executionHistory.RecId);
+
+                        return false;
+                    }
+                }
+                else
+                {
+                    if(executionHistory)
+                    {
+                        executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSNoRecordToProcess");
+                    }
+                }
+                break;
+            case UBSEndPointType::Stock:
+
+                // Parms - 1 - Period date
+                // Parms - 2 - Legal Entity
+                
+                if(conLen(parms)<2)
+                {
+                    if(executionHistory)
+                    {
+                        executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSMissingMandatoryParameters");
+                        return false;
+                    }
+                    else
+                    {
+                        throw Error("@UBS:UBSMissingMandatoryParameters");
+                    }
+                }
+
+                outbountList =
+                    UBSOutboundInterfaceListBuilder::stockList(conPeek(parms,1),conPeek(parms,2));
+
+                if(outbountList.Count > 0)
+                {
+                    returnedCode =  UBSInterfaceToolkit.EndPoint::BuildRequest(outboundInterface.UBSResource,
+                                                                               outboundInterface.UBSResourceRequest,
+                                                                               _outboundInterfaceEndPoint.UBSEndPoint,
+                                                                               _bearer,
+                                                                               outbountList,
+                                                                               enum2int(_outboundInterfaceEndPoint.UBSEndPointType),
+                                                                               debugMod);
+
+                    if(returnedCode.GetValue(0) == 200)
+                    {
+                        UBSOutboundInterfaceEndPoint::updateUBSOutboundInterfaceEndPointSynchronisationDate(_outboundInterfaceEndPoint.UBSEndPointType);
+                    }
+                    else
+                    {
+                        if(executionHistory)
+                        {
+                            executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSOutboundInterfaceAPIIssue");
+                        }
+
+                        UBSOutboundInterfaceLog::insertLog(outboundInterface.UBSResource,
+                                                           outboundInterface.UBSResourceRequest,
+                                                           _outboundInterfaceEndPoint.UBSEndPoint,
+                                                           _outboundInterfaceEndPoint.UBSEndPointType,
+                                                           returnedCode.GetValue(0),returnedCode.GetValue(1),executionHistory.RecId);
+
+                        return false;
+                    }
+                }
+                else
+                {
+                    if(executionHistory)
+                    {
+                        executionHistory.updateStatus(UBSInterfaceStatus::InProcess,"@UBS:UBSNoRecordToProcess");
+                    }
+                }
+            default:
+                break;
+        }
+
+        return true;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

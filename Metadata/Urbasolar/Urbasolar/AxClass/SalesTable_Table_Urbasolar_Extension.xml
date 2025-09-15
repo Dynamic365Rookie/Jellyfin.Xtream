@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SalesTable_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(Salestable))]
+
+public final class SalesTable_Table_Urbasolar_Extension
+{
+
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>update</Name>
+				<Source><![CDATA[
+    public void update()
+    {
+        SalesTable orig = this.orig();
+
+        next update();
+
+        if(this.UBSProjectDim != orig.UBSProjectDim)
+        {
+            ttsbegin;
+            this.updateHeaderProjectDimension(this.UBSProjectDim);
+            this.update();
+            ttscommit;
+
+            this.updateLinesProjectDimension();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateHeaderProjectDimension</Name>
+				<Source><![CDATA[
+    public void updateHeaderProjectDimension(RecId _UBSProjectDim)
+    {
+        DimensionAttributeValue dimAttrValue = DimensionAttributeValue::find(_UBSProjectDim);
+
+        if(dimAttrValue)
+        {
+            DimensionAttributeValueSetStorage storage = DimensionAttributeValueSetStorage::find(this.defaultDimension);
+            storage.addItem(dimAttrValue);
+            this.defaultDimension = storage.save();
+
+            DimensionAttrValueLedgerOverride override               = DimensionAttrValueLedgerOverride::findByDimensionAttrValueLedgerOverride(dimAttrValue.RecId,
+                                                                                                                                                   Ledger::current());
+            UBSInventSiteCrossCompany        inventSiteCrossCompany = UBSInventSiteCrossCompany::findByRecId(override.UBSInventSiteCCRecId);
+                
+            this.setInventSiteId(inventSiteCrossCompany.SiteId);
+            this.DeliveryPostalAddress = LogisticsPostalAddress::findByLocation(InventSite::getLocationFromRole(InventSite::find(inventSiteCrossCompany.SiteId).RecId, LogisticsLocationRoleType::Delivery)).RecId;
+
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateLinesProjectDimension</Name>
+				<Source><![CDATA[
+    public void updateLinesProjectDimension()
+    {
+        SalesLine                           SalesLine;
+        DimensionAttributeValue             dimAttrValue = DimensionAttributeValue::find(this.UBSProjectDim);
+        
+        ttsbegin;
+        while select forupdate SalesLine
+            where SalesLine.SalesId == this.SalesId
+        {
+            DimensionAttributeValueSetStorage   storage = DimensionAttributeValueSetStorage::find(SalesLine.defaultDimension);
+        
+            if(dimAttrValue)
+            {
+                storage.addItem(dimAttrValue);
+                SalesLine.defaultDimension = storage.save();
+
+                DimensionAttrValueLedgerOverride    override                = DimensionAttrValueLedgerOverride::findByDimensionAttrValueLedgerOverride(dimAttrValue.RecId,
+                                                                                                                                                       Ledger::current());
+                UBSInventSiteCrossCompany           inventSiteCrossCompany  = UBSInventSiteCrossCompany::findByRecId(override.UBSInventSiteCCRecId);
+                InventDim                           inventDim               = SalesLine.inventDim(true);
+                
+                inventDim.InventSiteId = inventSiteCrossCompany.SiteId;
+                inventDim.update();
+
+                SalesLine.modifyInventDim(inventDim,fieldNum(InventDim, InventSiteId), false);
+                SalesLine.DeliveryPostalAddress = LogisticsPostalAddress::findByLocation(InventSite::getLocationFromRole(InventSite::find(inventSiteCrossCompany.SiteId).RecId, LogisticsLocationRoleType::Delivery)).RecId;
+
+                SalesLine.update();
+            }
+        }
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

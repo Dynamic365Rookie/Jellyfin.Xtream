@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTableExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendInvoiceInfoTable.Urbasolar</Name>
+	<FieldGroupExtensions />
+	<FieldGroups />
+	<FieldModifications />
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSSWIFTNo</Name>
+			<AssetClassification>Customer Content </AssetClassification>
+			<ExtendedDataType>SWIFTNo</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSBankIBAN</Name>
+			<AssetClassification>Customer Content </AssetClassification>
+			<ExtendedDataType>BankIBAN</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSAccountNum</Name>
+			<AssetClassification>Customer Content </AssetClassification>
+			<ExtendedDataType>BankAccount</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSBankInfoMatchingStatus</Name>
+			<Label>@UBS:UBSMatchingStatus</Label>
+			<EnumType>UBSVendInvoiceBankInfoMatchingStatus</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSHasWarrantyRetention</Name>
+			<ExtendedDataType>NoYesId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@UBS:UBSWarrantyRetentionApply</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>UBSWarrantyRate</Name>
+			<ExtendedDataType>PercentPositive</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@UBS:UBSWarrantyRetentionRate</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSIsPurchWarrantyImported</Name>
+			<Visible>No</Visible>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes />
+	<Mappings />
+	<PropertyModifications />
+	<RelationExtensions />
+	<RelationModifications />
+	<Relations />
+</AxTableExtension>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxMenuExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V1">
+	<Name>AccountsPayable.Urbasolar</Name>
+	<Customizations />
+	<Elements>
+		<AxMenuExtensionElement xmlns="">
+			<Parent>PeriodicTasks</Parent>
+			<MenuElement xmlns=""
+				i:type="AxMenuElementSubMenu">
+				<Name>Urbasolar</Name>
+				<Label>@UBS:UBSUrbasolar</Label>
+				<Elements>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSAutomaticReception</Name>
+						<MenuItemName>UBSAutomaticReception</MenuItemName>
+						<MenuItemType>Action</MenuItemType>
+					</AxMenuElement>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSSReferencingDocumentBatch</Name>
+						<MenuItemName>UBSSReferencingDocumentBatch</MenuItemName>
+						<MenuItemType>Action</MenuItemType>
+					</AxMenuElement>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSProcessedVendorInvoices</Name>
+						<MenuItemName>UBSProcessedVendorInvoices</MenuItemName>
+						<MenuItemType>Action</MenuItemType>
+					</AxMenuElement>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSPurchPackingSlipPost</Name>
+						<MenuItemName>UBSPurchPackingSlipPost</MenuItemName>
+						<MenuItemType>Action</MenuItemType>
+					</AxMenuElement>
+				</Elements>
+			</MenuElement>
+		</AxMenuExtensionElement>
+		<AxMenuExtensionElement xmlns="">
+			<Parent>InquiriesAndReports</Parent>
+			<MenuElement xmlns=""
+				i:type="AxMenuElementSubMenu">
+				<Name>UrbasolarIR</Name>
+				<Label>@UBS:UBSUrbasolar</Label>
+				<Elements>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSProcessedVendorInvioices</Name>
+						<MenuItemName>UBSProcessedVendorInvioices</MenuItemName>
+					</AxMenuElement>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSPurchOrderReceipt</Name>
+						<MenuItemName>UBSPurchOrderReceipt</MenuItemName>
+					</AxMenuElement>
+				</Elements>
+			</MenuElement>
+		</AxMenuExtensionElement>
+		<AxMenuExtensionElement xmlns="">
+			<Parent>Setup</Parent>
+			<PositionType>AfterItem</PositionType>
+			<PreviousSibling>WorkflowConfigurationVend</PreviousSibling>
+			<MenuElement xmlns=""
+				i:type="AxMenuElementMenuItem">
+				<Name>UBSWorkflowMultiEntityCopyBatchController</Name>
+				<MenuItemName>UBSWorkflowMultiEntityCopyBatchController</MenuItemName>
+				<MenuItemType>Action</MenuItemType>
+			</MenuElement>
+		</AxMenuExtensionElement>
+		<AxMenuExtensionElement xmlns="">
+			<Parent>Vendors</Parent>
+			<MenuElement xmlns=""
+				i:type="AxMenuElementMenuItem">
+				<Name>UBSTriggerDimensionState</Name>
+				<MenuItemName>UBSTriggerDimensionState</MenuItemName>
+			</MenuElement>
+		</AxMenuExtensionElement>
+	</Elements>
+	<MenuElementModifications />
+	<PropertyModifications />
+</AxMenuExtension>

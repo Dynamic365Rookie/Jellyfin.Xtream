@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>InventParameters_Form_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formStr(InventParameters))]
+final class InventParameters_Form_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>UBSInventParametersSites_InventSite_OnLookup</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Create lookup
+    /// </summary>
+    /// <param name="sender">FormControl</param>
+    /// <param name="e">FormControlEventArgs</param>
+    [FormControlEventHandler(formControlStr(InventParameters, UBSInventParametersSites_SiteId), FormControlEventType::Lookup)]
+    public static void UBSInventParametersSites_InventSite_OnLookup(FormControl sender, FormControlEventArgs e)
+    {
+        FormRun formRun = sender.formRun();
+     
+        formRun.ubsInventParametersSitesLookup(sender);
+
+        FormControlCancelableSuperEventArgs cancelableArgs = e as FormControlCancelableSuperEventArgs;
+        cancelableArgs.CancelSuperCall();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ubsInventParametersSitesLookup</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Lookup Query and instanciation
+    /// </summary>
+    /// <param name = "_formControl">FormControl</param>
+    public void ubsInventParametersSitesLookup(FormControl _formControl)
+    {
+        Query query = new Query();
+
+        QueryBuildDataSource    queryBuildDataSource;
+        SysTableLookup          sysTableLookup;
+ 
+        // Create an instance of SysTableLookup with the form control passed in
+        sysTableLookup = SysTableLookup::newParameters(tableNum(InventSite), _formControl);
+        sysTableLookup.addLookupfield(fieldNum(InventSite, SiteId));
+        sysTableLookup.addLookupfield(fieldNum(InventSite, Name));
+
+        queryBuildDataSource = query.addDataSource(tableNum(InventSite));
+
+        sysTableLookup.parmQuery(query);
+        
+        sysTableLookup.performFormLookup();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

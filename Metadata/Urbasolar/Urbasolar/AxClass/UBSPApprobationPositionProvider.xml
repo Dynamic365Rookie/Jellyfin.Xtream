@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSPApprobationPositionProvider</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSPApprobationPositionProvider implements WorkflowParticipantProvider
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getParticipantTokens</Name>
+				<Source><![CDATA[
+    public WorkflowParticipantTokenList getParticipantTokens()
+    {
+        // Constructs the new user group list.
+        WorkflowParticipantTokenList userGroups = WorkflowParticipantTokenList::construct();
+
+        userGroups.add("@UBS:UBSCategoryProcurementManager", "@UBS:UBSCategoryProcurementManager");
+
+        return userGroups;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>resolve</Name>
+				<Source><![CDATA[
+    public WorkflowUserList resolve(WorkflowContext _context, WorkflowParticipantToken _participantTokenName)
+    {
+        WorkflowUserList    workflowUserList = WorkflowUserList::construct();
+
+        switch(_context.parmTableId())
+        {
+            case tableNum(PurchReqTable):
+                PurchReqLine    purchReqLine;
+                PurchReqTable   purchReqTable = PurchReqTable::find(_context.parmRecId());
+            
+                while select purchReqLine where purchReqLine.PurchReqTable == purchReqTable.RecId
+                {
+                    changecompany(purchReqLine.InventDimIdDataArea)
+                    {
+                        UserId userId = EcoResCategory::findCategoryProcurementManager(purchReqLine.ProcurementCategory);
+                            
+                        if(userId)
+                        {
+                            workflowUserList.add(userId);
+                        }
+                    }
+                }
+                break;
+
+            case tableNum(PurchTable):
+                PurchLine   purchLine;
+                PurchTable  purchTable = PurchTable::findRecId(_context.parmRecId());
+            
+                while select purchLine where purchLine.PurchId == purchTable.PurchId
+                {
+                    UserId userId = EcoResCategory::findCategoryProcurementManager(purchLine.ProcurementCategory);
+               
+                    if(userId)
+                    {
+                        workflowUserList.add(userId);
+                    }
+                }
+                break;
+
+            case tableNum(VendInvoiceInfoTable):
+                VendInvoiceInfoLine     vendInvoiceInfoLine;
+                VendInvoiceInfoTable    vendInvoiceInfoTable = VendInvoiceInfoTable::findRecId(_context.parmRecId());
+
+                while select vendInvoiceInfoLine
+                    where vendInvoiceInfoLine.ParmId == vendInvoiceInfoTable.ParmId &&
+                          vendInvoiceInfoLine.TableRefId == vendInvoiceInfoTable.TableRefId
+                {
+                    UserId userId = EcoResCategory::findCategoryProcurementManager(vendInvoiceInfoLine.purchLine().ProcurementCategory);
+             
+                    if(userId)
+                    {
+                        workflowUserList.add(userId);
+                    }
+                }
+                break;
+        }
+
+        // Verify that the participant token is set or throw an error.
+        if (!_participantTokenName)
+        {
+            throw error("@SYS105453");
+        }
+
+        return workflowUserList;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

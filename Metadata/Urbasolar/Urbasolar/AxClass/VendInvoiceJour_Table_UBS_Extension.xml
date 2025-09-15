@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendInvoiceJour_Table_UBS_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(VendInvoiceJour))]
+internal final class VendInvoiceJour_Table_UBS_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>insert</Name>
+				<Source><![CDATA[
+    public void insert()
+    {
+        UBSVendInvoiceSageExport vendInvoiceSageExport;
+
+        next insert();
+
+        ttsbegin;
+        vendInvoiceSageExport.VendInvoiceJourRecId = this.RecId;
+        vendInvoiceSageExport.insert();
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

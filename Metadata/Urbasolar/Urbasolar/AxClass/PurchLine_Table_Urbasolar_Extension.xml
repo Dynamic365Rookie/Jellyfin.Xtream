@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchLine_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(PurchLine))]
+final class PurchLine_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>validateFieldValue</Name>
+				<Source><![CDATA[
+    public boolean validateFieldValue(FieldName _fieldName, int _arrayIndex)
+    {
+        boolean ret = next validateFieldValue(_fieldName,_arrayIndex);
+        
+        if(_fieldName == fieldStr(PurchLine, UBSAutomaticReceptionDate))
+        {
+            PurchReqTable purchReqTable = PurchReqTable::findPurchReqId(this.PurchReqId);
+            PurchLine     purchLine;
+
+            if(purchReqTable.UBSRecurringServicePurchase)
+            {
+                select count(RecId) from purchLine
+                    where purchLine.UBSAutomaticReceptionDate == this.UBSAutomaticReceptionDate &&
+                          purchLine.PurchId == this.PurchId &&
+                          purchLine.RecId != this.RecId;
+
+                if(purchLine.RecId >= 1)
+                {
+                    return checkFailed("@UBS:UBSCheckDuplicateDate");
+                }
+            }
+        }
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>insert</Name>
+				<Source><![CDATA[
+    public void insert(
+        boolean     dropInvent,                      
+        boolean     findMarkup,                      
+        boolean     updatePurchTableDistributions,   
+        boolean     _skipPurchTableUpdate,           
+        boolean     _skipInterCompanyCalcDisc)
+    {
+        LedgerDimensionValueSet mergeDim;
+
+        str dimAttributeName    = DimensionAttribute::UBSGetTableName(tableStr(VendTable),fieldStr(VendTable,AccountNum));
+        container conAttribute  = [dimAttributeName];
+        container conValue      = [this.purchTable().OrderAccount];
+
+        DimensionDefault newDim = UBSDefaultDimensionToolKit::createDefaultDimension(conAttribute,conValue);
+
+        if(this.DefaultDimension)
+        {
+            mergeDim  = UBSDefaultDimensionToolKit::setDimensionValueToDefaultDimension(this.DefaultDimension,newDim,tableStr(VendTable), dimAttributeName);
+        }
+    
+        this.DefaultDimension = this.DefaultDimension ? mergeDim : newDim;
+
+        this.updateProjectDimensionFromPurchTable();
+
+        if(this.UBSRequestedDate < this.DeliveryDate)
+        {
+            warning("@UBS:UBSRequestedDateCheckError");
+        }
+
+        next insert(dropInvent,findMarkup,updatePurchTableDistributions,_skipPurchTableUpdate,_skipInterCompanyCalcDisc);    
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>update</Name>
+				<Source><![CDATA[
+    public void update(boolean  dropInvent,
+                       boolean  updateOrderLineOfDeliverySchedule,
+                       boolean  updatePurchTableDropShipStatus)
+    {
+        if(this.UBSRequestedDate < this.DeliveryDate)
+        {
+            warning("@UBS:UBSRequestedDateCheckError");
+        }
+
+        next update(dropInvent,
+                    updateOrderLineOfDeliverySchedule,
+                    updatePurchTableDropShipStatus);
+        
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateProjectDimensionFromPurchTable</Name>
+				<Source><![CDATA[
+    public void updateProjectDimensionFromPurchTable()
+    {
+        PurchTable purchTable = this.purchTable();
+
+        DimensionAttributeValue dimAttrValue;
+        DimensionAttributeValueSetStorage storage;
+        DimensionAttrValueLedgerOverride override;
+        UBSInventSiteCrossCompany inventSiteCrossCompany;
+        InventDim inventDim;
+        
+
+        dimAttrValue = DimensionAttributeValue::find(purchTable.UBSProjectDim);
+
+        storage = DimensionAttributeValueSetStorage::find(this.defaultDimension);
+        if(dimAttrValue)
+        {
+            storage.addItem(dimAttrValue);
+            this.defaultDimension = storage.save();
+
+            if(!this.InventDimId)
+            {
+                override = DimensionAttrValueLedgerOverride::findByDimensionAttrValueLedgerOverride(dimAttrValue.RecId, Ledger::current());
+                inventSiteCrossCompany = UBSInventSiteCrossCompany::findByRecId(override.UBSInventSiteCCRecId);
+                ttsbegin;
+                inventDim = this.inventDim(true);
+                inventDim.InventSiteId = inventSiteCrossCompany.SiteId;
+                inventDim.update();
+                ttscommit;
+
+                this.modifyInventDim(inventDim,fieldNum(InventDim, InventSiteId), false);
+            }
+
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getPurchReqTableUBSRecurringServicePurchase</Name>
+				<Source><![CDATA[
+    public boolean getPurchReqTableUBSRecurringServicePurchase()
+    {
+        boolean ret;
+        PurchReqTable purchReqTable = PurchReqTable::findPurchReqId(this.PurchReqId);
+        ret = purchReqTable.UBSRecurringServicePurchase;
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

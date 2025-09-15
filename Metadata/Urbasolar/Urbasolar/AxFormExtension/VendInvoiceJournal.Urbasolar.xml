@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>VendInvoiceJournal.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlo4tvjawu1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormComboBoxControl">
+				<Name>UBSVendInvoiceSageExport_UBSExportStatus</Name>
+				<Type>ComboBox</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>UBSExportStatus</DataField>
+				<DataSource>UBSVendInvoiceSageExport</DataSource>
+				<Items />
+			</FormControl>
+			<Parent>OverviewGrid</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControl2yjaiew31</Name>
+			<FormControl xmlns=""
+				i:type="AxFormDateTimeControl">
+				<Name>UBSVendInvoiceSageExport_ExecutionDateTime</Name>
+				<Type>DateTime</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>ExecutionDateTime</DataField>
+				<DataSource>UBSVendInvoiceSageExport</DataSource>
+			</FormControl>
+			<Parent>OverviewGrid</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControldwf43d2v1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormStringControl">
+				<Name>UBSVendInvoiceSageExport_ErrorMessage</Name>
+				<Type>String</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataField>ErrorMessage</DataField>
+				<DataSource>UBSVendInvoiceSageExport</DataSource>
+				<DisplayHeight>1</DisplayHeight>
+				<DisplayHeightMode>Fixed</DisplayHeightMode>
+			</FormControl>
+			<Parent>OverviewGrid</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControl5iglnrqv1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormMenuFunctionButtonControl">
+				<Name>UBSUpdateResetVendorInvoiceExport</Name>
+				<Type>MenuFunctionButton</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<AutoRefreshData>Yes</AutoRefreshData>
+				<DataSource>VendInvoiceJour</DataSource>
+				<MenuItemName>UBSUpdateResetVendorInvoiceExport</MenuItemName>
+				<MenuItemType>Action</MenuItemType>
+				<MultiSelect>Yes</MultiSelect>
+				<NeedsRecord>Yes</NeedsRecord>
+			</FormControl>
+			<Parent>OverviewButtonGroup</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources>
+		<AxFormDataSource xmlns="">
+			<Name>UBSVendInvoiceSageExport</Name>
+			<Table>UBSVendInvoiceSageExport</Table>
+			<Fields>
+				<AxFormDataSourceField>
+					<DataField>DataAreaId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>ErrorMessage</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>ExecutionDateTime</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>Partition</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>RecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>TableId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSExportStatus</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>VendInvoiceJourRecId</DataField>
+				</AxFormDataSourceField>
+			</Fields>
+			<ReferencedDataSources />
+			<JoinSource>VendInvoiceJour</JoinSource>
+			<LinkType>InnerJoin</LinkType>
+			<DataSourceLinks />
+			<DerivedDataSources />
+		</AxFormDataSource>
+	</DataSources>
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

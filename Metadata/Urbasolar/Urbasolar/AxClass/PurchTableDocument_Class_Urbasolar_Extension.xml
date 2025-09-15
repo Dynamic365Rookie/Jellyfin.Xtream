@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchTableDocument_Class_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(PurchTableDocument))]
+
+public final class PurchTableDocument_Class_Urbasolar_Extension
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>UBSgetPurchTable</Name>
+				<Source><![CDATA[
+    //Copy of the standard private method
+    private PurchTable UBSgetPurchTable(RecId  _recId)
+    {
+        if (!purchTable)
+        {
+            purchTable = PurchTable::findRecId(_recId);
+        }
+
+        return purchTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmCalcPurchReqTotalAmount</Name>
+				<Source><![CDATA[
+    public UBSPurchReqTotalAmount parmCalcPurchReqTotalAmount(CompanyId _companyId, TableId _tableId, RecId _recId)
+    {
+        Amount  purchReqTotalAmount = 0;
+
+        this.UBSgetPurchTable(_recId);
+
+        if (purchTable)
+        {
+            PurchReqLine purchReqLine;
+            while select LineAmount from purchReqLine 
+                where purchReqLine.PurchId == purchTable.PurchId
+                {
+                    purchReqTotalAmount += purchReqLine.LineAmount;
+                }
+        }
+
+        return purchReqTotalAmount;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

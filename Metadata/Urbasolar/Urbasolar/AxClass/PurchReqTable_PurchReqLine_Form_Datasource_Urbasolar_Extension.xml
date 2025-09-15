@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchReqTable_PurchReqLine_Form_Datasource_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(FormDataSourceStr(PurchReqTable,PurchReqLine))]
+internal final class PurchReqTable_PurchReqLine_Form_Datasource_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>write</Name>
+				<Source><![CDATA[
+    public void write()
+    {
+        next write();
+
+        PurchReqLine  newPurchReqLine;
+
+        PurchReqLine  purchReqLine  = this.cursor();
+        PurchReqTable purchReqTable = PurchReqTable::findPurchReqId(purchReqLine.purchReqId());
+
+        if(purchReqLine.LineNum == 1 &&
+           purchReqTable.UBSRecurringServicePurchase &&
+           purchReqLine.UBSAutomaticReceptionDate == dateNull() &&
+           this.checkDuplicationaValidity())
+        {
+            Dialogbutton dialogButtonConfirm = Box::okCancel("@UBS:UBSDuplicationPRLine",DialogButton::Ok);
+
+            if(dialogButtonConfirm == Dialogbutton::Ok)
+            {
+                TransDate startDate = dateStartMth(purchReqTable.UBSStartingMonth);
+                
+                ttsbegin;
+                purchReqLine.UBSAutomaticReceptionDate = dateStartMth(purchReqTable.UBSStartingMonth);
+                purchReqLine.update();
+
+                for(int i = 1; i < purchReqTable.UBSPeriodNumber; i++)
+                {
+                    startDate = nextMth(startDate);
+                    newPurchReqLine.data(purchReqLine);
+                    newPurchReqLine.LineNum        = i+1;
+                    newPurchReqLine.SequenceNumber = any2int(i+1);
+                    newPurchReqLine.RecId          = 0;
+                    newPurchReqLine.UBSAutomaticReceptionDate = startDate;
+                    newPurchReqLine.insert();
+                }
+                ttscommit;
+
+                newPurchReqLine.clear();
+
+                ttsbegin;
+                update_recordset newPurchReqLine
+                    setting PurchPrice = purchReqLine.PurchPrice,
+                            LineAmount = purchReqLine.LineAmount,
+                            VendAccount = purchReqLine.VendAccount
+                    where newPurchReqLine.PurchReqTable == purchReqLine.PurchReqTable &&
+                          newPurchReqLine.LineNum != 1;
+
+                ttscommit;
+            }
+            this.research();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkDuplicationaValidity</Name>
+				<Source><![CDATA[
+    private boolean checkDuplicationaValidity()
+    {
+        boolean ret;
+        PurchReqLine  purchReqLine  = this.cursor();
+
+        if(purchReqLine.ItemId && purchReqLine.VendAccount && purchReqLine.PurchPrice && purchReqLine.PurchQty)
+        {
+            return true;
+        }
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

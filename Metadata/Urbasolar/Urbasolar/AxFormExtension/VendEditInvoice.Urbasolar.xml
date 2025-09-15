@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>VendEditInvoice.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControldudxqore1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormGroupControl">
+				<Name>UBSInvoiceCaptureGroup</Name>
+				<Type>Group</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>VendInvoiceInfoTable_UBSAccountNum</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSAccountNum</DataField>
+						<DataSource>VendInvoiceInfoTable</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>VendInvoiceInfoTable_UBSBankIBAN</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSBankIBAN</DataField>
+						<DataSource>VendInvoiceInfoTable</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>VendInvoiceInfoTable_UBSSWIFTNo</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSSWIFTNo</DataField>
+						<DataSource>VendInvoiceInfoTable</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormComboBoxControl">
+						<Name>VendInvoiceInfoTable_UBSBankInfoMatchingStatus</Name>
+						<AllowEdit>No</AllowEdit>
+						<Type>ComboBox</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSBankInfoMatchingStatus</DataField>
+						<DataSource>VendInvoiceInfoTable</DataSource>
+						<Items />
+					</AxFormControl>
+				</Controls>
+				<Caption>@UBS:UBSInvoiceCapture</Caption>
+			</FormControl>
+			<Parent>GroupPaymentInvoice</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControldxmxxjyt1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormGroupControl">
+				<Name>UBSRetention</Name>
+				<AutoDeclaration>Yes</AutoDeclaration>
+				<Type>Group</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormCheckBoxControl">
+						<Name>VendInvoiceInfoTable_UBSHasWarrantyRetention</Name>
+						<AutoDeclaration>Yes</AutoDeclaration>
+						<Type>CheckBox</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSHasWarrantyRetention</DataField>
+						<DataSource>VendInvoiceInfoTable</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormRealControl">
+						<Name>VendInvoiceInfoTable_UBSWarrantyRate</Name>
+						<AutoDeclaration>Yes</AutoDeclaration>
+						<Type>Real</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSWarrantyRate</DataField>
+						<DataSource>VendInvoiceInfoTable</DataSource>
+					</AxFormControl>
+				</Controls>
+				<Caption>@UBS:UBSWarrantyRetention</Caption>
+			</FormControl>
+			<Parent>LineViewHeaderDetails</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

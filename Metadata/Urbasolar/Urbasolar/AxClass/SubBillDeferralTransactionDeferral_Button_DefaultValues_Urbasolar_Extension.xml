@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SubBillDeferralTransactionDeferral_Button_DefaultValues_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formcontrolstr(SubBillDeferralTransactionDeferral,DefaultValues))]
+internal final class SubBillDeferralTransactionDeferral_Button_DefaultValues_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>clicked</Name>
+				<Source><![CDATA[
+    public void clicked()
+    {
+        int infologLine = infolog.line();
+
+        FormButtonControl bc = any2Object(this) as FormButtonControl;
+        formdatasource    fds = bc.formRun().dataSource(tableStr(SubBillDeferralTransactionLineDeferral));
+
+        next clicked();
+
+        if(element.curTransactionType == SubBillDeferralTransactionType::VendInvoice && element.ubsAccountingDistribution.ubsAllowDeferral())
+        {
+            SubBillDeferralTransactionLineDeferral subBillDeferralTransactionLineDeferral = fds.cursor();
+            subBillDeferralTransactionLineDeferral.ubsInitFromAccountingDistribution(element.args().record(), false);
+
+            infolog.clear(infologLine);
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

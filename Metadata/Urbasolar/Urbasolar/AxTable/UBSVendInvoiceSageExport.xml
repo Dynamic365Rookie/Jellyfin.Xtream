@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSVendInvoiceSageExport</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class UBSVendInvoiceSageExport extends common
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>resetExportState</Name>
+				<Source><![CDATA[
+    public static void resetExportState(RefRecId _VendInvoiceJourRecId)
+    {
+        UBSVendInvoiceSageExport vendInvoiceSageExport;
+
+        select forupdate vendInvoiceSageExport where vendInvoiceSageExport.VendInvoiceJourRecId == _VendInvoiceJourRecId;
+
+        if(vendInvoiceSageExport)
+        {
+            vendInvoiceSageExport.ExecutionDateTime = utcdatetimenull();
+            vendInvoiceSageExport.ErrorMessage = "";
+            vendInvoiceSageExport.UBSExportStatus = UBSExportStatus::ToProcess;
+            vendInvoiceSageExport.update();
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<AllowRowVersionChangeTracking>Yes</AllowRowVersionChangeTracking>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>VendInvoiceJourRecId</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<Mandatory>Yes</Mandatory>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSExportStatus</Name>
+			<EnumType>UBSExportStatus</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ErrorMessage</Name>
+			<ExtendedDataType>DMFErrorMessage</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldUtcDateTime">
+			<Name>ExecutionDateTime</Name>
+			<ExtendedDataType>ExecutionTime</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes>
+		<AxTableIndex>
+			<Name>Key</Name>
+			<Fields>
+				<AxTableIndexField>
+					<DataField>VendInvoiceJourRecId</DataField>
+				</AxTableIndexField>
+			</Fields>
+		</AxTableIndex>
+	</Indexes>
+	<Mappings />
+	<Relations>
+		<AxTableRelation>
+			<Name>VendorInvoice</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<RelatedTable>VendInvoiceJour</RelatedTable>
+			<RelatedTableCardinality>ExactlyOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>VendInvoiceJourRecId</Name>
+					<Field>VendInvoiceJourRecId</Field>
+					<RelatedField>RecId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+	<StateMachines />
+</AxTable>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterfaceToolkit</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+using RestSharp;
+using Newtonsoft;
+using UBSInterfaceToolkit.TokenToolkit;
+
+internal final class UBSOutboundInterfaceToolkit
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getBearer</Name>
+				<Source><![CDATA[
+    public static str getBearer()
+    {
+        UBSOutboundInterface outboundInterface =  UBSOutboundInterface::findUBSOutboundInterface();
+
+        str bearer = UBSInterfaceToolkit.TokenToolkit::getToken(outboundInterface.UBSRootURLAuthentication,
+                                                                outboundInterface.UBSTenantId,
+                                                                outboundInterface.UBSEndURLAuthentication,
+                                                                outboundInterface.UBSClientId,
+                                                                UBSOutboundInterface::findPassword(),
+                                                                outboundInterface.UBSGrantType,
+                                                                outboundInterface.UBSScope);
+
+        return bearer;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

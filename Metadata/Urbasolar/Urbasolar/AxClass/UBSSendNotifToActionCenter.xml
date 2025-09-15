@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSSendNotifToActionCenter</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSSendNotifToActionCenter
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>addActionCenterUserList</Name>
+				<Source><![CDATA[
+    static void addActionCenterUserList(Array _userArray,str _title, str _message,str _originClass)
+    {
+        // Set up the notification
+        SystemNotificationDataContract notification = new SystemNotificationDataContract();
+        notification.Users(_userArray); 
+        notification.Title(_title);
+        notification.RuleId(_originClass);
+        notification.Message(_message);
+        notification.ExpirationDateTime(DateTimeUtil::addHours(DateTimeUtil::utcNow(), 48)); // Expiration time is 48 hours
+
+        SystemNotificationsManager::AddSystemNotification(notification);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>addActionCenterSingleUser</Name>
+				<Source><![CDATA[
+    static void addActionCenterSingleUser(str _userId,str _title, str _message,str _originClass)
+    {
+        // Set up the notification
+        SystemNotificationDataContract notification = new SystemNotificationDataContract();
+        notification.Users().value(1, _userId);
+        notification.Title(_title);
+        notification.RuleId(_originClass);
+        notification.Message(_message);
+        notification.ExpirationDateTime(DateTimeUtil::addHours(DateTimeUtil::utcNow(), 48)); // Expiration time is 48 hours
+
+        SystemNotificationsManager::AddSystemNotification(notification);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

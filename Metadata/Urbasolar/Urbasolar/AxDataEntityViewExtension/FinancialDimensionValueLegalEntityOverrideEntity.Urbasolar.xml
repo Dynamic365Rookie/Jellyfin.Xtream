@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxDataEntityViewExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>FinancialDimensionValueLegalEntityOverrideEntity.Urbasolar</Name>
+	<DataSources>
+		<AxQueryExtensionEmbeddedDataSource>
+			<Parent>DimensionAttrValueLedgerOverride</Parent>
+			<DataSource>
+				<Name>UBSInventSiteCrossCompany</Name>
+				<DynamicFields>Yes</DynamicFields>
+				<IsReadOnly>Yes</IsReadOnly>
+				<Table>UBSInventSiteCrossCompany</Table>
+				<DataSources />
+				<DerivedDataSources />
+				<Fields />
+				<Ranges />
+				<JoinMode>OuterJoin</JoinMode>
+				<Relations>
+					<AxQuerySimpleDataSourceRelation>
+						<Name>QueryDataSourceRelation1</Name>
+						<JoinDataSource>DimensionAttrValueLedgerOverride</JoinDataSource>
+						<JoinRelationName>UBSInventSiteCrossCompany</JoinRelationName>
+					</AxQuerySimpleDataSourceRelation>
+				</Relations>
+			</DataSource>
+		</AxQueryExtensionEmbeddedDataSource>
+	</DataSources>
+	<FieldGroupExtensions />
+	<FieldGroups />
+	<FieldModifications />
+	<Fields>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSInventSiteCCRecId</Name>
+			<AllowEdit>No</AllowEdit>
+			<DataField>UBSInventSiteCCRecId</DataField>
+			<DataSource>DimensionAttrValueLedgerOverride</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewUnmappedFieldString">
+			<Name>SiteId</Name>
+			<ExtendedDataType>InventSiteId</ExtendedDataType>
+			<IsComputedField>No</IsComputedField>
+		</AxDataEntityViewField>
+	</Fields>
+	<Mappings />
+	<PropertyModifications />
+	<Relations />
+</AxDataEntityViewExtension>

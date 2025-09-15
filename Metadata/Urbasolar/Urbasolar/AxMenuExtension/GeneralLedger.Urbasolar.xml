@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxMenuExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V1">
+	<Name>GeneralLedger.Urbasolar</Name>
+	<Customizations />
+	<Elements>
+		<AxMenuExtensionElement xmlns="">
+			<Parent>PeriodicTasks</Parent>
+			<MenuElement xmlns=""
+				i:type="AxMenuElementSubMenu">
+				<Name>UrbasolarTasks</Name>
+				<Label>@UBS:UBSUrbasolar</Label>
+				<Elements>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSOutboundInterfaceAccrual</Name>
+						<MenuItemName>UBSOutboundInterfaceAccrual</MenuItemName>
+						<MenuItemType>Action</MenuItemType>
+					</AxMenuElement>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSOutboundInterfaceStock</Name>
+						<MenuItemName>UBSOutboundInterfaceStock</MenuItemName>
+						<MenuItemType>Action</MenuItemType>
+					</AxMenuElement>
+				</Elements>
+			</MenuElement>
+		</AxMenuExtensionElement>
+	</Elements>
+	<MenuElementModifications />
+	<PropertyModifications />
+</AxMenuExtension>

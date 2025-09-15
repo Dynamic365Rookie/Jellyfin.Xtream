@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>AccountingDistribution_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(AccountingDistribution))]
+final class AccountingDistribution_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>ubsSubBillDeferralDeferredWithParentDistribution</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// check if child distributions should be deferred
+    /// </summary>
+    /// <returns>true if this distribution should be deferred if the parent is deferred</returns>
+    internal boolean ubsSubBillDeferralDeferredWithParentDistribution()
+    {
+        boolean deferredWithParent;
+        SubBillDeferralParameters deferralParam = SubBillDeferralParameters::find();
+
+        switch (this.MonetaryAmount)
+        {
+            case MonetaryAmount::TaxNonRecoverable:
+            case MonetaryAmount::TaxNonRecoverableVariance:
+            case MonetaryAmount::PriceVariance:
+            case MonetaryAmount::QuantityVariance:
+            case MonetaryAmount::PriceAdjustmentVariance:
+            case MonetaryAmount::DiscountVariance:
+                deferredWithParent = true;
+                break;
+            case MonetaryAmount::PriceAdjustment:
+            case MonetaryAmount::Discount:
+                deferredWithParent = (deferralParam.SubBillDeferralPurchaseDiscountDeferralOption ==
+                    SubBillDeferralDiscountDeferralOption::MergeDiscountWithRevenue);
+                break;
+        }
+
+        return deferredWithParent;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ubsSubBillDeferralAccDistIsDeferred</Name>
+				<Source><![CDATA[
+    [SysClientCacheDataMethodAttribute(true)]
+    internal display boolean ubsSubBillDeferralAccDistIsDeferred()
+    {
+        boolean isDeferred;
+
+        if (SubBillDeferralEnableFeature::isEnabled())
+        {
+            SubBillDeferralTransactionLineDeferral deferralTable;
+            AccountingDistribution accountingDistributionParent;
+
+            if (this.ParentDistribution && this.ubsSubBillDeferralDeferredWithParentDistribution())
+            {
+                accountingDistributionParent = AccountingDistribution::find(this.ParentDistribution);
+                if (accountingDistributionParent.MonetaryAmount == this.MonetaryAmount)
+                {
+                    // prevent infinite loops, although it should never reach here unless there is invalid data
+                    return false;
+                }
+                isDeferred = accountingDistributionParent.ubsSubBillDeferralAccDistIsDeferred();
+            }
+            else
+            {
+                deferralTable = SubBillDeferralTransactionLineDeferral::ubsFindByAccountingDistribution(this.RecId);
+                isDeferred = (deferralTable.RecId != 0 && deferralTable.SubBillDeferralDeferred);
+            }
+        }
+
+        return isDeferred;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ubsAllowDeferral</Name>
+				<Source><![CDATA[
+    internal boolean ubsAllowDeferral()
+    {
+        boolean allowed = false;
+        SubBillDeferralTransactionType transactionType = this.ubsSubBillDeferralGetTransactionType();
+        ProjectAccountingDistribution projectAccountingDistribution = ProjectAccountingDistribution::findByAccountingDistribution(this.RecId);
+        if (projectAccountingDistribution)
+        {
+            // For Project scenario only VendInvoice, ExpenseReport and FreeTextInvoice is supported
+            if (transactionType == SubBillDeferralTransactionType::VendInvoice)
+            {
+                ProjTable projTable = ProjTable::findRecId(projectAccountingDistribution.ProjTable);
+                
+                // Project type needs to be Time & Material
+                if (projTable.Type == ProjType::TimeMaterial)
+                {
+                    if (transactionType == SubBillDeferralTransactionType::VendInvoice)
+                    {
+                            VendInvoiceInfoLine vendInvoiceInfoLine;
+                            VendInvoiceInfoLine_Project vendInvoiceInfoLine_Project;
+                            ProjCategory projCategory;
+
+                            select firstonly CategoryType from projCategory
+                                join ProjTransId from vendInvoiceInfoLine_Project
+                                    where vendInvoiceInfoLine_Project.ProjCategoryId == projCategory.CategoryId
+                                join * from vendInvoiceInfoLine
+                                    where vendInvoiceInfoLine.RecId == vendInvoiceInfoLine_Project.VendInvoiceInfoLineRefRecId
+                                        && vendInvoiceInfoLine.SourceDocumentLine == this.SourceDocumentLine;
+
+                            switch (projCategory.CategoryType)
+                            {
+                                case ProjCategoryType::Hour:
+                                    allowed = projTable.projGroup().EmplTransCost == ProjLedgerStatus::Deferred;
+                                    break;
+
+                                case ProjCategoryType::Cost:
+                                    allowed = projTable.projGroup().costTransCost == ProjLedgerStatus::Deferred;
+                                    break;
+                
+                                case ProjCategoryType::Item:
+                                    allowed = (projTable.projGroup().ItemTransCost == ProjLedgerStatus::Deferred)
+                                        && !vendInvoiceInfoLine.isStocked();
+                                    break;
+                            }
+                    }
+
+                    if (allowed)
+                    {
+                        ProjLineProperty projLineProperty;
+                        select firstonly ToBeInvoiced from projLineProperty
+                            where projLineProperty.RecId == projectAccountingDistribution.ProjLineProperty;
+
+                        allowed = SubBillDeferralTransactionLineDeferral::ubsIsProjectChargeable(
+                            projTable.ProjId,
+                            projectAccountingDistribution.ProjCategory,
+                            projLineProperty.ToBeInvoiced);
+                    }
+                }
+            }
+        }
+        else
+        {
+            // For non-Project scenario only VendInvoice and FreeTextInvoice is supported
+            allowed = (transactionType == SubBillDeferralTransactionType::VendInvoice || transactionType == SubBillDeferralTransactionType::FreeTextInvoice);
+        }
+
+        return allowed;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ubsSubBillDeferralGetTransactionType</Name>
+				<Source><![CDATA[
+    internal SubBillDeferralTransactionType ubsSubBillDeferralGetTransactionType()
+    {
+        SubBillDeferralTransactionType transactionType = 0;
+        SourceDocumentLine sourceDocumentLine = sourceDocumentLine::find(this.SourceDocumentLine);
+        
+        if(sourceDocumentLine.SourceRelationType == tableNum(VendInvoiceInfoLine))
+        {
+            transactionType = SubBillDeferralTransactionType::VendInvoice;
+        }
+    
+        return transactionType;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ubsSubBillDeferralUpdateChildAccDistAccount</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// update the account for all child distributions recursively
+    /// we do this manually as AccountingDistributionProcessor::syncChildDistribution() gives incorrect results
+    /// note: this is also used when deferral is removed, so we dont check if the parent distribution is deferred
+    /// </summary>
+    internal void ubsSubBillDeferralUpdateChildAccDistAccount()
+    {
+        if (SubBillDeferralEnableFeature::isEnabled())
+        {
+            AccountingDistribution accountingDistributionChild;
+
+            while select forupdate accountingDistributionChild where
+                accountingDistributionChild.ParentDistribution == this.RecId
+            {
+                if (accountingDistributionChild.ubsSubBillDeferralDeferredWithParentDistribution() &&
+                    accountingDistributionChild.LedgerDimension != this.LedgerDimension)
+                {
+                    accountingDistributionChild.LedgerDimension = this.LedgerDimension;
+                    accountingDistributionChild.update();
+                    accountingDistributionChild.ubsSubBillDeferralUpdateChildAccDistAccount();
+                }
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

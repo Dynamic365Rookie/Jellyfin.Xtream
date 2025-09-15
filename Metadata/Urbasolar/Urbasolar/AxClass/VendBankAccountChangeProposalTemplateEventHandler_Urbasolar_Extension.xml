@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendBankAccountChangeProposalTemplateEventHandler_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(VendBankAccountChangeProposalTemplateEventHandler))]
+final class VendBankAccountChangeProposalTemplateEventHandler_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>completed</Name>
+				<Source><![CDATA[
+    public void completed(WorkflowEventArgs _workflowEventArgs)
+    {
+        next completed(_workflowEventArgs);
+
+        RecId vendBankAccountRecId  = _workflowEventArgs.parmWorkflowContext().parmRecId();
+        VendBankAccount bankAccount = VendBankAccount::findByRecId(vendBankAccountRecId,true);
+        VendTable vendTable         = VendTable::find(bankAccount.VendAccount,true);
+        
+        UBSVendBankAccountAccountIdOrigField UBSVendBankAccountAccountIdOrigField = UBSVendBankAccountAccountIdOrigField::
+                                                                                                findVendAccountTableAccountId(bankAccount.AccountID);
+        int64 vendBankAccountCount = VendBankAccount::vendBankAccountPerVendorCount(vendTable.AccountNum);
+
+        if(UBSVendBankAccountAccountIdOrigField && vendBankAccountCount == 1)
+        {
+            str   orignator         = WorkflowTrackingStatusTable::findByCorrelation(
+                                                _workflowEventArgs.parmWorkflowContext().parmWorkflowCorrelationId()).Originator;
+
+            ttsbegin;
+            vendTable.BankAccount = bankAccount.AccountID;
+            vendTable.update();
+            ttscommit;
+             
+            ttsbegin;
+            VendTableChangeProposal change = VendTableChangeProposal::findOrCreate(vendTable.RecId, true);
+            change.BankAccount = bankAccount.AccountID;
+            change.setFlagForChangedField(VendTableChangeProposalField::BankAccount);
+            change.update();
+            ttscommit;
+
+            ttsbegin;
+            VendTable::updateWorkflowState(vendTable.RecId, VendTableChangeProposalWorkflowState::Submitted);
+            WorkflowCorrelationId   workflowCorrelationId = Workflow::activateFromWorkflowType(workFlowTypeStr(VendTableChangeProposalWorkflow),
+                                                                               vendTable.RecId,
+                                                                               '@UBS:UBSAutomacticSubmission',
+                                                                               false,
+                                                                               orignator);
+
+            UBSVendBankAccountAccountIdOrigField.selectForUpdate(true);
+            UBSVendBankAccountAccountIdOrigField.delete();
+            ttscommit;
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

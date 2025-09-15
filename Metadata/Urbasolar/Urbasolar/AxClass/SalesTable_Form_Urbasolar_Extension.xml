@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SalesTable_Form_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(formStr(SalesTable))]
+
+public final class SalesTable_Form_Urbasolar_Extension
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>SalesTable_UBSProjectDim_OnLookup</Name>
+				<Source><![CDATA[
+    [FormControlEventHandler(formControlStr(SalesTable, SalesTable_UBSProjectDim), FormControlEventType::Lookup)]
+    public static void SalesTable_UBSProjectDim_OnLookup(FormControl sender, FormControlEventArgs e)
+    {
+
+        UBSProjectDimensionValueLookup::projectDimensionLookup(sender, e);
+
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

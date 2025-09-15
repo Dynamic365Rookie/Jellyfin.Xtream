@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>InventSite_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(InventSite))]
+
+public final class InventSite_Table_Urbasolar_Extension
+{
+}
+
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>insert</Name>
+				<Source><![CDATA[
+    public void insert()
+    {
+        next insert();
+        UBSInventSiteCrossCompany::createRecord(this.SiteId, this.DataAreaId);
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>delete</Name>
+				<Source><![CDATA[
+    public void delete()
+    {
+        next delete();
+        UBSInventSiteCrossCompany::deleteRecord(this.SiteId, this.DataAreaId);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

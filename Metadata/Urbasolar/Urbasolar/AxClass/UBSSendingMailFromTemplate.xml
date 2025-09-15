@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSSendingMailFromTemplate</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSSendingMailFromTemplate
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>sendMail</Name>
+				<Source><![CDATA[
+    public static void sendMail(str _toEmailAddress, SysEmailSystemId _template , Map _placeHolderMap, str _userId, str _languageId)
+    {
+        SysOutgoingEmailTable       outGoingEmailTable;
+        SysEmailSystemTable         sysEmailSystemTable = SysEmailSystemTable::find(_template);
+        SysEmailMessageSystemTable  sysEmailMessageSystemTable = SysEmailMessageSystemTable::find(_template, _languageId);
+
+        str messageBody = sysEmailMessageSystemTable.Mail;
+        str subject     = sysEmailMessageSystemTable.Subject;
+      
+        messageBody = SysEmailMessage::stringExpand(messageBody, _placeholderMap);
+        subject     = SysEmailMessage::stringExpand(subject, _placeholderMap);
+        
+        outgoingEmailTable.EmailItemId                  = EventInbox::nextEventId();
+        outgoingEmailTable.TemplateId                   = _template;
+        outgoingEmailTable.Sender                       = SysEmailSystemTable.SenderAddr;
+        outgoingEmailTable.SenderName                   = SysEmailSystemTable.SenderName;
+        outgoingEmailTable.Recipient                    = _toEmailAddress;
+        outgoingEmailTable.Subject                      = subject;
+        outgoingEmailTable.Message                      = messageBody;
+        outgoingEmailTable.Priority                     = SysEmailSystemTable.Priority;
+        outgoingEmailTable.WithRetries                  = true;
+        outgoingEmailTable.RetryNum                     = 0;
+        outgoingEmailTable.UserId                       = _userId;
+        outgoingEmailTable.Status                       = SysEmailStatus::Unsent;
+        outgoingEmailTable.LatestStatusChangeDateTime   = DateTimeUtil::getSystemDateTime();
+        outgoingEmailTable.insert();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

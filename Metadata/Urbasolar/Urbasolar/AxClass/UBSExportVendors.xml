@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSExportVendors</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public final class UBSExportVendors
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>exportVendors</Name>
+				<Source><![CDATA[
+    public static DMFExecutionId exportVendors()
+    {
+
+        DMFDefinitionGroup DMFDefinitionGroup = DMFDefinitionGroup::find(VendParameters::find().UBSVendorInterfaceDMFDefinitionGroup);
+        DMFDefinitionGroupName definitionGroupName = DMFDefinitionGroup.DefinitionGroupName;
+
+        str downloadUrl;
+        DMFDefinitionGroupEntity dmfDefinitionGroupEntity;
+        DMFExecutionId executionId;
+
+
+        try
+        {
+            select firstonly dmfDefinitionGroupEntity
+                where dmfDefinitionGroupEntity.DefinitionGroup == definitionGroupName;
+
+            executionId = DMFUtil::setupNewExecution(definitionGroupName);
+            DataImportFramework::MoveToStaging(executionId);
+            SharedServiceUnitFileID exportedFileId = DMFPackageExporter::exportToFileV2(definitionGroupName, executionId, dmfDefinitionGroupEntity.Entity, dmfDefinitionGroupEntity.Source);
+
+            if (exportedFileId != '')
+            {
+                downloadUrl = DMFDataPopulation::getAzureBlobReadUrl(str2Guid(exportedFileId));
+                System.Uri uri = new System.Uri(downloadUrl);
+                str fileExt;
+
+                if (uri != null)
+                {
+                    fileExt = System.IO.Path::GetExtension(uri.LocalPath);
+
+                    Filename filename = strFmt('%1', definitionGroupName);
+                    System.IO.Stream stream = File::UseFileFromURL(downloadUrl);
+                    //File::SendFileToUser(stream, filename);
+                }
+            }
+        }
+        catch
+        {
+            error('DMF export failed');
+        }
+
+        return executionId;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

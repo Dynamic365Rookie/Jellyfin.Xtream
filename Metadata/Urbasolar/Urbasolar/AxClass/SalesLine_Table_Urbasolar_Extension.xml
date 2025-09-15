@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SalesLine_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(SalesLine))]
+
+public final class SalesLine_Table_Urbasolar_Extension
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>updateProjectDimensionFromSalesTable</Name>
+				<Source><![CDATA[
+    public void updateProjectDimensionFromSalesTable()
+    {
+        SalesTable SalesTable = this.salesTable();
+
+        DimensionAttributeValue dimAttrValue;
+        DimensionAttributeValueSetStorage storage;
+        DimensionAttrValueLedgerOverride override;
+        UBSInventSiteCrossCompany inventSiteCrossCompany;
+        InventDim inventDim;
+        
+
+        dimAttrValue = DimensionAttributeValue::find(SalesTable.UBSProjectDim);
+
+        storage = DimensionAttributeValueSetStorage::find(this.defaultDimension);
+        if(dimAttrValue)
+        {
+            storage.addItem(dimAttrValue);
+            this.defaultDimension = storage.save();
+            
+            if(!this.InventDimId)
+            {
+                override = DimensionAttrValueLedgerOverride::findByDimensionAttrValueLedgerOverride(dimAttrValue.RecId, Ledger::current());
+                inventSiteCrossCompany = UBSInventSiteCrossCompany::findByRecId(override.UBSInventSiteCCRecId);
+                ttsbegin;
+                inventDim = this.inventDim(true);
+                inventDim.InventSiteId = inventSiteCrossCompany.SiteId;
+                inventDim.update();
+                ttscommit;
+
+                this.modifyInventDim(inventDim,fieldNum(InventDim, InventSiteId), false);
+            }
+
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>update</Name>
+				<Source><![CDATA[
+    public void  update(boolean  _dropInvent,
+                        Common   _childBuffer,
+                        boolean  _updateOrderLineOfDeliverySchedule,
+                        boolean  _mcrAutoallocate,
+                        boolean  _cameFromCreate,
+                        boolean  _promptSuppItem
+                        )
+    {
+        next update(  _dropInvent,
+                           _childBuffer,
+                          _updateOrderLineOfDeliverySchedule,
+                          _mcrAutoallocate,
+                          _cameFromCreate,
+                          _promptSuppItem);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

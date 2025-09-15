@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FC65038C-1B2F-41E1-A629-BED71D161FFF}") = "USB-28_StockAccountEntriesInterface (VAR) [Urbasolar]", "USB-28_StockAccountEntriesInterface.rnrproj", "{DBC3684A-12FA-42AD-8630-A5277AEF572C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UBSInterfaceToolkit", "..\UBSInterfaceToolkit\UBSInterfaceToolkit\UBSInterfaceToolkit.csproj", "{40AE7E59-9350-4886-9255-495FE307027C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DBC3684A-12FA-42AD-8630-A5277AEF572C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBC3684A-12FA-42AD-8630-A5277AEF572C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBC3684A-12FA-42AD-8630-A5277AEF572C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBC3684A-12FA-42AD-8630-A5277AEF572C}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{40AE7E59-9350-4886-9255-495FE307027C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40AE7E59-9350-4886-9255-495FE307027C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40AE7E59-9350-4886-9255-495FE307027C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40AE7E59-9350-4886-9255-495FE307027C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3D019E3B-5C8E-403F-95A7-9C58BD0E1D71}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://dev.azure.com/labdevms
+		SccProjectUniqueName0 = ..\\UBSInterfaceToolkit\\UBSInterfaceToolkit\\UBSInterfaceToolkit.csproj
+		SccProjectName0 = ../UBSInterfaceToolkit/UBSInterfaceToolkit
+		SccLocalPath0 = ..\\UBSInterfaceToolkit\\UBSInterfaceToolkit
+		SccLocalPath1 = .
+		SccProjectUniqueName2 = USB-28_StockAccountEntriesInterface.rnrproj
+		SccLocalPath2 = .
+	EndGlobalSection
+EndGlobal

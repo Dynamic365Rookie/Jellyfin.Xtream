@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchReqLine_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(PurchReqLine))]
+final class PurchReqLine_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>validateFieldValue</Name>
+				<Source><![CDATA[
+    public boolean validateFieldValue(FieldName _fieldName, int _arrayIndex)
+    {
+        boolean ret = next validateFieldValue(_fieldName,_arrayIndex);
+
+        if(_fieldName ==  fieldStr(PurchReqLine, UBSAutomaticReceptionDate))
+        {
+            PurchReqLine  purchreqline;
+            PurchReqTable purchreqtable = this.purchReqTable();
+
+            if(purchreqtable.UBSRecurringServicePurchase == NoYes::Yes)
+            {
+                while select UBSAutomaticReceptionDate
+                    from purchreqline where
+                      purchreqline.PurchReqTable == purchreqtable.RecId &&
+                      purchreqline.RecId != this.RecId
+                {
+                    if(this.UBSAutomaticReceptionDate >= dateStartMth(purchreqline.UBSAutomaticReceptionDate) &&
+                       this.UBSAutomaticReceptionDate <= endMth(purchreqline.UBSAutomaticReceptionDate))
+                    {
+                        return checkFailed("@UBS:UBSCheckDuplicateDate");
+                    }
+                }
+
+                if(this.purchReqTable().UBSRecurringServicePurchase && this.UBSAutomaticReceptionDate == dateNull() && this.LineNum != 1)
+                {
+                    return checkFailed("@UBS:UBSCheckRecurringDateEmpty");
+                }
+            }
+        }
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>insert</Name>
+				<Source><![CDATA[
+    public void insert()
+    {
+        if(this.RequiredDate > this.purchReqTable().UBSRequestedDate)
+        {
+            warning("@UBS:UBSRequestedDateCheckError");
+        }
+
+        next insert();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>update</Name>
+				<Source><![CDATA[
+    public void update(boolean _doVersioning, boolean _createMarkupTrans)
+    {
+        if(this.RequiredDate > this.purchReqTable().UBSRequestedDate)
+        {
+            warning("@UBS:UBSRequestedDateCheckError");
+        }
+
+        next update(_doVersioning, _createMarkupTrans);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>modifiedFieldItemId</Name>
+				<Source><![CDATA[
+    public void modifiedFieldItemId()
+    {
+        next modifiedFieldItemId();
+
+        this.populateAdditionalDimension();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>initCatalogItem</Name>
+				<Source><![CDATA[
+    public void initCatalogItem(InventTable     _catalogItem,
+                                LineNum         _lineNum,
+                                SequenceNumber  _sequenceNumber,
+                                CurrencyCode    _currencyCode)
+    {
+    
+        next initCatalogItem(_catalogItem, _lineNum, _sequenceNumber, _currencyCode);
+
+        this.populateAdditionalDimension();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>populateAdditionalDimension</Name>
+				<Source><![CDATA[
+    private void populateAdditionalDimension()
+    {
+        PurchReqTable purchReqTable = this.purchReqTable();
+
+        DimensionAttributeValue             dimAttrValue;
+        DimensionAttributeValueSetStorage   storage;
+        DimensionAttrValueLedgerOverride    override;
+        UBSInventSiteCrossCompany           inventSiteCrossCompany;
+        InventDim                           inventDim;
+
+        dimAttrValue = DimensionAttributeValue::find(purchReqTable.UBSProjectDim);
+        storage      = DimensionAttributeValueSetStorage::find(this.defaultDimension);
+
+        if(dimAttrValue)
+        {
+            storage.addItem(dimAttrValue);
+            this.defaultDimension = storage.save();
+
+            override                = DimensionAttrValueLedgerOverride::findByDimensionAttrValueLedgerOverride(dimAttrValue.RecId, Ledger::current());
+            inventSiteCrossCompany  = UBSInventSiteCrossCompany::findByRecId(override.UBSInventSiteCCRecId);
+            
+            inventDim.InventSiteId  = inventSiteCrossCompany.SiteId;
+            inventDim               = InventDim::FindOrCreate(inventDim);
+
+            this.setInventDimId(inventDim.inventDimId, inventDim);
+            this.setAddressFromInventDim(this.inventDim());
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxForm xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>UBSOutboundInterface</Name>
+	<SourceCode>
+		<Methods xmlns="">
+			<Method>
+				<Name>classDeclaration</Name>
+				<Source><![CDATA[
+[Form]
+public class UBSOutboundInterface extends FormRun
+{
+}
+]]></Source>
+			</Method>
+		</Methods>
+		<DataSources xmlns="" />
+		<DataControls xmlns="">
+			<Control>
+				<Name>UBSTestConnection</Name>
+				<Type>Button</Type>
+				<Methods>
+					<Method>
+						<Name>clicked</Name>
+						<Source><![CDATA[
+        public void clicked()
+        {
+            super();
+
+            str bearer = UBSOutboundInterfaceToolkit::getBearer();
+
+            if(!System.String::IsNullOrWhiteSpace(bearer))
+            {
+                Global::info('@UBS:UBSTestBearerConnectionSuccess');
+            }
+        }
+
+]]></Source>
+					</Method>
+				</Methods>
+			</Control>
+		</DataControls>
+		<Members xmlns="" />
+	</SourceCode>
+	<DataSources>
+		<AxFormDataSource xmlns="">
+			<Name>UBSOutboundInterface</Name>
+			<Table>UBSOutboundInterface</Table>
+			<Fields>
+				<AxFormDataSourceField>
+					<DataField>Partition</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>RecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>TableId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSClientId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSClientSecret</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSEndURLAuthentication</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSGrantType</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSResource</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSResourceRequest</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSRootURLAuthentication</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSScope</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSTenantId</DataField>
+				</AxFormDataSourceField>
+			</Fields>
+			<ReferencedDataSources />
+			<DataSourceLinks />
+			<DerivedDataSources />
+		</AxFormDataSource>
+		<AxFormDataSource xmlns="">
+			<Name>UBSOutboundInterfaceEndPoint</Name>
+			<Table>UBSOutboundInterfaceEndPoint</Table>
+			<Fields>
+				<AxFormDataSourceField>
+					<DataField>Partition</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>RecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>TableId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSEndPoint</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSEndPointType</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSLastSynchronisationDateTime</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>UBSOutboundInterface</DataField>
+				</AxFormDataSourceField>
+			</Fields>
+			<ReferencedDataSources />
+			<JoinSource>UBSOutboundInterface</JoinSource>
+			<DataSourceLinks />
+			<DerivedDataSources />
+		</AxFormDataSource>
+	</DataSources>
+	<Design>
+		<Caption xmlns="">@UBS:UBSOutboundInterface</Caption>
+		<Pattern xmlns="">SimpleDetails-StandardTabsContainer</Pattern>
+		<PatternVersion xmlns="">1.5</PatternVersion>
+		<Controls xmlns="">
+			<AxFormControl xmlns=""
+				i:type="AxFormActionPaneControl">
+				<Name>OutboundFormActionPaneControl</Name>
+				<Type>ActionPane</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormButtonGroupControl">
+						<Name>FormButtonGroupControl1</Name>
+						<Type>ButtonGroup</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormButtonControl">
+								<Name>UBSTestConnection</Name>
+								<Type>Button</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Text>@UBS:UBSTestConnection</Text>
+							</AxFormControl>
+						</Controls>
+					</AxFormControl>
+				</Controls>
+			</AxFormControl>
+			<AxFormControl xmlns=""
+				i:type="AxFormTabControl">
+				<Name>OutboundFormTabControl</Name>
+				<Type>Tab</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormTabPageControl">
+						<Name>OutboundFormTabPageControl</Name>
+						<Pattern>Custom</Pattern>
+						<Type>TabPage</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormGroupControl">
+								<Name>OutBoundFormGroupControl</Name>
+								<Type>Group</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Controls>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>UBSOutboundInterface_UBSGrantType</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSGrantType</DataField>
+										<DataSource>UBSOutboundInterface</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>UBSOutboundInterface_UBSRootURLAuthentication</Name>
+										<Type>String</Type>
+										<Width>400</Width>
+										<WidthMode>Manual</WidthMode>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSRootURLAuthentication</DataField>
+										<DataSource>UBSOutboundInterface</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>UBSOutboundInterface_UBSTenantId</Name>
+										<Type>String</Type>
+										<Width>400</Width>
+										<WidthMode>Manual</WidthMode>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSTenantId</DataField>
+										<DataSource>UBSOutboundInterface</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>UBSOutboundInterface_UBSEndURLAuthentication</Name>
+										<Type>String</Type>
+										<Width>400</Width>
+										<WidthMode>Manual</WidthMode>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSEndURLAuthentication</DataField>
+										<DataSource>UBSOutboundInterface</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>UBSOutboundInterface_UBSClientId</Name>
+										<Type>String</Type>
+										<Width>400</Width>
+										<WidthMode>Manual</WidthMode>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSClientId</DataField>
+										<DataSource>UBSOutboundInterface</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>UBSOutboundInterface_UBSClientSecret</Name>
+										<Type>String</Type>
+										<Width>400</Width>
+										<WidthMode>Manual</WidthMode>
+										<FormControlExtension
+											i:nil="true" />
+										<DataMethod>passwordEdit</DataMethod>
+										<DataSource>UBSOutboundInterface</DataSource>
+										<Label>@UBS:UBSClientSecret</Label>
+										<PasswordStyle>Yes</PasswordStyle>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>UBSOutboundInterface_UBSScope</Name>
+										<Type>String</Type>
+										<Width>400</Width>
+										<WidthMode>Manual</WidthMode>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSScope</DataField>
+										<DataSource>UBSOutboundInterface</DataSource>
+									</AxFormControl>
+								</Controls>
+								<DataSource>UBSOutboundInterface</DataSource>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormGroupControl">
+								<Name>OutboundEndPointFormGroupControl</Name>
+								<Type>Group</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Controls>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>UBSOutboundInterface_UBSResource</Name>
+										<Type>String</Type>
+										<Width>400</Width>
+										<WidthMode>Manual</WidthMode>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSResource</DataField>
+										<DataSource>UBSOutboundInterface</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>UBSOutboundInterface_UBSResourceRequest</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSResourceRequest</DataField>
+										<DataSource>UBSOutboundInterface</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormButtonGroupControl">
+										<Name>OutboundEndPointFormButtonGroupControl</Name>
+										<Type>ButtonGroup</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<Controls>
+											<AxFormControl xmlns=""
+												i:type="AxFormCommandButtonControl">
+												<Name>Insert</Name>
+												<Type>CommandButton</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<Command>New</Command>
+											</AxFormControl>
+											<AxFormControl xmlns=""
+												i:type="AxFormCommandButtonControl">
+												<Name>Delete</Name>
+												<Type>CommandButton</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<Command>DeleteRecord</Command>
+											</AxFormControl>
+										</Controls>
+										<ArrangeMethod>HorizontalLeft</ArrangeMethod>
+										<DataSource>UBSOutboundInterfaceEndPoint</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormGridControl">
+										<Name>OutboundEndPointFormGridControl</Name>
+										<Type>Grid</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<Controls>
+											<AxFormControl xmlns=""
+												i:type="AxFormStringControl">
+												<Name>UBSOutboundInterfaceEndPoint_UBSEndPoint</Name>
+												<Type>String</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<DataField>UBSEndPoint</DataField>
+												<DataSource>UBSOutboundInterfaceEndPoint</DataSource>
+											</AxFormControl>
+											<AxFormControl xmlns=""
+												i:type="AxFormComboBoxControl">
+												<Name>UBSOutboundInterfaceEndPoint_UBSEndPointType</Name>
+												<Type>ComboBox</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<DataField>UBSEndPointType</DataField>
+												<DataSource>UBSOutboundInterfaceEndPoint</DataSource>
+												<Items />
+											</AxFormControl>
+											<AxFormControl xmlns=""
+												i:type="AxFormDateTimeControl">
+												<Name>UBSOutboundInterfaceEndPoint_UBSLastSynchronisationDateTime</Name>
+												<Type>DateTime</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<DataField>UBSLastSynchronisationDateTime</DataField>
+												<DataSource>UBSOutboundInterfaceEndPoint</DataSource>
+												<Label>@UBS:UBSLastSynchronisationDateTime</Label>
+											</AxFormControl>
+										</Controls>
+										<DataSource>UBSOutboundInterfaceEndPoint</DataSource>
+									</AxFormControl>
+								</Controls>
+								<DataSource>UBSOutboundInterfaceEndPoint</DataSource>
+							</AxFormControl>
+							<AxFormControl xmlns=""
+								i:type="AxFormGroupControl">
+								<Name>ComplteAuthenticationURL</Name>
+								<Type>Group</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<Controls>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>UBSOutboundInterface_UBSCompleteAuthenticationURL</Name>
+										<AllowEdit>No</AllowEdit>
+										<Type>String</Type>
+										<Width>800</Width>
+										<WidthMode>Manual</WidthMode>
+										<FormControlExtension
+											i:nil="true" />
+										<DataMethod>completeAuthenticationURL</DataMethod>
+										<DataSource>UBSOutboundInterface</DataSource>
+										<Label>@UBS:UBSCompleteAuthenticationURL</Label>
+									</AxFormControl>
+								</Controls>
+							</AxFormControl>
+						</Controls>
+						<ColumnsMode>Fill</ColumnsMode>
+						<Caption>@SYS37997</Caption>
+					</AxFormControl>
+				</Controls>
+			</AxFormControl>
+		</Controls>
+	</Design>
+	<Parts />
+</AxForm>

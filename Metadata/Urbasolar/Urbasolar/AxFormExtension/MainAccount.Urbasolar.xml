@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>MainAccount.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlulrrjmhm1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormTabPageControl">
+				<Name>Urbasolar</Name>
+				<Pattern>FieldsFieldGroups</Pattern>
+				<PatternVersion>1.1</PatternVersion>
+				<Type>TabPage</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormGroupControl">
+						<Name>UBSInterface</Name>
+						<Type>Group</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormCheckBoxControl">
+								<Name>MainAccount_UBSWarrantyTempAccount</Name>
+								<Type>CheckBox</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataField>UBSWarrantyTempAccount</DataField>
+								<DataSource>MainAccount</DataSource>
+							</AxFormControl>
+						</Controls>
+						<Caption>@SYS69603</Caption>
+					</AxFormControl>
+				</Controls>
+				<ColumnsMode>Fill</ColumnsMode>
+				<Caption>@UBS:UBSUrbasolar</Caption>
+			</FormControl>
+			<Parent>MainTab</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources />
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxView xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSInterfaceStockEntryView</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class UBSInterfaceStockEntryView extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getEntryType</Name>
+				<Source><![CDATA[
+    public static str getEntryType()
+    {
+        str ret;
+        Map inventTransTypeMap = new Map(Types::String, Types::String);
+
+        inventTransTypeMap.insert(int2str(enum2int(InventTransType::Sales)),SysComputedColumn::returnLiteral("Vente"));
+        inventTransTypeMap.insert(int2str(enum2int(InventTransType::Purch)),SysComputedColumn::returnLiteral("Achat"));
+        inventTransTypeMap.insert(int2str(enum2int(InventTransType::InventTransaction)),SysComputedColumn::returnLiteral("Rebut"));
+        inventTransTypeMap.insert(int2str(enum2int(InventTransType::InventTransfer)),SysComputedColumn::returnLiteral("Transfert"));
+        inventTransTypeMap.insert(int2str(enum2int(InventTransType::InventLossProfit)),SysComputedColumn::returnLiteral("Ajustement"));
+        inventTransTypeMap.insert(int2str(enum2int(InventTransType::InventCounting)),SysComputedColumn::returnLiteral("InvenTaire"));
+
+
+        ret = SysComputedColumn::switch(
+            SysComputedColumn::returnField(viewstr(UBSInterfaceStockEntryView),viewstr(UBSVoucherStockReferenceCategoryView),fieldStr(UBSVoucherStockReferenceCategoryView,ReferenceCategory)),
+            inventTransTypeMap,
+            SysComputedColumn::returnLiteral("Autre")
+            );
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>AccountingDate</Name>
+			<DataField>AccountingDate</DataField>
+			<DataSource>GeneralJournalEntry</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>SubledgerVoucherDataAreaId</Name>
+			<DataField>SubledgerVoucherDataAreaId</DataField>
+			<DataSource>GeneralJournalEntry</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>AccountingCurrencyAmount</Name>
+			<DataField>AccountingCurrencyAmount</DataField>
+			<DataSource>GeneralJournalAccountEntry</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>CostCenter</Name>
+			<DataField>CostCenter</DataField>
+			<DataSource>UBSDimensionCombinationView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>ExpenseNature</Name>
+			<DataField>ExpenseNature</DataField>
+			<DataSource>UBSDimensionCombinationView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>GroupChartOfAccount</Name>
+			<DataField>GroupChartOfAccount</DataField>
+			<DataSource>UBSDimensionCombinationView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>MainAccountValue</Name>
+			<DataField>MainAccountValue</DataField>
+			<DataSource>UBSDimensionCombinationView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Vendor</Name>
+			<DataField>Vendor</DataField>
+			<DataSource>UBSDimensionCombinationView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>Project</Name>
+			<DataField>Project</DataField>
+			<DataSource>UBSDimensionCombinationView</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldComputedString">
+			<Name>InventTransType</Name>
+			<ViewMethod>getEntryType</ViewMethod>
+			<StringSize>50</StringSize>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>TransactionCurrencyCode</Name>
+			<DataField>TransactionCurrencyCode</DataField>
+			<DataSource>GeneralJournalAccountEntry</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>TransactionCurrencyAmount</Name>
+			<DataField>TransactionCurrencyAmount</DataField>
+			<DataSource>GeneralJournalAccountEntry</DataSource>
+		</AxViewField>
+	</Fields>
+	<Indexes />
+	<Mappings />
+	<Relations />
+	<StateMachines />
+	<ViewMetadata>
+		<Name>Metadata</Name>
+		<SourceCode>
+			<Methods />
+		</SourceCode>
+		<DataSources>
+			<AxQuerySimpleRootDataSource>
+				<Name>GeneralJournalAccountEntry</Name>
+				<DynamicFields>Yes</DynamicFields>
+				<Table>GeneralJournalAccountEntry</Table>
+				<DataSources>
+					<AxQuerySimpleEmbeddedDataSource>
+						<Name>GeneralJournalEntry</Name>
+						<DynamicFields>Yes</DynamicFields>
+						<Table>GeneralJournalEntry</Table>
+						<DataSources>
+							<AxQuerySimpleEmbeddedDataSource>
+								<Name>UBSVoucherStockReferenceCategoryView</Name>
+								<DynamicFields>Yes</DynamicFields>
+								<Table>UBSVoucherStockReferenceCategoryView</Table>
+								<DataSources />
+								<DerivedDataSources />
+								<Fields />
+								<Ranges />
+								<Relations>
+									<AxQuerySimpleDataSourceRelation>
+										<Name>QueryDataSourceRelation1</Name>
+										<Field>RecId</Field>
+										<JoinDataSource>GeneralJournalEntry</JoinDataSource>
+										<RelatedField>GeneralJournalEntryRecId</RelatedField>
+									</AxQuerySimpleDataSourceRelation>
+								</Relations>
+							</AxQuerySimpleEmbeddedDataSource>
+						</DataSources>
+						<DerivedDataSources />
+						<Fields />
+						<Ranges />
+						<Relations>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation1</Name>
+								<JoinDataSource>GeneralJournalAccountEntry</JoinDataSource>
+								<JoinRelationName>GeneralJournalEntry</JoinRelationName>
+							</AxQuerySimpleDataSourceRelation>
+						</Relations>
+					</AxQuerySimpleEmbeddedDataSource>
+					<AxQuerySimpleEmbeddedDataSource>
+						<Name>UBSDimensionCombinationView</Name>
+						<DynamicFields>Yes</DynamicFields>
+						<Table>UBSDimensionCombinationView</Table>
+						<DataSources />
+						<DerivedDataSources />
+						<Fields />
+						<Ranges />
+						<Relations>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation1</Name>
+								<Field>LedgerDimension</Field>
+								<JoinDataSource>GeneralJournalAccountEntry</JoinDataSource>
+								<RelatedField>RecId</RelatedField>
+							</AxQuerySimpleDataSourceRelation>
+						</Relations>
+					</AxQuerySimpleEmbeddedDataSource>
+				</DataSources>
+				<DerivedDataSources />
+				<Fields />
+				<Ranges>
+					<AxQuerySimpleDataSourceRange>
+						<Name>PostingType</Name>
+						<Field>PostingType</Field>
+						<Value>LedgerPostingType::SalesConsump,LedgerPostingType::SalesPackingSlip,LedgerPostingType::SalesOffsetAccountPackingSlip,LedgerPostingType::SalesIssue,LedgerPostingType::PurchPckSlp,LedgerPostingType::PurchReceipt,LedgerPostingType::InventReceipt,LedgerPostingType::InventIssue,LedgerPostingType::InventProfit,LedgerPostingType::InventLoss,LedgerPostingType::PurchStockVariation,LedgerPostingType::LedgerPostingType::SalesConsump,LedgerPostingType::SalesPackingSlip,LedgerPostingType::SalesOffsetAccountPackingSlip,LedgerPostingType::SalesIssue,LedgerPostingType::PurchPckSlp,LedgerPostingType::PurchReceipt,LedgerPostingType::InventReceipt,LedgerPostingType::InventIssue,LedgerPostingType::InventProfit,LedgerPostingType::InventLoss,LedgerPostingType::InventInterUnitPayable,LedgerPostingType::InventInterUnitReceivable</Value>
+					</AxQuerySimpleDataSourceRange>
+				</Ranges>
+				<GroupBy />
+				<Having />
+				<OrderBy />
+			</AxQuerySimpleRootDataSource>
+		</DataSources>
+	</ViewMetadata>
+</AxView>

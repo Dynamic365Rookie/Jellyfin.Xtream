@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Diagnostics
+  GenerationTime="2025-01-08T10:58:16.828552+00:00">
+  <Items>
+    <Diagnostic>
+      <DiagnosticType>VisualStudioIntegration</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>K:\AosService\PackagesLocalDirectory\bin\labelc.exe</Path>
+      <Moniker>K:\AosService\PackagesLocalDirectory\bin\labelc.exe -metadata="K:\AosService\PackagesLocalDirectory" -output="K:\AosService\PackagesLocalDirectory\Urbasolar\Resources" -modelmodule="Urbasolar" </Moniker>
+      <Message>K:\AosService\PackagesLocalDirectory\bin\labelc.exe -metadata="K:\AosService\PackagesLocalDirectory" -output="K:\AosService\PackagesLocalDirectory\Urbasolar\Resources" -modelmodule="Urbasolar" </Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>Starting label compilation...</Moniker>
+      <Message>Starting label compilation...</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>- Module name    </Moniker>
+      <Message>Urbasolar</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>- Metadata path  </Moniker>
+      <Message>K:\AosService\PackagesLocalDirectory\</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>- Output path    </Moniker>
+      <Message>K:\AosService\PackagesLocalDirectory\Urbasolar\Resources\</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>- Maximum DoP    </Moniker>
+      <Message>0 (Logical Processors: 4)</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>Compiling Primary Resource file for UBS</Moniker>
+      <Message>Compiling Primary Resource file for UBS</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>Generating Primary resource assembly for UBS</Moniker>
+      <Message>Generating Primary resource assembly for UBS</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>Compiling label file UBS for language en-US</Moniker>
+      <Message>Compiling label file UBS for language en-US</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>Compiling label file UBS for language fr</Moniker>
+      <Message>Compiling label file UBS for language fr</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>Generating satellite resource assembly for label file UBS, language en-US</Moniker>
+      <Message>Generating satellite resource assembly for label file UBS, language en-US</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>Generating satellite resource assembly for label file UBS, language fr</Moniker>
+      <Message>Generating satellite resource assembly for label file UBS, language fr</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>Done compiling 2 label files!</Moniker>
+      <Message>Done compiling 2 label files!</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Unspecified</DiagnosticType>
+      <Severity>Informational</Severity>
+      <Path>labelc.exe</Path>
+      <Moniker>Completed label compilation in 1 seconds with exit code 0.</Moniker>
+      <Message>Completed label compilation in 1 seconds with exit code 0.</Message>
+    </Diagnostic>
+  </Items>
+  <Aliases />
+</Diagnostics>

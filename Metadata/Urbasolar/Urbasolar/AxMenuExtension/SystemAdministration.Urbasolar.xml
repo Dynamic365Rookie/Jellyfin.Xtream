@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxMenuExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V1">
+	<Name>SystemAdministration.Urbasolar</Name>
+	<Customizations />
+	<Elements>
+		<AxMenuExtensionElement xmlns="">
+			<Parent>Setup</Parent>
+			<MenuElement xmlns=""
+				i:type="AxMenuElementMenuItem">
+				<Name>UBSOutboundInterface</Name>
+				<MenuItemName>UBSOutboundInterface</MenuItemName>
+			</MenuElement>
+		</AxMenuExtensionElement>
+		<AxMenuExtensionElement xmlns="">
+			<Parent>Periodic</Parent>
+			<MenuElement xmlns=""
+				i:type="AxMenuElementSubMenu">
+				<Name>UrbasolarTasks</Name>
+				<Label>@UBS:UBSUrbasolar</Label>
+				<Elements>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSOutboundInterface_FinancialDimensionLegalEntity</Name>
+						<MenuItemName>UBSOutboundInterface_FinancialDimensionLegalEntity</MenuItemName>
+						<MenuItemType>Action</MenuItemType>
+					</AxMenuElement>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSOutboundInterface_Vendor</Name>
+						<MenuItemName>UBSOutboundInterface_Vendor</MenuItemName>
+						<MenuItemType>Action</MenuItemType>
+					</AxMenuElement>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSOutboundInterface_FinancialDimension</Name>
+						<MenuItemName>UBSOutboundInterface_FinancialDimension</MenuItemName>
+						<MenuItemType>Action</MenuItemType>
+					</AxMenuElement>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSOutboundInterfaceVendorInvoice</Name>
+						<MenuItemName>UBSOutboundInterfaceVendorInvoice</MenuItemName>
+						<MenuItemType>Action</MenuItemType>
+					</AxMenuElement>
+				</Elements>
+			</MenuElement>
+		</AxMenuExtensionElement>
+		<AxMenuExtensionElement xmlns="">
+			<Parent>Inquiries</Parent>
+			<MenuElement xmlns=""
+				i:type="AxMenuElementSubMenu">
+				<Name>UrbasolarInquiries</Name>
+				<Label>@UBS:UBSUrbasolar</Label>
+				<Elements>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSInterfaceExecutionHistoryTable</Name>
+						<MenuItemName>UBSInterfaceExecutionHistoryTable</MenuItemName>
+					</AxMenuElement>
+				</Elements>
+			</MenuElement>
+		</AxMenuExtensionElement>
+	</Elements>
+	<MenuElementModifications />
+	<PropertyModifications />
+</AxMenuExtension>

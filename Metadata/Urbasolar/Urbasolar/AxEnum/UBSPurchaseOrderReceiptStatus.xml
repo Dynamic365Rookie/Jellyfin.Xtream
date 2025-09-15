@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSPurchaseOrderReceiptStatus</Name>
+	<UseEnumValue>No</UseEnumValue>
+	<EnumValues>
+		<AxEnumValue>
+			<Name>NotStarted</Name>
+			<Label>@SYS80099</Label>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>Completed</Name>
+			<Label>@SYS54623</Label>
+			<Value>1</Value>
+		</AxEnumValue>
+		<AxEnumValue>
+			<Name>Error</Name>
+			<Label>@SYS8500</Label>
+			<Value>2</Value>
+		</AxEnumValue>
+	</EnumValues>
+	<IsExtensible>true</IsExtensible>
+</AxEnum>

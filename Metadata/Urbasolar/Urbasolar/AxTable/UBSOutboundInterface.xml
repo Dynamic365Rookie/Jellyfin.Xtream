@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSOutboundInterface</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class UBSOutboundInterface extends common
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>passwordEdit</Name>
+				<Source><![CDATA[
+    [SysClientCacheDataMethodAttribute(true)]
+    public edit str passwordEdit(boolean _set, str value)
+    {
+        return Global::editEncryptedField(this, value, fieldNum(UBSOutboundInterface, UBSClientSecret), _set);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>completeAuthenticationURL</Name>
+				<Source><![CDATA[
+    public display str completeAuthenticationURL()
+    {
+        return strFmt("%1%2%3",this.UBSRootURLAuthentication,this.UBSTenantId,this.UBSEndURLAuthentication);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findUBSOutboundInterface</Name>
+				<Source><![CDATA[
+    public static UBSOutboundInterface findUBSOutboundInterface()
+    {
+        UBSOutboundInterface outboundInterface;
+
+        select firstfast outboundInterface;
+
+        return outboundInterface;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findPassword</Name>
+				<Source><![CDATA[
+    public static str findPassword()
+    {
+        str passInClear = Global::editEncryptedField(UBSOutboundInterface::findUBSOutboundInterface(),'',fieldNum(UBSOutboundInterface,UBSClientSecret),false);
+        return passInClear;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+	<SubscriberAccessLevel>
+		<Read>Allow</Read>
+	</SubscriberAccessLevel>
+	<AllowRowVersionChangeTracking>Yes</AllowRowVersionChangeTracking>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
+	<DeleteActions />
+	<FieldGroups>
+		<AxTableFieldGroup>
+			<Name>AutoReport</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoLookup</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoIdentification</Name>
+			<AutoPopulate>Yes</AutoPopulate>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoSummary</Name>
+			<Fields />
+		</AxTableFieldGroup>
+		<AxTableFieldGroup>
+			<Name>AutoBrowse</Name>
+			<Fields />
+		</AxTableFieldGroup>
+	</FieldGroups>
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSRootURLAuthentication</Name>
+			<Label>@UBS:UBSRootURLAuthentication</Label>
+			<StringSize>100</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSEndURLAuthentication</Name>
+			<Label>@UBS:UBSEndURLAuthentication</Label>
+			<StringSize>100</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSTenantId</Name>
+			<Label>@UBS:UBSTenantId</Label>
+			<StringSize>75</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSGrantType</Name>
+			<Label>@UBS:UBSGrantType</Label>
+			<StringSize>25</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSScope</Name>
+			<Label>@ElectronicMessage_WebApplication:Scope</Label>
+			<StringSize>255</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSClientId</Name>
+			<Label>@UBS:UBSClientId</Label>
+			<StringSize>75</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldContainer">
+			<Name>UBSClientSecret</Name>
+			<ExtendedDataType>UBSPassword</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@UBS:UBSClientSecret</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSResource</Name>
+			<Label>@UBS:UBSResource</Label>
+			<StringSize>150</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSResourceRequest</Name>
+			<Label>@UBS:UBSResourceRequest</Label>
+			<StringSize>50</StringSize>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSDebugMode</Name>
+			<ExtendedDataType>NoYesId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@SYS9526</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes />
+	<Mappings />
+	<Relations />
+	<StateMachines />
+</AxTable>

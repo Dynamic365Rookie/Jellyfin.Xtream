@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTableExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SalesParameters.Urbasolar</Name>
+	<FieldGroupExtensions />
+	<FieldGroups />
+	<FieldModifications />
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBS_SAS_InventSiteId</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>InventSiteId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@UBS:UBSSiteUBSSAS</Label>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes />
+	<Mappings />
+	<PropertyModifications />
+	<RelationExtensions />
+	<RelationModifications />
+	<Relations>
+		<AxTableRelation xmlns=""
+			i:type="AxTableRelationForeignKey">
+			<Name>InventSite</Name>
+			<Cardinality>ZeroMore</Cardinality>
+			<RelatedTable>InventSite</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBS_SAS_InventSiteId</Name>
+					<Field>UBS_SAS_InventSiteId</Field>
+					<RelatedField>SiteId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+			<Index>SiteIdx</Index>
+		</AxTableRelation>
+	</Relations>
+</AxTableExtension>

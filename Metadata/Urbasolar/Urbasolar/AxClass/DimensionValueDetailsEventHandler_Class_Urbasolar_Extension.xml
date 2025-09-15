@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>DimensionValueDetailsEventHandler_Class_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(DimensionValueDetailsEventHandler))]
+public static class DimensionValueDetailsEventHandler_Class_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>getDataEntityContextEvent</Name>
+				<Source><![CDATA[
+    public static void getDataEntityContextEvent(xFormRun _sender, OfficeGeneratedExportMenuItem _menuItem, EventHandlerResult _result)
+    {
+        next getDataEntityContextEvent(_sender,_menuItem,_result);
+
+        DimensionIValueDetailMaintain valueDetails = _sender as DimensionIValueDetailMaintain;
+    
+        if(_menuItem.dataEntityName() == tableStr(FinancialDimensionValueEntity))
+        {
+            ExportToExcelDataEntityContext context = ExportToExcelDataEntityContext::construct(_menuItem.dataEntityName());
+            ListEnumerator bindings = context.bindings().getEnumerator();
+            bindings.moveNext();
+            ExportToExcelDataEntityBindingInfo binding = bindings.current();
+
+            if (valueDetails.isSaveDataPerCompany())
+            {
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, FinancialDimension));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, LegalEntityId));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, DimensionValue));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, Description));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, ActiveFrom));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, ActiveTo));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, IsSuspended));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, IsTotal));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, IsBlockedForManualEntry));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, GroupDimension));
+
+                // Entity Extensions
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, IsBalancing_PSN));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, Owner));
+            }
+            else
+            {
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, FinancialDimension));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, DimensionValue));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, Description));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, ActiveFrom));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, ActiveTo));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, IsSuspended));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, IsTotal));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, IsBlockedForManualEntry));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, GroupDimension));
+
+                // Entity Extensions
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, IsBalancing_PSN));
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, Owner));
+
+                // This should be left blank for this financial dimension,
+                // but cannot be left off the list as then Excel would not allow publishing.
+                binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, LegalEntityId));
+            }
+
+            binding.fieldList().addEnd(fieldStr(FinancialDimensionValueEntity, UBSConducteurTravaux));
+
+            _result.result(context);
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

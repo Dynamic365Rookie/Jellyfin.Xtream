@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSPurchPackingSlipPost</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSPurchPackingSlipPost extends RunBaseBatch
+{
+    private Dialog dialog;
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>canGoBatchJournal</Name>
+				<Source><![CDATA[
+    public boolean canGoBatchJournal()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    public Object dialog()
+    {
+        dialog = super();
+        
+        return dialog;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFromDialog</Name>
+				<Source><![CDATA[
+    public boolean getFromDialog()
+    {
+        return super();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>pack</Name>
+				<Source><![CDATA[
+    public container pack()
+    {
+        return conNull();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    protected boolean canRunInNewSession()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>unpack</Name>
+				<Source><![CDATA[
+    public boolean unpack(container packedClass)
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    server static UBSPurchPackingSlipPost construct()
+    {
+        return new UBSPurchPackingSlipPost();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    static void main(Args args)
+    {
+        UBSPurchPackingSlipPost  import = UBSPurchPackingSlipPost::construct();
+
+        if (import.prompt())
+        {
+            import.runOperation();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        UBSPurchOrderReceipt purchOrderReceipt;
+        while select UBSPurchaseOrderReceiptNumber, UBSPurchaseOrderReceiptStatus from purchOrderReceipt
+        group by purchOrderReceipt.UBSPurchaseOrderReceiptNumber, purchOrderReceipt.UBSPurchaseOrderReceiptStatus
+        where purchOrderReceipt.UBSPurchaseOrderReceiptStatus == UBSPurchaseOrderReceiptStatus::NotStarted
+        
+        {
+            UBSPurchOrderReceipt firstPurchOrderReceipt;
+            select firstonly firstPurchOrderReceipt where purchOrderReceipt.UBSPurchaseOrderReceiptNumber == purchOrderReceipt.UBSPurchaseOrderReceiptNumber
+                && firstPurchOrderReceipt.UBSPurchaseOrderReceiptStatus == UBSPurchaseOrderReceiptStatus::NotStarted;
+            if(firstPurchOrderReceipt)
+            {
+                if(firstPurchOrderReceipt.UBSPurchaseOrderReceiptQuantity > 0)
+                {
+                    UBSPurchPackingSlipPost::purchPackingSlipPost(firstPurchOrderReceipt.UBSPurchaseOrderReceiptNumber, firstPurchOrderReceipt);
+                }
+                else
+                {
+                    //UBSPurchPackingSlipPost::purchPackingSlipsCorrect(firstPurchOrderReceipt);
+                }
+            }
+        }
+
+        while select purchOrderReceipt where purchOrderReceipt.UBSPurchaseOrderReceiptQuantity < 0 //Corrections only
+            && purchOrderReceipt.UBSPurchaseOrderReceiptStatus == UBSPurchaseOrderReceiptStatus::NotStarted
+        {
+            UBSPurchPackingSlipPost::purchPackingSlipsCorrect(purchOrderReceipt);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>purchPackingSlipPost</Name>
+				<Source><![CDATA[
+    static void purchPackingSlipPost(Num _packingSlipId, UBSPurchOrderReceipt _purchOrderReceipt)
+    {
+        System.Exception ex;
+        try
+        {
+            PurchFormLetter             purchFormLetter;
+            PurchFormletterParmData     purchFormLetterParmData;
+            PurchParmUpdate             purchParmUpdate;
+            PurchParmTable              purchParmTable;
+            PurchParmLine               purchParmLine;
+            PurchTable                  purchTable;
+            PurchLine                   purchLine;
+            PurchId                     purchId;
+            Num                         packingSlipId;
+            TransDate                   transDate;
+            VendPackingSlipJour         vendPackingSlipJour;
+
+            UBSPurchOrderReceipt purchOrderReceipt_line;
+
+            purchId       = _purchOrderReceipt.UBSPurchaseOrderNumber;
+            packingSlipId = _packingSlipId;
+            transDate = _purchOrderReceipt.UBSPurchaseOrderReceiptDate;
+            purchTable    = PurchTable::find(purchId);
+
+            select firstOnly vendPackingSlipJour
+        where vendPackingSlipJour.PurchId == purchId
+            && vendPackingSlipJour.PackingSlipId == packingSlipId;
+
+            if(vendPackingSlipJour) throw Error(strFmt("@UBS:UBSRECPEPPackingslipExists", packingSlipId)); //check if packing slip already exists
+
+            select firstonly purchOrderReceipt_line //check if a receipt from same packing slip has different sign qty
+            where
+            purchOrderReceipt_line.UBSPurchaseOrderReceiptNumber == packingSlipId
+            && purchOrderReceipt_line.UBSPurchaseOrderReceiptStatus == UBSPurchaseOrderReceiptStatus::NotStarted
+            && purchOrderReceipt_line.UBSPurchaseOrderReceiptQuantity < 0;
+
+            if(purchOrderReceipt_line) throw error("@UBS:UBSRECPEPDifferentSignError");
+
+
+            ttsBegin;
+
+            // Create PurchParamUpdate table
+            purchFormLetterParmData = PurchFormletterParmData::newData(
+            DocumentStatus::PackingSlip,
+            VersioningUpdateType::Initial);
+    
+            purchFormLetterParmData.parmOnlyCreateParmUpdate(true);
+            purchFormLetterParmData.createData(false);
+            purchParmUpdate = purchFormLetterParmData.parmParmUpdate();
+
+            // Set PurchParmTable table
+            purchParmTable.clear();
+            purchParmTable.TransDate                =  transDate;
+            purchParmTable.Ordering                 = DocumentStatus::PackingSlip;
+            purchParmTable.ParmJobStatus            = ParmJobStatus::Waiting;
+            purchParmTable.Num                      = packingSlipId;
+            purchParmTable.PurchId                  = purchTable.PurchId;
+            purchParmTable.PurchName                = purchTable.PurchName;
+            purchParmTable.DeliveryName             = purchTable.DeliveryName;
+            purchParmTable.DeliveryPostalAddress    = purchTable.DeliveryPostalAddress;
+            purchParmTable.OrderAccount             = purchTable.OrderAccount;
+            purchParmTable.CurrencyCode             = purchTable.CurrencyCode;
+            purchParmTable.InvoiceAccount           = purchTable.InvoiceAccount;
+            purchParmTable.ParmId                   = purchParmUpdate.ParmId;
+            purchParmTable.insert();
+
+            // Set PurchParmLine table
+            while select purchLine
+        join purchOrderReceipt_line
+        where purchLine.PurchId == purchId
+            && purchLine.LineNumber == purchOrderReceipt_line.UBSPurchaseOrderLineNumber
+            && purchOrderReceipt_line.UBSPurchaseOrderReceiptNumber == packingSlipId
+            && purchOrderReceipt_line.UBSPurchaseOrderReceiptStatus == UBSPurchaseOrderReceiptStatus::NotStarted
+            && purchOrderReceipt_line.UBSPurchaseOrderReceiptQuantity > 0
+            {
+                purchOrderReceipt_line.selectForUpdate(true);
+                purchOrderReceipt_line.ReceiptErrorMsg = "";
+                purchOrderReceipt_line.update();
+
+                purchParmLine.InitFromPurchLine(purchLine);
+                
+                purchParmLine.ReceiveNow    = UBSPurchPackingSlipPost::calculateQuantity(purchOrderReceipt_line, purchLine);
+                purchParmLine.ParmId        = purchParmTable.ParmId;
+                purchParmLine.TableRefId    = purchParmTable.TableRefId;
+                purchParmLine.setQty(DocumentStatus::PackingSlip, false, true);
+                purchParmLine.setLineAmount();
+                purchParmLine.insert();
+            }
+            
+
+            purchFormLetter = PurchFormLetter::construct(DocumentStatus::PackingSlip);
+            purchFormLetter.transDate(systemDateGet());
+            purchFormLetter.proforma(false);
+            purchFormLetter.specQty(PurchUpdate::All);
+            purchFormLetter.purchTable(purchTable);
+    
+            // This is the ID we hard code as the product receipt ID, if we do the posting via UI
+            // user would have the option to manually enter this value
+            purchFormLetter.parmParmTableNum(purchParmTable.ParmId);
+            purchFormLetter.parmId(purchParmTable.ParmId);
+            purchFormLetter.purchParmUpdate(purchFormLetterParmData.parmParmUpdate());
+
+            purchFormLetter.run();
+            
+            
+            ttsCommit;
+
+            UBSPurchPackingSlipPost::changeLinesStatus(packingSlipId, UBSPurchaseOrderReceiptStatus::Completed);
+        }
+        catch(ex)
+        {
+            
+
+            str messageBody = "";
+            for (int i=1; i<=infolog.line(); i++)
+
+            {
+
+                messageBody += infolog.text(i);
+
+            }
+            infolog.clear();
+            UBSPurchPackingSlipPost::logErrorToLines(_purchOrderReceipt.RecId, messageBody);
+
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>purchPackingSlipsCorrect</Name>
+				<Source><![CDATA[
+    static void purchPackingSlipsCorrect(UBSPurchOrderReceipt _purchOrderReceipt)
+    {
+        //VendPackingSlipJour vendPackingSlipJour;
+        VendPackingSlipTrans vendPackingSlipTrans;
+        Qty qtyToCorrect = _purchOrderReceipt.UBSPurchaseOrderReceiptQuantity;
+
+        System.Exception ex;
+
+        //Remove from overReceipt first
+        UBSPurchOrderReceipt overReceiptPurchOrderReceipt;
+        while select forupdate overReceiptPurchOrderReceipt order by overReceiptPurchOrderReceipt.IntegrationDate desc
+            where overReceiptPurchOrderReceipt.UBSPurchaseOrderNumber == _purchOrderReceipt.UBSPurchaseOrderNumber
+            && overReceiptPurchOrderReceipt.UBSPurchaseOrderLineNumber == _purchOrderReceipt.UBSPurchaseOrderLineNumber
+            && overReceiptPurchOrderReceipt.UpdatedOrderedQuantityOverReceipt > 0
+        {
+            ttsbegin;
+            if(overReceiptPurchOrderReceipt.UpdatedOrderedQuantityOverReceipt > abs(qtyToCorrect))
+            {
+                overReceiptPurchOrderReceipt.UpdatedOrderedQuantityOverReceipt = overReceiptPurchOrderReceipt.UpdatedOrderedQuantityOverReceipt + qtyToCorrect; //qtyToCorrect is negative
+                qtyToCorrect = 0;
+            }
+            else
+            {
+                qtyToCorrect = qtyToCorrect + overReceiptPurchOrderReceipt.UpdatedOrderedQuantityOverReceipt;
+                overReceiptPurchOrderReceipt.UpdatedOrderedQuantityOverReceipt = 0;
+            }
+            overReceiptPurchOrderReceipt.update();
+            ttscommit;
+
+            if(qtyToCorrect == 0) break;
+        }
+            
+
+        if(qtyToCorrect != 0)
+        {
+            while select vendPackingSlipTrans order by vendPackingSlipTrans.RecId desc
+            where vendPackingSlipTrans.OrigPurchid == _purchOrderReceipt.UBSPurchaseOrderNumber
+            && vendPackingSlipTrans.PurchaseLineLineNumber == _purchOrderReceipt.UBSPurchaseOrderLineNumber
+            && vendPackingSlipTrans.Qty > 0
+            
+            {
+                if(vendPackingSlipTrans.Qty > abs(qtyToCorrect))
+                {
+
+                    UBSPurchPackingSlipPost::purchPackingSlipCorrect(vendPackingSlipTrans.PackingSlipId, _purchOrderReceipt.UBSPurchaseOrderReceiptDate,  _purchOrderReceipt.UBSPurchaseOrderNumber, vendPackingSlipTrans.Qty +  qtyToCorrect, _purchOrderReceipt.UBSPurchaseOrderLineNumber, _purchOrderReceipt.RecId);
+                    qtyToCorrect = 0;
+                }
+                else
+                {
+                    UBSPurchPackingSlipPost::purchPackingSlipCorrect(vendPackingSlipTrans.PackingSlipId, _purchOrderReceipt.UBSPurchaseOrderReceiptDate,  _purchOrderReceipt.UBSPurchaseOrderNumber, 0, _purchOrderReceipt.UBSPurchaseOrderLineNumber, _purchOrderReceipt.RecId);// or CANCEL ?
+                    qtyToCorrect = qtyToCorrect + vendPackingSlipTrans.Qty;
+                }
+                if(qtyToCorrect == 0) break;
+            }
+        }
+
+        UBSPurchPackingSlipPost::changeLineStatusFromReceipt(_purchOrderReceipt, UBSPurchaseOrderReceiptStatus::Completed);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>purchPackingSlipCorrect</Name>
+				<Source><![CDATA[
+    static void purchPackingSlipCorrect(Num _packingSlipId, TransDate _transDate, PurchId _purchId, Qty _correcteQty, int _lineNum, RecId _UBSPOReceiptRecId)
+    {
+        System.Exception ex;
+        try
+        {
+            PurchFormLetter         purchFormLetter;
+            PurchFormletterParmData purchFormLetterParmData;
+            PurchParmUpdate         purchParmUpdate;
+            PurchParmTable          purchParmTable;
+            PurchParmLine           purchParmLine;
+            PurchTable              purchTable;
+            PurchLine               purchLine;
+            PurchId                 purchId;
+            Num                     packingSlipId;
+            VendPackingSlipJour     vendPackingSlipJour;
+            VendPackingSlipTrans    vendPackingSlipTrans;
+            TransDate               transDate;
+
+            UBSPurchOrderReceipt purchOrderReceipt_line;
+
+            purchId       = _purchId;
+            packingSlipId = _packingSlipId;
+            transDate = _transDate;
+
+            purchTable = PurchTable::find(purchId);
+
+            select firstonly purchOrderReceipt_line
+            where
+            purchOrderReceipt_line.UBSPurchaseOrderReceiptNumber == packingSlipId
+            && purchOrderReceipt_line.UBSPurchaseOrderReceiptStatus == UBSPurchaseOrderReceiptStatus::NotStarted
+            && purchOrderReceipt_line.UBSPurchaseOrderReceiptQuantity > 0;
+
+            if(purchOrderReceipt_line) throw error("@UBS:UBSRECPEPDifferentSignError");
+
+
+            select firstOnly vendPackingSlipJour
+        where vendPackingSlipJour.PurchId == purchId
+            && vendPackingSlipJour.PackingSlipId == packingSlipId;
+
+            ttsBegin;
+
+            // Instantiate PurchFormLetterParmData
+            purchFormLetterParmData = PurchFormletterParmData::newData(
+        DocumentStatus::PackingSlip,
+        VersioningUpdateType::Correction);
+
+            purchFormLetterParmData.parmOnlyCreateParmUpdate(true);
+            purchFormLetterParmData.createData(false);
+            purchParmUpdate = purchFormLetterParmData.parmParmUpdate();
+
+            // Set PurchParmTable table
+            purchParmTable.clear();
+            purchParmTable.TransDate             = transDate;
+            purchParmTable.Ordering              = DocumentStatus::PackingSlip;
+            purchParmTable.ParmJobStatus         = ParmJobStatus::Waiting;
+            purchParmTable.ParmId                = purchParmUpdate.ParmId;
+            purchParmTable.Num                   = packingSlipId;
+            purchParmTable.ReCalculate           = true;
+            purchParmTable.PurchId               = purchTable.PurchId;
+            purchParmTable.PurchName             = purchTable.PurchName;
+            purchParmTable.DeliveryName          = purchTable.DeliveryName;
+            purchParmTable.OrderAccount          = purchTable.OrderAccount;
+            purchParmTable.InvoiceAccount        = purchTable.InvoiceAccount;
+            purchParmTable.CurrencyCode          = purchTable.CurrencyCode;
+            purchParmTable.DeliveryPostalAddress = purchTable.DeliveryPostalAddress;
+            purchParmTable.VendPackingSlipJour   = vendPackingSlipJour.RecId;
+            purchParmTable.insert();
+            
+            // Set PurchParmLine table
+            select purchLine
+        where purchLine.PurchId == purchId
+            && purchLine.LineNumber == _lineNum;
+            
+            select firstOnly vendPackingSlipTrans
+            where vendPackingSlipTrans.OrigPurchid == purchLine.PurchId
+                && vendPackingSlipTrans.PurchaseLineLineNumber == purchLine.LineNumber;
+
+            purchParmLine.ParmId = purchParmTable.ParmId;
+            purchParmLine.TableRefId = purchParmTable.TableRefId;
+            purchParmLine.InitFromPurchLine(purchLine);
+            //purchParmLine.ReceiveNow = UBSPurchPackingSlipPost::calculateQuantity(purchOrderReceipt_line, purchLine);
+            purchParmLine.ReceiveNow = _correcteQty; //new QTY
+            purchParmLine.modifiedReceiveNow();
+            purchParmLine.PreviousReceiveNow = vendPackingSlipTrans.Qty;
+            purchParmLine.PreviousInventNow = vendPackingSlipTrans.InventQty;
+            purchParmLine.setQty(DocumentStatus::PackingSlip, false);
+            purchParmLine.setLineAmount();
+            purchParmLine.insert();
+            
+
+            purchFormLetter = PurchFormLetter::construct(DocumentStatus::PackingSlip);
+            purchFormLetter.parmVersioningUpdateType(VersioningUpdateType::Correction);
+            purchFormLetter.purchParmUpdate(purchFormLetterParmData.parmParmUpdate());
+            purchFormLetter.parmCallerTable(vendPackingSlipJour);
+            purchFormLetter.parmParmTableNum(purchParmTable.ParmId);
+            purchFormLetter.parmId(purchParmTable.ParmId);
+            purchFormLetter.specQty(PurchUpdate::ReceiveNow);
+            purchFormLetter.transDate(systemDateGet());
+            purchFormLetter.proforma(false);
+            purchFormLetter.run();
+
+            ttsCommit;
+        }
+        catch(ex)
+        {
+            
+
+            str messageBody = "";
+            for (int i=1; i<=infolog.line(); i++)
+
+            {
+
+                messageBody += infolog.text(i);
+
+            }
+            infolog.clear();
+            UBSPurchPackingSlipPost::logErrorToLines(_UBSPOReceiptRecId, messageBody);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>logErrorToLines</Name>
+				<Source><![CDATA[
+    public static void logErrorToLines(RecId _UBSPOReceiptRecId , str _errorMsg)
+    {
+        UBSPurchOrderReceipt purchOrderReceipt;
+        ttsbegin;
+        select forupdate purchOrderReceipt where purchOrderReceipt.RecId == _UBSPOReceiptRecId;
+        purchOrderReceipt.UBSPurchaseOrderReceiptStatus = UBSPurchaseOrderReceiptStatus::Error;
+        purchOrderReceipt.ReceiptErrorMsg = _errorMsg;
+        purchOrderReceipt.update();
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>changeLinesStatus</Name>
+				<Source><![CDATA[
+    public static void changeLinesStatus(Num _packingSlipId, UBSPurchaseOrderReceiptStatus _status)
+    {
+        UBSPurchOrderReceipt purchOrderReceipt;
+        ttsbegin;
+        while select forupdate purchOrderReceipt
+            where purchOrderReceipt.UBSPurchaseOrderReceiptNumber == _packingSlipId
+            && purchOrderReceipt.UBSPurchaseOrderReceiptStatus == UBSPurchaseOrderReceiptStatus::NotStarted
+        {
+            purchOrderReceipt.UBSPurchaseOrderReceiptStatus = _status;
+            purchOrderReceipt.update();
+            
+        }
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>changeLineStatusFromReceipt</Name>
+				<Source><![CDATA[
+    public static void changeLineStatusFromReceipt(UBSPurchOrderReceipt _receipt, UBSPurchaseOrderReceiptStatus _status)
+    {
+        UBSPurchOrderReceipt purchOrderReceipt = _receipt;
+        purchOrderReceipt.selectForUpdate(true);
+        ttsbegin;
+        purchOrderReceipt.UBSPurchaseOrderReceiptStatus = _status;
+        purchOrderReceipt.update();
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calculateQuantity</Name>
+				<Source><![CDATA[
+    public static PurchQty calculateQuantity(UBSPurchOrderReceipt _receiptLine, PurchLine _purchLine) // for positive qty only
+    {
+        PurchQty purchQty;
+        if(_receiptLine.UBSPurchaseOrderReceiptQuantity > 0)
+        {
+            if(_purchLine.receivedInTotal() + _receiptLine.UBSPurchaseOrderReceiptQuantity > _purchLine.PurchQty)
+            {
+                purchQty = _purchLine.PurchQty - _purchLine.receivedInTotal();
+                _receiptLine.OrderedQuantityOverReceipt =  _receiptLine.UBSPurchaseOrderReceiptQuantity - purchQty;
+                _receiptLine.UpdatedOrderedQuantityOverReceipt =  _receiptLine.UBSPurchaseOrderReceiptQuantity - purchQty;
+                _receiptLine.UBSPurchaseOrderReceiptQuantity = purchQty;
+                _receiptLine.update();
+            }
+            else
+            {
+                purchQty = _receiptLine.UBSPurchaseOrderReceiptQuantity;
+            }
+        }
+
+        return purchQty;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>runAsBatch</Name>
+				<Source><![CDATA[
+    public static void runAsBatch(DMFExecutionId _executionId)
+    {
+        UBSPurchPackingSlipPost  import = UBSPurchPackingSlipPost::construct();
+
+        import.batchInfo().parmBatchExecute(true);
+        import.batchInfo().parmCaption(strFmt("%1: %2","@UBS:UBSRECPEP2", _executionId));
+        import.doBatch();
+        
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

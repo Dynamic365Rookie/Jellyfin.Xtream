@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSStockAlertBatchService</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSStockAlertBatchService extends SysOperationServiceBase
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Process</Name>
+				<Source><![CDATA[
+    public void Process()
+    {
+        DataArea dataArea;
+       
+        while select dataArea where dataArea.isVirtual == NoYes::No
+        {
+            changecompany(dataArea.id)
+            {
+                UserInfo                        userInfo;
+                InventSum                       inventSum;
+                InventTable                     inventTable;
+                UserGroupInfo                   userGroupInfo;
+                UserGroupList                   userGroupList;
+                InventTableModule               inventTableModule;
+                UBSInventParametersSites        inventParametersSites;
+                UBSStockAlertUserGroupMessage   stockAlertUserGroupMessage;
+
+                InventParameters                inventParameters = InventParameters::find();
+
+                while select sum(AvailPhysical), ItemId from inventSum
+                  exists join inventParametersSites
+                         group by inventSum.ItemId
+                            where inventParametersSites.SiteId == inventSum.InventSiteId &&
+                                  inventSum.Closed == NoYes::No &&
+                                  inventSum.ClosedQty == NoYes::No
+                {
+                    select NameAlias from inventTable
+                        where inventTable.ItemId == inventSum.ItemId
+                     exists join inventTableModule
+                        where inventTableModule.ItemId == inventTable.ItemId &&
+                              inventTableModule.ModuleType == ModuleInventPurchSales::Sales &&
+                              inventTableModule.RetailInventoryAvailabilityBuffer > inventSum.AvailPhysical &&
+                              inventTableModule.RetailInventoryAvailabilityBuffer > 0;
+                    
+                    if(inventTable)
+                    {
+                        ttsbegin;
+                        while select id,Name from userInfo
+                                exists join userGroupList
+                                     where userInfo.id == userGroupList.userId
+                                 exists join userGroupInfo
+                                     where userGroupInfo.id == userGroupList.groupId &&
+                                           userGroupInfo.RecId == inventParameters.UBSUserGroupInfo
+                        {
+                            str concatInventSite = InventSum::concatInventSiteJoinUBSinventParametersSites(inventSum.ItemId);
+
+                            stockAlertUserGroupMessage.clear();
+                            stockAlertUserGroupMessage.Id           = userInfo.id;
+                            stockAlertUserGroupMessage.Name         = userInfo.name;
+                            stockAlertUserGroupMessage.ItemId       = inventSum.ItemId;
+                            stockAlertUserGroupMessage.NameAlias    = inventTable.NameAlias;
+                            stockAlertUserGroupMessage.InventSite   = concatInventSite;
+
+                            stockAlertUserGroupMessage.insert();
+                        }
+                        ttscommit;
+                    }
+                }
+
+                while select Id,Name, NetworkAlias, Language from userInfo
+                            exists join userGroupList
+                                 where userInfo.id == userGroupList.userId
+                             exists join userGroupInfo
+                                 where userGroupInfo.id == userGroupList.groupId &&
+                                       userGroupInfo.RecId == inventParameters.UBSUserGroupInfo
+                {
+                    container itemIdCon, inventSiteCon;
+
+                    while select stockAlertUserGroupMessage 
+                        where stockAlertUserGroupMessage.Id == userInfo.id
+                    {
+                        itemIdCon       += strFmt("%1 - %2",stockAlertUserGroupMessage.ItemId,stockAlertUserGroupMessage.NameAlias);
+                        inventSiteCon   += stockAlertUserGroupMessage.InventSite;
+                    }
+
+                    str itemIdToInsert     = UBSStringToolkit::removeDuplicateWords(con2Str(itemIdCon,", "),", ");
+                    str inventSiteToInsert = UBSStringToolkit::removeDuplicateWords(con2Str(inventSiteCon,", "), ", ");
+                 
+                    if(!System.String::IsNullOrWhiteSpace(itemIdToInsert) ||
+                       !System.String::IsNullOrWhiteSpace(inventSiteToInsert))
+                    {
+                        UBSSendNotifToActionCenter::addActionCenterSingleUser(userInfo.id,
+                                                                          "@UBS:UBSStockAlertBatchController",
+                                                                           strFmt(inventParameters.UBSAlertBody,
+                                                                               itemIdToInsert,
+                                                                               inventSiteToInsert),
+                                                                           "UBSStockAlertBatchService");
+                
+                        if(inventParameters.UBSTemplateEmailId)
+                        {
+                            Map placeHolderMap = new Map(Types::String, Types::String);
+                            placeHolderMap.insert('user',userInfo.name);
+                            placeHolderMap.insert('article',itemIdToInsert);
+                            placeHolderMap.insert('site',inventSiteToInsert);
+
+                            UBSSendingMailFromTemplate::sendMail(userInfo.networkAlias,
+                                                             inventParameters.UBSTemplateEmailId,
+                                                             placeHolderMap,
+                                                             userInfo.id,
+                                                             userInfo.language);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSWorkflowMultiEntityCopyBatchService</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+/// <summary>
+/// Based on SysWorkflowConfigurationListPage
+/// </summary>
+internal final class UBSWorkflowMultiEntityCopyBatchService
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>Process</Name>
+				<Source><![CDATA[
+    public void Process(UBSWorkflowMultiEntityCopyBatchContract _workflowMultiEntityContract)
+    {
+        WorkflowTable           workflowTableOrigin;
+        WorkflowVersionTable    workflowVersionTableOrigin;
+        DataArea                dataArea;
+        DataAreaId              contractDataAreaId = _workflowMultiEntityContract.parmLegalEntity();
+        
+        using(System.IO.Stream workflowStream)
+        {
+            while select workflowTableOrigin
+                where (workflowTableOrigin.Module == ModuleAxapta::Vendor ||
+                       workflowTableOrigin.Module == ModuleAxapta::PurchaseOrder) &&
+                       workflowTableOrigin.DataArea == contractDataAreaId &&
+                       workflowTableOrigin.DefaultConfiguration == NoYes::Yes
+            join workflowVersionTableOrigin
+                where workflowVersionTableOrigin.WorkflowTable == workflowTableOrigin.RecId &&
+                      workflowVersionTableOrigin.Enabled == NoYes::Yes
+            {
+            
+                while select DataArea
+                    where DataArea.id != contractDataAreaId
+                {
+                    changecompany(DataArea.id)
+                    {
+                        if(!this.checkWorkflowTableExist(DataArea.id, workflowTableOrigin.TemplateName))
+                        {
+                            using(System.IO.Stream stream = this.exportWorkflow(workflowVersionTableOrigin.ConfigurationId, workflowStream))
+                            {
+                                Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowExportDefinition def = Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowModel::LoadExportedWorkflowFromStream(stream);
+
+                                this.importWorkflow(WorkflowAXVersion::AX6, def, true);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>exportWorkflow</Name>
+				<Source><![CDATA[
+    public System.IO.Stream exportWorkflow(WorkflowConfigurationId _workflowConfigurationId, System.IO.Stream _stream)
+    {
+        System.Exception        clrException;
+        int                     lineBeforeCLRError;
+        str                     axVersion;
+        int                     infoLogLine = infologLine();
+
+        if(_stream && _stream.CanSeek && _stream.CanWrite)
+        {
+            _stream.Position = 0;
+            _stream.SetLength(0);
+        }
+
+        if (_workflowConfigurationId)
+        {
+            try
+            {
+                axVersion = enum2Symbol(enumNum(WorkflowAXVersion), WorkflowAXVersion::AX6);
+                _stream = Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowModel::ExportToStream(_workflowConfigurationId, curext(), axVersion);
+                return _stream;
+            }
+            catch (Exception::CLRError)
+            {
+                clrException = CLRInterop::getLastException();
+
+                if (clrException != null)
+                {
+                    // Do not add this error to infolog as it provides little information
+                    // "target of invocation failed...."
+                    // Inner exception is more descriptive
+                    clrException = clrException.get_InnerException();
+
+                    if (clrException != null)
+                    {
+                        error(clrException.get_Message());
+                        // remove only "ClrObject static method invocation error" from infoLog
+                        infolog.cut(lineBeforeCLRError+1, lineBeforeCLRError+1);
+                    }
+                }
+            }
+        }
+
+        return _stream;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>importWorkflow</Name>
+				<Source><![CDATA[
+    private WorkflowImportType importWorkflow(WorkflowAXVersion importVersion,
+                                              Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowExportDefinition _workflowConfigurationExportDefinition,
+                                              boolean _createNewConfiguration)
+    {
+        #Admin
+        Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowModel managedWorkflowConfiguration;
+        int64                   storageId;
+        System.Exception        clrException;
+        str                     importedAXVersion,
+                                errorMessage,
+                                expectedAXVersion;
+        UserInfo                userInfo;
+        WorkflowImportType      ret = WorkflowImportType::Yes;
+        WorkflowTable           workflowTable;
+        WorkflowVersionTable    workflowVersionTable;
+
+        try
+        {
+            expectedAXVersion = enum2Symbol(enumNum(WorkflowAXVersion), WorkflowAXVersion::AX6);
+
+            importedAXVersion = _workflowConfigurationExportDefinition.get_AXVersion();
+
+            if (importedAXVersion!= expectedAXVersion)
+            {
+                warning(strFmt("@SYS115861",importedAXVersion, expectedAXVersion));
+            }
+
+            select NetworkDomain, NetworkAlias from userInfo where userInfo.Id == curUserId();
+
+            managedWorkflowConfiguration = Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowModel::Import(
+                _workflowConfigurationExportDefinition,
+                _createNewConfiguration,
+                curUserId(),
+                curext(),
+                userInfo.NetworkDomain + '\\' + userInfo.NetworkAlias);
+
+            if(managedWorkflowConfiguration != null)
+            {
+                storageId = managedWorkflowConfiguration.get_StorageId();
+                if(storageId == 0)
+                {
+                    workflowVersionTable.clear();
+                    workflowVersionTable.initFromWorkflow(managedWorkflowConfiguration);
+
+                    workflowTable.clear();
+                    workflowTable.initFromWorkflow(managedWorkflowConfiguration);
+                    workflowTable.SequenceNumber = managedWorkflowConfiguration.get_SequenceNumber();
+                }
+                else
+                {
+                    workflowVersionTable = WorkflowVersionTable::findRecId(storageId);
+                    workflowTable        = workflowVersionTable.workflowTable();
+                }
+            }
+            CodeAccessPermission::revertAssert();
+        }
+        catch (Exception::CLRError)
+        {
+            // BP deviation documented
+            clrException = CLRInterop::getLastException();
+
+            if (clrException != null)
+            {
+                // Do not add this error to infolog as it provides little information
+                // "target of invocation failed...."
+                // Inner exception is more descriptive
+                clrException = clrException.get_InnerException();
+
+                if (clrException != null)
+                {
+                    // BP deviation documented
+                    errorMessage = clrException.get_Message();
+                }
+            }
+
+            error(errorMessage);
+            ret = WorkflowImportType::Error;
+        }
+
+        if (ret == WorkflowImportType::Yes &&
+            workflowVersionTable.RecId == 0)
+        {
+            ret = WorkflowImportType::No;
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkWorkflowTableExist</Name>
+				<Source><![CDATA[
+    private boolean checkWorkflowTableExist(DataAreaId _dataArea, str _templateName)
+    {
+        WorkflowTable workflowTableToCheck;
+
+        select RecId from workflowTableToCheck
+            where workflowTableToCheck.DataArea == _dataArea &&
+                  workflowTableToCheck.TemplateName == _templateName;
+
+        return workflowTableToCheck ? true : false;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

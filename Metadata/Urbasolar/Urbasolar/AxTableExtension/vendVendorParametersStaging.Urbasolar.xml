@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTableExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>vendVendorParametersStaging.Urbasolar</Name>
+	<FieldGroupExtensions />
+	<FieldGroups />
+	<FieldModifications />
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSUpdateReason</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>ReasonCode</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@UBS:UBSUpdateReasonCode</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSPurchaseOrderAutoSubmissonWF</Name>
+			<Label>@UBS:UBSPurchaseOrderAutoSubmissonWF</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSApproveReason</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>ReasonCode</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@UBS:UBSApproveReason</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSCreationReason</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>ReasonCode</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@UBS:UBSCreationReasonCode</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>OverDelivery</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>PurchOverDelivery</ExtendedDataType>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>SubDelivery</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>PurchUnderDelivery</ExtendedDataType>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>DecimalPrecisionCheckQty</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<HelpText>@SCM:DecimalPrecisionCheckQtyHelpText</HelpText>
+			<Label>@SCM:DecimalPrecisionCheckQty</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>AccesLevelInvoiced</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<EnumType>SalesPurchAccesLevel</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IsSupplierShipmentDatesEnabled</Name>
+			<AssetClassification>Customer content</AssetClassification>
+			<ExtendedDataType>PurchSupplierShipmentDates</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>CheckPackingSlip</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ConfigurationKey>LogisticsBasic</ConfigurationKey>
+			<ExtendedDataType>VendReusePackingSlip</ExtendedDataType>
+			<EnumType>ReuseVoucher</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>ProductReceiptCharges</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ConfigurationKey>LogisticsBasic</ConfigurationKey>
+			<Label>@SYP4882022</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>PurchRegisteredQuantitySelectionRule</Name>
+			<AssetClassification>Customer content</AssetClassification>
+			<EnumType>PurchRegisteredQuantitySelectionRule</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>OrderBatchTaskSizeLines</Name>
+			<ExtendedDataType>FormletterBatchTaskSizeLines</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>OrderBatchTaskSize</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>FormletterBatchTaskSize</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>PurchaseType</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<EnumType>PurchaseType</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ReturnActionDefault</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ConfigurationKey>ReturnItem</ConfigurationKey>
+			<ExtendedDataType>PurchReturnActionId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@SYS29122</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>PurchPoolId</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>PurchPoolId</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@SYS23446</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>PromptTransfer</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<Label>@SYS25478</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>PromptQty</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<Label>@SYS103129</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>AutomaticFactBoxUpdateOnPO_PSN</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>AutomaticFactBoxUpdateOnPO_PSN</ExtendedDataType>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>DisallowLineRenumbering</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<HelpText>@SCM:DisallowLineRenumberingHelpText</HelpText>
+			<Label>@SCM:DisallowRenumberingOfLines</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>EnableBillToAddress</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ConfigurationKey>PublicSector</ConfigurationKey>
+			<ExtendedDataType>EnableBillToAddress</ExtendedDataType>
+			<HelpText>@ProcurementAndSourcing:EnableBillToAddressHelpText</HelpText>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>PSNCalculatePODeliveryDate</Name>
+			<AssetClassification>Customer content</AssetClassification>
+			<ConfigurationKey>PublicSector</ConfigurationKey>
+			<HelpText>@PSNExtensionFeatures:ParameterToCalculateDeliveryDate</HelpText>
+			<Label>@PSNExtensionFeatures:CalculatePurchaseOrderDeliveryDateBasedOnLeadTime</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>PSNWorkingCalendarId</Name>
+			<AssetClassification>Customer content</AssetClassification>
+			<ConfigurationKey>PublicSector</ConfigurationKey>
+			<ExtendedDataType>CalendarId</ExtendedDataType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>DoSetReleasedPOToDraft</Name>
+			<AssetClassification>Customer content</AssetClassification>
+			<ConfigurationKey>PublicSector</ConfigurationKey>
+			<ExtendedDataType>NoYesId</ExtendedDataType>
+			<HelpText>@ProcurementAndSourcing:CheckBoxHelpTextForDraftStatusPurchaseOrderCreation</HelpText>
+			<Label>@ProcurementAndSourcing:DraftStatusPurchaseOrderCreationViaPurchaseRequisitions</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>PrintAmountOnPurchaseOrder</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>PurchAmountPurchaseOrder</ExtendedDataType>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>ChangeRequestEnabled</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>VersioningChangeRequestRequired</ExtendedDataType>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>ChangeRequestAllowOverride</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<Label>@SYS184161</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IntercompanyAgreementAutoSearch</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>IntercompanyPurchAgreementAutoSearch</ExtendedDataType>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>SkipRereadOnUpdate</Name>
+			<FeatureClass>PurchTableRereadHandlingFlight</FeatureClass>
+			<HelpText>@Scm:PurchSkipRereadOnUpdateFieldHelpText</HelpText>
+			<Label>@Scm:PurchSkipRereadOnUpdateFieldLabel</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IsPurchUpdateSkipPurchLineEventsEnabled</Name>
+			<AssetClassification>Customer content</AssetClassification>
+			<ExtendedDataType>PurchUpdateSkipPurchLineEvents</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>PurchLineDefaultAddressFromHeader</Name>
+			<ExtendedDataType>PurchLineDefaultAddressFromHeader</ExtendedDataType>
+			<FeatureClass>PurchLineDeliveryAddressKeepFromHeaderFlight</FeatureClass>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>IntercompanyUseNotActiveRelation</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>IntercompanyUseNotActiveRelation</ExtendedDataType>
+			<FeatureClass>IntercompanyPurchTableControlICRelationNotActiveFlight</FeatureClass>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes />
+	<Mappings />
+	<PropertyModifications />
+	<RelationExtensions />
+	<RelationModifications />
+	<Relations />
+</AxTableExtension>

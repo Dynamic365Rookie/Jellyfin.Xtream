@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchInvoiceJournalPost_class_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(PurchInvoiceJournalPost))]
+final class PurchInvoiceJournalPost_class_Urbasolar_Extension
+{
+    
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>endLedgerVoucher</Name>
+				<Source><![CDATA[
+    protected void endLedgerVoucher()
+    {
+        next endLedgerVoucher();
+
+        if(vendInvoiceJour.Recid && 
+            vendInvoiceJour.UBSHasWarrantyRetention && 
+            VendParameters::find().UBSWarrantyRetentionAutomated && 
+            vendInvoiceJour.InvoiceAmount > 0 &&
+            vendInvoiceJour.UBSWarrantyLedgerJournalId == "")
+        {
+            UBSProcessVendInvoiceRetention::processVendInvoiceRetention(vendInvoiceJour);
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

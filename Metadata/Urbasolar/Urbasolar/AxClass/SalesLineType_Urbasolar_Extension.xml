@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SalesLineType_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(classStr(SalesLineType))]
+final class SalesLineType_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>initFromSalesTable</Name>
+				<Source><![CDATA[
+    void initFromSalesTable(SalesTable _salesTable, boolean _ignoreInventDim)
+    {
+        next initFromSalesTable(_salesTable, _ignoreInventDim);
+
+        DimensionAttributeValue dimAttrValue;
+        DimensionAttributeValueSetStorage storage;
+        SalesTable salesTable;
+
+        dimAttrValue = DimensionAttributeValue::find(_salesTable.UBSProjectDim);
+
+        storage = DimensionAttributeValueSetStorage::find(salesLine.DefaultDimension);
+
+        if(dimAttrValue)
+        {
+            storage.addItem(dimAttrValue);
+            salesLine.DefaultDimension = storage.save();
+        }
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

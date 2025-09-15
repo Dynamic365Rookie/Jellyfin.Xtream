@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxTableExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchReqTable.Urbasolar</Name>
+	<FieldGroupExtensions />
+	<FieldGroups />
+	<FieldModifications />
+	<Fields>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSRecurringServicePurchase</Name>
+			<Label>@UBS:UBSRecurringServicePurchase</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt">
+			<Name>UBSPeriodNumber</Name>
+			<Label>@UBS:UBSPeriodNumber</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldDate">
+			<Name>UBSStartingMonth</Name>
+			<Label>@UBS:UBSStartingMonth</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldInt64">
+			<Name>UBSProjectDim</Name>
+			<Label>@UBS:UBSProjectDim</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldDate">
+			<Name>UBSRequestedDate</Name>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>PurchReqRequiredDate</ExtendedDataType>
+			<Label>@UBS:UBSRequestedDate</Label>
+		</AxTableField>
+	</Fields>
+	<FullTextIndexes />
+	<Indexes />
+	<Mappings />
+	<PropertyModifications />
+	<RelationExtensions />
+	<RelationModifications />
+	<Relations>
+		<AxTableRelation>
+			<Name>DimensionAttributeValue</Name>
+			<Cardinality>ZeroMore</Cardinality>
+			<RelatedTable>DimensionAttributeValue</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
+			<RelationshipType>Association</RelationshipType>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSProjectDim</Name>
+					<Field>UBSProjectDim</Field>
+					<RelatedField>RecId</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+	</Relations>
+</AxTableExtension>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>FinancialDimensionValueEntity_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(FinancialDimensionValueEntity))]
+final class FinancialDimensionValueEntity_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>update</Name>
+				<Source><![CDATA[
+    public void update()
+    {
+        if(this.UBSConducteurTravaux)
+        {
+            HcmWorker hcmWorker = HcmWorker::findByPersonnelNumber(this.UBSConducteurTravaux);
+
+            DimensionAttributeValue dav;
+
+            ttsbegin;
+            select firstonly forupdate dav where dav.DisplayValue == this.DimensionValue;
+            dav.UBSConducteurTravaux = hcmWorker.RecId;
+            dav.update();
+            ttscommit;
+        }
+        next update();
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

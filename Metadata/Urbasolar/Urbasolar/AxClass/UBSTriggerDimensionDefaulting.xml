@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSTriggerDimensionDefaulting</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSTriggerDimensionDefaulting  extends RunBaseBatch
+{
+    DataAreaId sourceEntity;
+    AccountNum vendorAccount;
+
+    #define.CurrentVersion(1)
+    #localmacro.CurrentList
+        sourceEntity,
+        vendorAccount
+    #endmacro
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>canGoBatchJournal</Name>
+				<Source><![CDATA[
+    public boolean canGoBatchJournal()
+    {
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>pack</Name>
+				<Source><![CDATA[
+    public container pack()
+    {
+        return [#CurrentVersion, #CurrentList];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>unpack</Name>
+				<Source><![CDATA[
+    public boolean unpack(container packedClass)
+    {
+        Version version = runbase::getVersion(packedClass);
+        switch (version)
+        {
+            case #CurrentVersion:
+                [version, #CurrentList] = packedClass;
+                break;
+            default:
+                return false;
+        }
+
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    protected boolean canRunInNewSession()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmSourceEntity</Name>
+				<Source><![CDATA[
+    public DataAreaId parmSourceEntity(DataAreaId _sourceEntity = sourceEntity)
+    {
+        sourceEntity = _sourceEntity;
+        return sourceEntity;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>parmVendorAccount</Name>
+				<Source><![CDATA[
+    public AccountNum parmVendorAccount(AccountNum _vendorAccount = vendorAccount)
+    {
+        vendorAccount = _vendorAccount;
+        return vendorAccount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    server static UBSTriggerDimensionDefaulting construct()
+    {
+        return new UBSTriggerDimensionDefaulting();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    static void main(Args args)
+    {
+        UBSTriggerDimensionDefaulting import = UBSTriggerDimensionDefaulting::construct();
+
+        if (import.prompt())
+        {
+            import.runOperation();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        UBSTriggerDimensionDefaultingMain defaultDimension = new UBSTriggerDimensionDefaultingMain();
+        defaultDimension.updateDefaultDimension(sourceEntity, vendorAccount);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

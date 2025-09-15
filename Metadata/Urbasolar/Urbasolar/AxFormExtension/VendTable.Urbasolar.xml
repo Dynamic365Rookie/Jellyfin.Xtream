@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxFormExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V6">
+	<Name>VendTable.Urbasolar</Name>
+	<ControlModifications />
+	<Controls>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControly4ncuk4g1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormGroupControl">
+				<Name>Urbasolar</Name>
+				<Type>Group</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>DirPartyTable_UBSProcCategoryName</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSProcCategoryName</DataField>
+						<DataSource>DirPartyTable</DataSource>
+						<Mandatory>Yes</Mandatory>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>DirPartyTable_UBSReferencing</Name>
+						<AllowEdit>No</AllowEdit>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSReferencing</DataField>
+						<DataSource>DirPartyTable</DataSource>
+					</AxFormControl>
+				</Controls>
+				<Caption>@UBS:UBSUrbasolar</Caption>
+			</FormControl>
+			<Parent>UpperGroup</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlmdwxt5551</Name>
+			<FormControl xmlns=""
+				i:type="AxFormGroupControl">
+				<Name>UBSBlockageMonitoring</Name>
+				<AllowEdit>No</AllowEdit>
+				<Type>Group</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>UBSVendOnHoldHistory_ReasonCode</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>ReasonCode</DataField>
+						<DataSource>VendOnHoldHistory</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>UBSVendOnHoldHistory_ReasonComment</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>ReasonComment</DataField>
+						<DataSource>VendOnHoldHistory</DataSource>
+					</AxFormControl>
+				</Controls>
+				<Caption>@UBS:UBSBlockageMonitoring</Caption>
+				<DataSource>VendOnHoldHistory</DataSource>
+			</FormControl>
+			<Parent>UpperGroup</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlnd2mmmpf1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormGroupControl">
+				<Name>UrbasolarDetailsGroup</Name>
+				<Type>Group</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>VendTable_UBSEsgScore</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSEsgScore</DataField>
+						<DataSource>VendTable</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormDateControl">
+						<Name>VendTable_UBSEsgScoreValidity</Name>
+						<Type>Date</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSEsgScoreValidity</DataField>
+						<DataSource>VendTable</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormStringControl">
+						<Name>VendTable_UBSAuditScore</Name>
+						<Type>String</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSAuditScore</DataField>
+						<DataSource>VendTable</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormDateControl">
+						<Name>VendTable_UBSAuditScoreValidity</Name>
+						<Type>Date</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSAuditScoreValidity</DataField>
+						<DataSource>VendTable</DataSource>
+					</AxFormControl>
+					<AxFormControl xmlns=""
+						i:type="AxFormDateControl">
+						<Name>VendTable_UBSFuturAuditDateSchedule</Name>
+						<Type>Date</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<DataField>UBSFuturAuditDateSchedule</DataField>
+						<DataSource>VendTable</DataSource>
+					</AxFormControl>
+				</Controls>
+				<Caption>@UBS:UBSUrbasolar</Caption>
+			</FormControl>
+			<Parent>TabDetails</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlteedic3k1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormActionPaneTabControl">
+				<Name>UrbasolarActionPaneTab</Name>
+				<Type>ActionPaneTab</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<Controls>
+					<AxFormControl xmlns=""
+						i:type="AxFormButtonGroupControl">
+						<Name>UrbasolarButtonGroupHeader</Name>
+						<Type>ButtonGroup</Type>
+						<FormControlExtension
+							i:nil="true" />
+						<Controls>
+							<AxFormControl xmlns=""
+								i:type="AxFormMenuFunctionButtonControl">
+								<Name>UBSReferencingDocuments</Name>
+								<Type>MenuFunctionButton</Type>
+								<FormControlExtension
+									i:nil="true" />
+								<DataSource>DirPartyTable</DataSource>
+								<MenuItemName>UBSReferencingDocuments</MenuItemName>
+								<Text>@UBS:UBSReferencingDocuments</Text>
+							</AxFormControl>
+						</Controls>
+					</AxFormControl>
+				</Controls>
+				<Caption>@UBS:UBSUrbasolar</Caption>
+			</FormControl>
+			<Parent>ActionPane</Parent>
+		</AxFormExtensionControl>
+	</Controls>
+	<DataSourceModifications />
+	<DataSourceReferences />
+	<DataSources>
+		<AxFormDataSource xmlns="">
+			<Name>VendOnHoldHistory</Name>
+			<Table>VendOnHoldHistory</Table>
+			<Fields>
+				<AxFormDataSourceField>
+					<DataField>CreatedBy</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>CreatedDateTime</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>DataAreaId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>OnHold</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>Partition</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>ReasonCode</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>ReasonComment</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>RecId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>TableId</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>ValidFrom</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>ValidTo</DataField>
+				</AxFormDataSourceField>
+				<AxFormDataSourceField>
+					<DataField>VendAccount</DataField>
+				</AxFormDataSourceField>
+			</Fields>
+			<ReferencedDataSources />
+			<JoinSource>VendTable</JoinSource>
+			<DataSourceLinks />
+			<DerivedDataSources />
+		</AxFormDataSource>
+	</DataSources>
+	<Parts />
+	<PropertyModifications />
+</AxFormExtension>

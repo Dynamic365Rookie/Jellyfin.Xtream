@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxWorkflowParticipantAssignmentProvider xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="Microsoft.Dynamics.AX.Metadata.V2">
+	<Name xmlns="">UBSPApprobationPositionProvider</Name>
+	<AvailableForAllWorkflowTemplates xmlns="">No</AvailableForAllWorkflowTemplates>
+	<Label xmlns="">@UBS:UBSCategoryProcurementManager</Label>
+	<ProviderClass xmlns="">UBSPApprobationPositionProvider</ProviderClass>
+	<WorkflowTemplates xmlns="">
+		<AxWorkflowTemplateReference>
+			<Name>PurchTableTemplate</Name>
+		</AxWorkflowTemplateReference>
+		<AxWorkflowTemplateReference>
+			<Name>PurchReqReview</Name>
+		</AxWorkflowTemplateReference>
+		<AxWorkflowTemplateReference>
+			<Name>VendProcessInvoice</Name>
+		</AxWorkflowTemplateReference>
+	</WorkflowTemplates>
+</AxWorkflowParticipantAssignmentProvider>

@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>SubBillDeferralTransactionLineDeferral_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(SubBillDeferralTransactionLineDeferral))]
+final class SubBillDeferralTransactionLineDeferral_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>processedEventHandler</Name>
+				<Source><![CDATA[
+    [Hookable(false), SubscribesTo(classStr(AccountingDistributionProcessor), delegateStr(AccountingDistributionProcessor, processedEventHandler))]
+    public static void processedEventHandler(SourceDocumentLineItemList _sourceDocumentLineItemList)
+    {
+        if (SubBillDeferralEnableFeature::isEnabled())
+        {
+            AccountingDistribution                  accountingDistribution;
+            AccountingDistribution                  accountingDistributionParent;
+            SourceDocumentLineItem                  sourceDocumentLineItem;
+            AccountingDistributionList              accountingDistributionList;
+            AccountingDistributionListEnumerator    accountingDistributionListEnumerator;
+            SubBillDeferralTransactionLineDeferral  deferralTable;
+            SourceDocumentLineItemListEnumerator    sourceDocumentLineItemListEnumerator = _sourceDocumentLineItemList.getEnumerator();
+
+            while (sourceDocumentLineItemListEnumerator.moveNext())
+            {
+                sourceDocumentLineItem               = sourceDocumentLineItemListEnumerator.current();
+                accountingDistributionList           = sourceDocumentLineItem.parmAccountingDistributionList();
+                accountingDistributionListEnumerator = accountingDistributionList.getEnumerator();
+
+                while (accountingDistributionListEnumerator.moveNext())
+                {
+                    accountingDistribution = accountingDistributionListEnumerator.current();
+                    accountingDistribution.reread();
+
+                    if (accountingDistribution.ubsSubBillDeferralDeferredWithParentDistribution())
+                    {
+                        accountingDistributionParent = AccountingDistribution::find(accountingDistribution.ParentDistribution);
+
+                        if (accountingDistributionParent && accountingDistributionParent.ubsSubBillDeferralAccDistIsDeferred() &&
+                            accountingDistributionParent.LedgerDimension != accountingDistribution.LedgerDimension)
+                        {
+                            // if the distribution is added after main expense, update the account to match
+                            // example case: tax is changed manually and item is deferrable by default
+                            accountingDistribution.selectForUpdate(true);
+                            accountingDistribution.LedgerDimension = accountingDistributionParent.LedgerDimension;
+                            accountingDistribution.update();
+                        }
+                    }
+
+                    if (accountingDistribution.MonetaryAmount != MonetaryAmount::ExtendedPrice
+                        && accountingDistribution.MonetaryAmount != MonetaryAmount::PriceAdjustment
+                        && accountingDistribution.MonetaryAmount != MonetaryAmount::Discount)
+                    {
+                        continue;
+                    }
+
+                    deferralTable = SubBillDeferralTransactionLineDeferral::ubsFindByAccountingDistribution(accountingDistribution.RecId, true);
+
+                    if (!deferralTable && accountingDistribution.ubsAllowDeferral())
+                    {
+                        deferralTable.ubsInitFromAccountingDistribution(accountingDistribution, false);
+                    }
+                }
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ubsInitFromAccountingDistribution</Name>
+				<Source><![CDATA[
+    public void ubsInitFromAccountingDistribution(AccountingDistribution _accountingDistribution, boolean _defaulting)
+    {
+        SubBillDeferralParameters subBillDeferralParameters = SubBillDeferralParameters::find();
+
+        boolean success;
+
+        if(_accountingDistribution.ubsSubBillDeferralGetTransactionType() == SubBillDeferralTransactionType::VendInvoice)
+        {
+            success = this.ubsInitFromAccountDistributionVendInvoice(_accountingDistribution,_defaulting);
+        
+
+            if (!success)
+            {
+                if (_accountingDistribution.UbsSubBillDeferralGetTransactionType() != SubBillDeferralTransactionType::ExpenseReport)
+                {
+                    warning("@SubBill:DeferralSetupIncomplete");
+                }
+
+                this.SubBillDeferralDeferred = false;
+                if (_defaulting && this.RecId)
+                {
+                    this.selectForUpdate(true);
+                    ttsbegin;
+                    this.update();
+                    ttscommit;
+                }
+                return;
+            }
+    
+            ttsBegin;
+    
+            this.SubBillDeferralDeferred = true;
+            this.TransRecId = _accountingDistribution.RecId;
+
+            if (this.SubBillDeferralScheduleType == SubBillDeferralScheduleType::StraightLine)
+            {
+                this.SubBillDeferralConsolidatePriorPeriods = subBillDeferralParameters.SubBillDeferralConsolidatePriorPeriods;
+                this.SubBillDeferralEqualPerPeriod          = subBillDeferralParameters.SubBillDeferralEqualPerPeriod;
+    
+                // dates
+                this.SubBillDeferralStartDate = SubBillDeferralScheduleCreate::defaultStartDate(this.findFirstRecurrenceDate(_accountingDistribution));
+                this.SubBillDeferralEndDate   = this.findLastRecurrenceDate(_accountingDistribution);
+                this.calculateEndDate();
+            }
+    
+            if (!_defaulting || this.SubBillDeferralEventTemplateId)
+            {
+                if (this.validateWrite())
+                {
+                    this.write();
+                }
+            }
+    
+            this.updateFromTransaction();
+            this.loadEventTemplate(this.SubBillDeferralEventTemplateId);
+            this.calculateEventValues();
+    
+            if (this.RecId)
+            {
+                this.update();
+            }
+    
+            ttsCommit;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ubsInitFromAccountDistributionVendInvoice</Name>
+				<Source><![CDATA[
+    private boolean ubsInitFromAccountDistributionVendInvoice(AccountingDistribution _accountingDistribution, boolean _defaulting)
+    {
+        MainAccountNum                      mainAccountNumAccDist;
+        MainAccountNum                      mainAccountNumDefDefault;
+        VendInvoiceInfoTable                vendInvoiceInfoTable;
+        VendInvoiceInfoLine                 vendInvoiceInfoLine;
+        AccountingDistribution              accountingDistribution;
+        SubBillDeferralDefaultAccount       subBillDeferralDefaultAccount;
+        SubBillDeferralDefaultTemplate      subBillDeferralDefaultTemplate;
+        SubBillDeferralDefaultAccountType   deferralDefaultAccountType;
+
+        SubBillDeferralParameters       subBillDeferralParameters = SubBillDeferralParameters::find();
+        
+        select firstonly vendInvoiceInfoLine
+            join accountingDistribution
+                where accountingDistribution.SourceDocumentLine == vendInvoiceInfoLine.SourceDocumentLine
+                && accountingDistribution.RecId == _accountingDistribution.RecId;
+    
+        vendInvoiceInfoTable = VendInvoiceInfoTable::find(vendInvoiceInfoLine.ParmId, vendInvoiceInfoLine.TableRefId);
+    
+        this.SubBillDeferralTransactionType = SubBillDeferralTransactionType::VendInvoice;
+        this.SubBillDeferralSourceRecType = SubBillDeferralSourceRecType::AccountingDistribution;
+    
+        deferralDefaultAccountType = SubBillDeferralTransactionLineDeferral::ubsGetDeferralDefaultAccountType(
+            _accountingDistribution.MonetaryAmount,
+            subBillDeferralParameters);
+
+        // get the default account
+        subBillDeferralDefaultAccount = SubBillDeferralDefaultAccount::findTransTypeItemCustVend(
+            deferralDefaultAccountType,
+            vendInvoiceInfoLine.ItemId,
+            InventTable::find(vendInvoiceInfoLine.ItemId).itemGroup().ItemGroupId,
+            vendInvoiceInfoLine.ProcurementCategory,
+            vendInvoiceInfoTable.InvoiceAccount,
+            VendTable::find(vendInvoiceInfoTable.InvoiceAccount).VendGroup
+            );
+    
+        //get the default template
+        subBillDeferralDefaultTemplate = SubBillDeferralDefaultTemplate::findTransTypeItemCustVend(
+            SubBillDeferralTransactionType::VendInvoice,
+            vendInvoiceInfoLine.ItemId,
+            InventTable::find(vendInvoiceInfoLine.ItemId).itemGroup().ItemGroupId,
+            vendInvoiceInfoLine.ProcurementCategory,
+            vendInvoiceInfoTable.InvoiceAccount,
+            VendTable::find(vendInvoiceInfoTable.InvoiceAccount).VendGroup);
+
+        //if it's defaulting and there is no default, cancel the init
+        if (_defaulting && !SubBillDeferralDeferrableItems::isItemOrCategoryDeferrable(vendInvoiceInfoLine.ItemId, vendInvoiceInfoLine.ProcurementCategory,
+            SubBillDeferralTransactionType::VendInvoice))
+        {
+            return false;
+        }
+    
+        if (subBillDeferralDefaultAccount.RecId != 0)
+        {
+            mainAccountNumAccDist = LedgerDimensionFacade::getMainAccountIdFromLedgerDimension(_accountingDistribution.LedgerDimension);
+            mainAccountNumDefDefault = LedgerDimensionFacade::getMainAccountIdFromLedgerDimension(subBillDeferralDefaultAccount.LedgerDimension);
+    
+            if (mainAccountNumAccDist == mainAccountNumDefDefault)
+            {
+                // accounting distribution account is already the deferral account, set recognition account to default
+                this.SubBillDeferralRecognitionAccount = vendInvoiceInfoLine.ubsSubBillDeferralGetDefaultLedgerDimensionAccount();
+            }
+            else
+            {
+                if (_defaulting)
+                {
+                    this.SubBillDeferralDeferred = false;
+                    return false;
+                }
+                else
+                {
+                    ttsBegin;
+
+                    this.SubBillDeferralRecognitionAccount = _accountingDistribution.LedgerDimension;
+
+                    _accountingDistribution.selectForUpdate(true);
+                    _accountingDistribution.LedgerDimension = UBSSubBillCommon::copyDimensionsToMainAccount(this.SubBillDeferralRecognitionAccount, mainAccountNumDefDefault);
+                    // update needed for validation of recognition account being same as deferral account
+                    _accountingDistribution.update();
+
+                    _accountingDistribution.ubsSubBillDeferralUpdateChildAccDistAccount();
+
+                    ttsCommit;
+                }
+            }
+
+            if (subBillDeferralParameters.usingShortTermDeferrals() && subBillDeferralDefaultAccount.SubBillDeferralShortTermAccount)
+            {
+                this.SubBillDeferralShortTermAccount = UBSSubBillCommon::copyDimensionsToMainAccount(this.SubBillDeferralRecognitionAccount,
+                    LedgerDimensionFacade::getMainAccountIdFromLedgerDimension(subBillDeferralDefaultAccount.SubBillDeferralShortTermAccount));
+            }
+
+            if (subBillDeferralParameters.usingProfitAndLoss())
+            {
+                if (subBillDeferralDefaultAccount.SubBillDeferralInitialRecAcct)
+                {
+                    this.SubBillDeferralInitialRecAcct = UBSSubBillCommon::copyDimensionsToMainAccount(this.SubBillDeferralRecognitionAccount,
+                        LedgerDimensionFacade::getMainAccountIdFromLedgerDimension(subBillDeferralDefaultAccount.SubBillDeferralInitialRecAcct));
+                }
+                if (subBillDeferralDefaultAccount.SubBillDeferralRecOffAcct)
+                {
+                    this.SubBillDeferralRecOffAcct = UBSSubBillCommon::copyDimensionsToMainAccount(this.SubBillDeferralRecognitionAccount,
+                        LedgerDimensionFacade::getMainAccountIdFromLedgerDimension(subBillDeferralDefaultAccount.SubBillDeferralRecOffAcct));
+                }
+            }
+        }
+    
+        if (subBillDeferralDefaultTemplate.RecId != 0)
+        {
+            if (subBillDeferralDefaultTemplate.SubBillDeferralTemplateId)
+            {
+                this.SubBillDeferralScheduleType = SubBillDeferralScheduleType::StraightLine;
+                this.SubBillDeferralScheduleFromTemplate = true;
+                this.SubBillDeferralTemplateId = subBillDeferralDefaultTemplate.SubBillDeferralTemplateId;
+            }
+            else
+            {
+                this.SubBillDeferralScheduleType = SubBillDeferralScheduleType::EventBased;
+                this.SubBillDeferralEventTemplateId = subBillDeferralDefaultTemplate.SubBillDeferralEventTemplateId;
+            }
+        }
+        else
+        {
+            this.SubBillDeferralScheduleType = SubBillDeferralScheduleType::StraightLine;
+            this.SubBillDeferralScheduleFromTemplate = false;
+            this.SubBillDeferralTemplateId = '';
+        }
+
+        //get the deferral account from the accounting distribution line, only override later on if there is a default
+        this.SubBillDeferralAccount = _accountingDistribution.LedgerDimension;
+    
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ubsFindByAccountingDistribution</Name>
+				<Source><![CDATA[
+    internal static SubBillDeferralTransactionLineDeferral ubsFindByAccountingDistribution(
+        RecId           _accountingDistributionRecId,
+        boolean         _forUpdate = false)
+    {
+        SubBillDeferralTransactionLineDeferral deferralTable;
+    
+        if (_accountingDistributionRecId == 0)
+        {
+            return deferralTable;
+        }
+    
+        deferralTable.selectForUpdate(_forUpdate);
+    
+        select deferralTable where deferralTable.TransRecId == _accountingDistributionRecId &&
+            (deferralTable.SubBillDeferralTransactionType == SubBillDeferralTransactionType::FreeTextInvoice ||
+            deferralTable.SubBillDeferralTransactionType == SubBillDeferralTransactionType::VendInvoice ||
+            deferralTable.SubBillDeferralTransactionType == SubBillDeferralTransactionType::ExpenseReport);
+    
+        return deferralTable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ubsGetDeferralDefaultAccountType</Name>
+				<Source><![CDATA[
+    internal static SubBillDeferralDefaultAccountType ubsGetDeferralDefaultAccountType(
+        MonetaryAmount _monetaryAmount,
+        SubBillDeferralParameters _subBillDeferralParameters)
+    {
+        SubBillDeferralDefaultAccountType deferralDefaultAccountType;
+        switch(_monetaryAmount)
+        {
+            case MonetaryAmount::PriceAdjustment,
+                MonetaryAmount::PriceAdjustmentVariance,
+                MonetaryAmount::Discount,
+                MonetaryAmount::DiscountVariance:
+                if (_subBillDeferralParameters.SubBillDeferralPurchaseDiscountDeferralOption == SubBillDeferralDiscountDeferralOption::SeparateScheduleDiscount)
+                {
+                    deferralDefaultAccountType = SubBillDeferralDefaultAccountType::PurchDiscount;
+                }
+                else
+                {
+                    return false;
+                }
+                break;
+            case MonetaryAmount::ExtendedPrice:
+                deferralDefaultAccountType = SubBillDeferralDefaultAccountType::PurchExpense;
+                break;
+            default:
+                deferralDefaultAccountType = SubBillDeferralDefaultAccountType::PurchExpense;
+                break;
+        }
+
+        return deferralDefaultAccountType;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>ubsIsProjectChargeable</Name>
+				<Source><![CDATA[
+    internal static boolean ubsIsProjectChargeable(ProjId _projId, RecId _categoryRecId, NoYes _toBeInvoiced = NoYes::No)
+    {
+        boolean isProjectChargeable;
+
+        if (_projId && _categoryRecId && _toBeInvoiced)
+        {
+            // Set the is project chargeable to true since the line property is set to be invoiced.
+            isProjectChargeable = true;
+
+            ProjTable projTable;
+            PSAContractLineItems psaContractLineItemsExist;
+
+            select firstonly RecId, ContractLineNum from psaContractLineItemsExist
+                    where psaContractLineItemsExist.LineType == PSAContractLineType::TAndM
+                join projTable
+                    where projTable.ProjId == _projId
+                        && projTable.ProjInvoiceProjId == psaContractLineItemsExist.ProjInvoiceProjId;
+                        
+            if (psaContractLineItemsExist.RecId != 0)
+            {
+                ProjCategory projCategory;
+                PSAContractLineItems psaContractLineItems;
+                PSAContractLineItemsSetup psaContractLineItemsSetup;
+
+                select firstonly RecId from psaContractLineItems
+                    where psaContractLineItems.LineType == PSAContractLineType::TAndM
+                join psaContractLineItemsSetup
+                    where psaContractLineItemsSetup.ContractLineNum == psaContractLineItems.ContractLineNum
+                        && psaContractLineItemsSetup.ProjId == _projId
+                join projCategory
+                    where psaContractLineItemsSetup.CategoryId == ProjCategory.CategoryId
+                        && projCategory.RecId == _categoryRecId;
+
+                isProjectChargeable = isProjectChargeable && psaContractLineItemsSetup.RecId != 0;
+            }
+        }
+
+        return isProjectChargeable;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findFirstRecurrenceDate</Name>
+				<Source><![CDATA[
+    private TransDate findFirstRecurrenceDate(AccountingDistribution _accountingDistribution)
+    {
+        PurchLine purchline;
+
+        VendInvoiceInfoTable vendInvoiceInfoTable  = VendInvoiceInfoTable::findSourceDocumentHeader(_accountingDistribution.SourceDocumentHeader);
+
+        select firstonly UBSAutomaticReceptionDate from purchline
+            order by UBSAutomaticReceptionDate asc
+                where purchline.PurchId == vendInvoiceInfoTable.PurchId;
+
+        return purchline.UBSAutomaticReceptionDate;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>findLastRecurrenceDate</Name>
+				<Source><![CDATA[
+    private TransDate findLastRecurrenceDate(AccountingDistribution _accountingDistribution)
+    {
+        PurchLine purchline;
+
+        VendInvoiceInfoTable vendInvoiceInfoTable  = VendInvoiceInfoTable::findSourceDocumentHeader(_accountingDistribution.SourceDocumentHeader);
+
+        select firstonly UBSAutomaticReceptionDate from purchline
+            order by UBSAutomaticReceptionDate desc
+                where purchline.PurchId == vendInvoiceInfoTable.PurchId;
+
+        return endMth(purchline.UBSAutomaticReceptionDate);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

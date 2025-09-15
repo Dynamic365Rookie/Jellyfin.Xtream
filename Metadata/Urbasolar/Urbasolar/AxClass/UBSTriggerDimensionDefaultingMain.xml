@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSTriggerDimensionDefaultingMain</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+internal final class UBSTriggerDimensionDefaultingMain
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>updateDefaultDimension</Name>
+				<Source><![CDATA[
+    public void updateDefaultDimension(DataAreaId _sourceEntity, AccountNum _vendorAccount)
+    {
+        SysDataSharingPolicy              policy;
+        SysDataSharingOrganizationEnabled organization;
+        SysDataSharingOrganizationEnabled organizationExist;
+        SysDataSharingRuleEnabled         rule;
+        VendTable                         vendTable;
+        RefTableName                      vendTableName = tableId2Name(tableNum(VendTable));
+
+        while select DataSharingCompany 
+            from organization
+                group by DataSharingCompany
+                    exists join policy
+                        where policy.RecId == organization.DataSharingPolicy && 
+                              policy.IsEnabled
+                     exists join rule
+                        where rule.DataSharingPolicy == policy.RecId && 
+                              rule.SharedTableName == vendTableName
+                     exists join organizationExist
+                        where organizationExist.DataSharingPolicy  == policy.RecId && 
+                              organizationExist.DataSharingCompany == _sourceEntity
+        {
+            if(organization.DataSharingCompany == curExt())
+            {
+                continue;
+            }
+            changecompany(organization.DataSharingCompany)
+            {
+                vendTable = VendTable::find(_vendorAccount,true);
+                ttsbegin;
+                DimensionDefaultFacade::copyDimensionValueToDefaultDimensionField(vendTable, fieldNum(VendTable, AccountNum), vendTable, fieldNum(VendTable, DefaultDimension));
+                ttscommit;
+            }
+        }
+
+        ttsbegin;
+        UBSVendorDimensionToSync vendorDimensionToSync;
+        vendorDimensionToSync.UBSAccountNum = _vendorAccount;
+        vendorDimensionToSync.UBSDimensionIsUpdated = NoYes::Yes;
+        vendorDimensionToSync.insert();
+        ttscommit;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

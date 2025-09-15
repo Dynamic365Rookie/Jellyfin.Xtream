@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>VendBankAccount_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(VendBankAccount))]
+final class VendBankAccount_Table_Urbasolar_Extension
+{
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>vendBankAccountPerVendorCount</Name>
+				<Source><![CDATA[
+    public static int64 vendBankAccountPerVendorCount(AccountNum _accountNum)
+    {
+        VendBankAccount vendBankAccount;
+
+        select count(RecId) from vendBankAccount
+            where vendBankAccount.VendAccount == _accountNum;
+
+        return vendBankAccount.RecId;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxDataEntityViewExtension xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>DimensionCombinationEntity.DimensionIntegration</Name>
+	<DataSources />
+	<FieldGroupExtensions />
+	<FieldGroups />
+	<FieldModifications />
+	<Fields>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewUnmappedFieldString">
+			<Name>CostCenter</Name>
+			<ComputedFieldMethod>getValueColumnForDimensionAttributeSql</ComputedFieldMethod>
+			<ExtendedDataType>DimensionValue</ExtendedDataType>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewUnmappedFieldString">
+			<Name>ExpenseNature</Name>
+			<ComputedFieldMethod>getValueColumnForDimensionAttributeSql</ComputedFieldMethod>
+			<ExtendedDataType>DimensionValue</ExtendedDataType>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewUnmappedFieldString">
+			<Name>GroupChartOfAccount</Name>
+			<ComputedFieldMethod>getValueColumnForDimensionAttributeSql</ComputedFieldMethod>
+			<ExtendedDataType>DimensionValue</ExtendedDataType>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewUnmappedFieldString">
+			<Name>Project</Name>
+			<ComputedFieldMethod>getValueColumnForDimensionAttributeSql</ComputedFieldMethod>
+			<ExtendedDataType>DimensionValue</ExtendedDataType>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewUnmappedFieldString">
+			<Name>Vendor</Name>
+			<ComputedFieldMethod>getValueColumnForDimensionAttributeSql</ComputedFieldMethod>
+			<ExtendedDataType>DimensionValue</ExtendedDataType>
+		</AxDataEntityViewField>
+	</Fields>
+	<Mappings />
+	<PropertyModifications />
+	<Relations />
+</AxDataEntityViewExtension>
