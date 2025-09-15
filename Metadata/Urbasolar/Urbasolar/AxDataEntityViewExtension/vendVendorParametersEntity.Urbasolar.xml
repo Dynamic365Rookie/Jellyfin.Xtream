@@ -204,6 +204,12 @@
 			<DataField>PurchLineDefaultAddressFromHeader</DataField>
 			<DataSource>PurchParameters</DataSource>
 		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSDisableReferencingCheck</Name>
+			<DataField>UBSDisableReferencingCheck</DataField>
+			<DataSource>VendParameters</DataSource>
+		</AxDataEntityViewField>
 	</Fields>
 	<Mappings />
 	<PropertyModifications />

@@ -123,6 +123,11 @@
       <Name>DirPartyV2Entity.Urbasolar</Name>
       <Link>Data Entity Extensions\DirPartyV2Entity.Urbasolar</Link>
     </Content>
+    <Content Include="AxDataEntityViewExtension\vendVendorParametersEntity.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>vendVendorParametersEntity.Urbasolar</Name>
+      <Link>Data Entity Extensions\vendVendorParametersEntity.Urbasolar</Link>
+    </Content>
     <Content Include="AxDataEntityViewExtension\VendVendorV2Entity.Urbasolar">
       <SubType>Content</SubType>
       <Name>VendVendorV2Entity.Urbasolar</Name>
@@ -232,6 +237,11 @@
       <SubType>Content</SubType>
       <Name>VendTable.Urbasolar</Name>
       <Link>Table Extensions\VendTable.Urbasolar</Link>
+    </Content>
+    <Content Include="AxTableExtension\vendVendorParametersStaging.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>vendVendorParametersStaging.Urbasolar</Name>
+      <Link>Table Extensions\vendVendorParametersStaging.Urbasolar</Link>
     </Content>
     <Content Include="AxTableExtension\VendVendorV2Staging.Urbasolar">
       <SubType>Content</SubType>

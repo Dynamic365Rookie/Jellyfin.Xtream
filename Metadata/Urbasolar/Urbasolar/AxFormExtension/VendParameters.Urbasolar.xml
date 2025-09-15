@@ -180,6 +180,15 @@
 									i:nil="true" />
 								<Controls>
 									<AxFormControl xmlns=""
+										i:type="AxFormCheckBoxControl">
+										<Name>VendParameters_UBSDisableReferencingCheck</Name>
+										<Type>CheckBox</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSDisableReferencingCheck</DataField>
+										<DataSource>VendParameters</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
 										i:type="AxFormGroupControl">
 										<Name>UBSProcCategoryLvlGroupControl</Name>
 										<Type>Group</Type>

@@ -14,19 +14,22 @@ public class UBSMandatoryDocuments extends common
     public static boolean checkMandatoryDocument(RefRecId _party, DirPartyTable _dirPartyTable)
     {
         boolean ret = true;
-        UBSReferencingDocuments referencingDocuments = UBSReferencingDocuments::findNotReferencingDocument(_party);
-        UBSMandatoryDocuments mandatoryDocuments;
+        UBSReferencingDocuments referencingDocuments;
+        UBSMandatoryDocuments   mandatoryDocuments;
 
-        while select UBSReferencing from mandatoryDocuments
+        if(!VendParameters::find().UBSDisableReferencingCheck)
+        {
+            while select UBSReferencing from mandatoryDocuments
                     notexists join referencingDocuments
                         where mandatoryDocuments.UBSDocuments   == referencingDocuments.UBSDocuments &&
                               mandatoryDocuments.UBSReferencing == _dirPartyTable.UBSReferencing &&
                               referencingDocuments.Party        == _dirPartyTable.RecId
-        {
-            if(mandatoryDocuments.UBSReferencing == _dirPartyTable.UBSReferencing)
             {
-                ret = checkFailed('@UBS:UBSMissingDocumentInVendor');
-                break;
+                if(mandatoryDocuments.UBSReferencing == _dirPartyTable.UBSReferencing)
+                {
+                    ret = checkFailed('@UBS:UBSMissingDocumentInVendor');
+                    break;
+                }
             }
         }
   

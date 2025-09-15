@@ -34,9 +34,12 @@ public class UBSReferencingDocuments extends common
     {
         UBSReferencingDocuments referencingDocuments;
 
-        select firstfast referencingDocuments
+        if(!VendParameters::find().UBSDisableReferencingCheck)
+        {
+            select firstfast referencingDocuments
                 where referencingDocuments.UBSDocumentName =='' &&
                       referencingDocuments.Party == _party;
+        }
 
         return referencingDocuments;
     }

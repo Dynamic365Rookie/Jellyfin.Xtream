@@ -252,6 +252,12 @@
 			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
 			<EnumType>NoYes</EnumType>
 		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSDisableReferencingCheck</Name>
+			<Label>@UBS:UBSDisableReferencingCheck</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
 	<Indexes />
