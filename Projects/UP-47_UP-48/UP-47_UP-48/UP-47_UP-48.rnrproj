@@ -40,7 +40,9 @@
     <Folder Include="Action Menu Items\" />
     <Folder Include="Classes\" />
     <Folder Include="Data Entities\" />
+    <Folder Include="Display Menu Items\" />
     <Folder Include="Form Extensions\" />
+    <Folder Include="Forms\" />
     <Folder Include="Label Files\" />
     <Folder Include="Menu Extensions\" />
     <Folder Include="Security Privileges\" />
@@ -80,6 +82,11 @@
       <Name>VendParameters.Urbasolar</Name>
       <Link>Form Extensions\VendParameters.Urbasolar</Link>
     </Content>
+    <Content Include="AxForm\UBSWorkflowMultiEntityCopyBatchLogs">
+      <SubType>Content</SubType>
+      <Name>UBSWorkflowMultiEntityCopyBatchLogs</Name>
+      <Link>Forms\UBSWorkflowMultiEntityCopyBatchLogs</Link>
+    </Content>
     <Content Include="AxLabelFile\UBS_en-US">
       <SubType>Content</SubType>
       <Name>UBS_en-US</Name>
@@ -105,6 +112,11 @@
       <Name>UBSWorkflowMultiEntityCopyBatchController</Name>
       <Link>Action Menu Items\UBSWorkflowMultiEntityCopyBatchController</Link>
     </Content>
+    <Content Include="AxMenuItemDisplay\UBSWorkflowMultiEntityCopyBatchLogs">
+      <SubType>Content</SubType>
+      <Name>UBSWorkflowMultiEntityCopyBatchLogs</Name>
+      <Link>Display Menu Items\UBSWorkflowMultiEntityCopyBatchLogs</Link>
+    </Content>
     <Content Include="AxSecurityPrivilege\UBSWorkflowEntityMaintain">
       <SubType>Content</SubType>
       <Name>UBSWorkflowEntityMaintain</Name>
@@ -119,6 +131,11 @@
       <SubType>Content</SubType>
       <Name>UBSVendParametersCC</Name>
       <Link>Tables\UBSVendParametersCC</Link>
+    </Content>
+    <Content Include="AxTable\UBSWorkflowMultiEntityCopyBatchLogs">
+      <SubType>Content</SubType>
+      <Name>UBSWorkflowMultiEntityCopyBatchLogs</Name>
+      <Link>Tables\UBSWorkflowMultiEntityCopyBatchLogs</Link>
     </Content>
     <Content Include="AxTable\UBSWorkflowStaging">
       <SubType>Content</SubType>

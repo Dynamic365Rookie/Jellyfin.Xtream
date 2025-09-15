@@ -186,4 +186,5 @@ UBSWarrantyRetentionWarningVendorGroup=La retenue de garantie automatique néces
 UBSWarrantyTempAccount=Compte tampon pour la retenue de garantie
 UBSWorkflowMultiEntityCopyBatchContractParmDataArea=Entreprises à l'origine des workflows
 UBSWorkflowMultiEntityCopyBatchController=UBS Répliquer le workflow entre les entités
+UBSWorkflowMultiEntityCopyBatchLogs=UBS - Répliquer le workflow entre les entités journal d'erreurs
 UBSWorkflowNumSeq=UBS - Souche de numéro de flux de travail pour le DMF

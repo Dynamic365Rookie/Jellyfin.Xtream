@@ -197,4 +197,5 @@ UBSWarrantyRetentionWarningVendorGroup=Warranty retention automation requires th
 UBSWarrantyTempAccount=Bridge account for warranty process
 UBSWorkflowMultiEntityCopyBatchContractParmDataArea=Companies at the origin of workflows.
 UBSWorkflowMultiEntityCopyBatchController=UBS - Replicate Workflow Across Entities
+UBSWorkflowMultiEntityCopyBatchLogs=UBS - Replicate Workflow Across Entities Logs
 UBSWorkflowNumSeq=UBS - Workflow number sequence for DMF

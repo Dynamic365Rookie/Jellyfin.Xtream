@@ -23,12 +23,12 @@ internal final class UBSWorkflowMultiEntityCopyBatchService
         
         using(System.IO.Stream workflowStream)
         {
-            while select workflowTableOrigin
+            while select TemplateName from workflowTableOrigin
                 where (workflowTableOrigin.Module == ModuleAxapta::Vendor ||
                        workflowTableOrigin.Module == ModuleAxapta::PurchaseOrder) &&
                        workflowTableOrigin.DataArea == contractDataAreaId &&
                        workflowTableOrigin.DefaultConfiguration == NoYes::Yes
-            join workflowVersionTableOrigin
+            join ConfigurationId, VersionIdMajor, VersionIdMinor, VersionIdBuild, VersionIdRevision from workflowVersionTableOrigin
                 where workflowVersionTableOrigin.WorkflowTable == workflowTableOrigin.RecId &&
                       workflowVersionTableOrigin.Enabled == NoYes::Yes
             {
@@ -38,14 +38,33 @@ internal final class UBSWorkflowMultiEntityCopyBatchService
                 {
                     changecompany(DataArea.id)
                     {
-                        if(!this.checkWorkflowTableExist(DataArea.id, workflowTableOrigin.TemplateName))
+                        try
                         {
-                            using(System.IO.Stream stream = this.exportWorkflow(workflowVersionTableOrigin.ConfigurationId, workflowStream))
-                            {
-                                Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowExportDefinition def = Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowModel::LoadExportedWorkflowFromStream(stream);
+                            this.updateAutomaticSubmitInvoiceToWorkflow();
 
-                                this.importWorkflow(WorkflowAXVersion::AX6, def, true);
+                            if(!this.checkWorkflowTableExistOrBigger(DataArea.id, workflowTableOrigin.TemplateName, workflowVersionTableOrigin))
+                            {
+                                using(System.IO.Stream stream = this.exportWorkflow(workflowVersionTableOrigin.ConfigurationId, workflowStream))
+                                {
+                                    Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowExportDefinition def = Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowModel::LoadExportedWorkflowFromStream(stream);
+
+                                    guid newWfToActivate = this.importWorkflow(WorkflowAXVersion::AX6, def, true, workflowVersionTableOrigin.VersionIdMajor,
+                                                                                                              workflowVersionTableOrigin.VersionIdMinor,
+                                                                                                              workflowVersionTableOrigin.VersionIdBuild,
+                                                                                                              workflowVersionTableOrigin.VersionIdRevision);
+
+                                }
                             }
+                        }
+                        catch(Exception::Error)
+                        {
+                            UBSWorkflowMultiEntityCopyBatchLogs::registerLog(workflowTableOrigin.TemplateName,
+                                                                             curExt(),
+                                                                             con2Str(xSession::xppCallStack(),"\n"));
+                        }
+                        finally
+                        {
+                            this.updateAutomaticSubmitInvoiceToWorkflow(NoYes::Yes);
                         }
                     }
                 }
@@ -108,9 +127,13 @@ internal final class UBSWorkflowMultiEntityCopyBatchService
 			<Method>
 				<Name>importWorkflow</Name>
 				<Source><![CDATA[
-    private WorkflowImportType importWorkflow(WorkflowAXVersion importVersion,
+    private guid importWorkflow(WorkflowAXVersion _importVersion,
                                               Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowExportDefinition _workflowConfigurationExportDefinition,
-                                              boolean _createNewConfiguration)
+                                              boolean _createNewConfiguration,
+                                              int _versionIdMajor,
+                                              int _versionIdMinor,
+                                              int _versionIdBuild,
+                                              int _versionIdRevision)
     {
         #Admin
         Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowModel managedWorkflowConfiguration;
@@ -120,13 +143,13 @@ internal final class UBSWorkflowMultiEntityCopyBatchService
                                 errorMessage,
                                 expectedAXVersion;
         UserInfo                userInfo;
-        WorkflowImportType      ret = WorkflowImportType::Yes;
+        guid                    ret = newGuid();
         WorkflowTable           workflowTable;
         WorkflowVersionTable    workflowVersionTable;
 
         try
         {
-            expectedAXVersion = enum2Symbol(enumNum(WorkflowAXVersion), WorkflowAXVersion::AX6);
+            expectedAXVersion = enum2Symbol(enumNum(WorkflowAXVersion), _importVersion);
 
             importedAXVersion = _workflowConfigurationExportDefinition.get_AXVersion();
 
@@ -147,6 +170,7 @@ internal final class UBSWorkflowMultiEntityCopyBatchService
             if(managedWorkflowConfiguration != null)
             {
                 storageId = managedWorkflowConfiguration.get_StorageId();
+
                 if(storageId == 0)
                 {
                     workflowVersionTable.clear();
@@ -158,8 +182,20 @@ internal final class UBSWorkflowMultiEntityCopyBatchService
                 }
                 else
                 {
-                    workflowVersionTable = WorkflowVersionTable::findRecId(storageId);
-                    workflowTable        = workflowVersionTable.workflowTable();
+                    ttsbegin;
+                    workflowVersionTable = WorkflowVersionTable::findRecId(storageId,true);
+                    workflowTable        = workflowVersionTable.workflowTable(true);
+
+                    workflowTable.DefaultConfiguration = NoYes::Yes;
+                    workflowTable.update();
+
+                    workflowVersionTable.VersionIdMajor     = _versionIdMajor;
+                    workflowVersionTable.VersionIdMinor     = _versionIdMinor;
+                    workflowVersionTable.VersionIdBuild     = _versionIdBuild;
+                    workflowVersionTable.VersionIdRevision  = _versionIdRevision;
+                    workflowVersionTable.update();
+                    ttscommit;
+
                 }
             }
             CodeAccessPermission::revertAssert();
@@ -184,32 +220,185 @@ internal final class UBSWorkflowMultiEntityCopyBatchService
             }
 
             error(errorMessage);
-            ret = WorkflowImportType::Error;
         }
 
-        if (ret == WorkflowImportType::Yes &&
-            workflowVersionTable.RecId == 0)
-        {
-            ret = WorkflowImportType::No;
-        }
-
-        return ret;
+        return workflowVersionTable.ConfigurationId;
     }
 
 ]]></Source>
 			</Method>
 			<Method>
-				<Name>checkWorkflowTableExist</Name>
+				<Name>activeConfigurationV6</Name>
 				<Source><![CDATA[
-    private boolean checkWorkflowTableExist(DataAreaId _dataArea, str _templateName)
+    static client void activeConfigurationV6(WorkflowConfigurationId _workflowConfigurationId)
+    {
+        Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowModel                workflowConfiguration;
+        Microsoft.Dynamics.AX.Framework.MetaModel.ValidationContext                 validationContext;
+        Microsoft.Dynamics.AX.Framework.MetaModel.ValidationMessageCollection       validationMessageCollection;
+        SysWorkflowConfigurationValidate                                            workflowConfigurationValidate;
+        WorkflowVersionTable                    workflowVersionTable;
+        WorkflowConfigDataChangeEventHandler    workflowConfigDataChangeEventHandler = SysWorkflowHelper::getConfigDataChangeEventHandler(workflowVersionTable.workflowTable().TemplateName);
+        boolean                                 setActive = true;
+        UserInfo                                userInfo;
+
+        select NetworkDomain, NetworkAlias from userInfo where userInfo.Id == curUserId();
+
+        new InteropPermission(InteropKind::ClrInterop).assert();
+
+        workflowVersionTable = WorkflowVersionTable::find(_workflowConfigurationId);
+        validationContext = new Microsoft.Dynamics.AX.Framework.MetaModel.ValidationContext();
+
+        if (workflowVersionTable.Enabled == NoYes::No)
+        {
+            workflowConfiguration = Microsoft.Dynamics.AX.Framework.Workflow.Model.WorkflowModel::Create(_workflowConfigurationId, curext(), userInfo.NetworkDomain + '\\' + userInfo.NetworkAlias, false);
+            workflowConfiguration.Validate(validationContext);
+        }
+
+        validationMessageCollection = validationContext.get_ValidationMessages();
+
+        if (CLRInterop::getAnyTypeForObject(validationMessageCollection.get_Count()) != 0)
+        {
+            workflowConfigurationValidate = SysWorkflowConfigurationValidate::newValidation(validationContext, workflowVersionTable.ConfigurationId);
+            workflowConfigurationValidate.toInfolog();
+        }
+
+        // BP deviation documented
+        if (CLRInterop::getAnyTypeForObject(validationMessageCollection.get_Errors()) != 0 ||
+            CLRInterop::getAnyTypeForObject(validationMessageCollection.get_Warnings()) != 0)
+        {
+            error("@SYS121781");
+        }
+        else
+        {
+            if (workflowVersionTable.Enabled == NoYes::Yes &&
+                WorkflowSubWorkflow::existWorkflow(workflowVersionTable.workflowTable().SequenceNumber))
+            {
+                if(Box::yesNo("@SYS121750", DialogButton::No) == DialogButton::No)
+                {
+                    setActive = false;
+                }
+            }
+
+            if (workflowConfigDataChangeEventHandler != null && setActive)
+            {
+                if (workflowVersionTable.Enabled == NoYes::No && !workflowConfigDataChangeEventHandler.validateActivate(workflowVersionTable))
+                {
+                    setActive = false;
+                }
+                else if (workflowVersionTable.Enabled == NoYes::Yes && !workflowConfigDataChangeEventHandler.validateDeactivate(workflowVersionTable))
+                {
+                    setActive = false;
+                }
+            }
+
+            if (setActive)
+            {
+                ttsbegin;
+                workflowVersionTable = WorkflowVersionTable::find(_workflowConfigurationId, true);
+                if (workflowVersionTable.RecId)
+                {
+                    if (workflowVersionTable.Enabled == NoYes::No)
+                        workflowVersionTable.Enabled = NoYes::Yes;
+                    else
+                        workflowVersionTable.Enabled = NoYes::No;
+                    workflowVersionTable.update();
+                }
+                ttscommit;
+            }
+        }
+
+        CodeAccessPermission::revertAssert();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>checkWorkflowTableExistOrBigger</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Check if workflow exist
+    /// If exist check the version
+    /// If exist and version is below the original version return false
+    /// and deactivate the current workflow version
+    /// </summary>
+    /// <param name = "_dataArea">DataAreaId</param>
+    /// <param name = "TemplateName">str</param>
+    /// <param name = "_workflowVersionTableOrigin">WorkflowVersionTable</param>
+    /// <returns>boolean</returns>
+    private boolean checkWorkflowTableExistOrBigger(DataAreaId _dataArea, TemplateName _templateName, WorkflowVersionTable _workflowVersionTableOrigin)
     {
         WorkflowTable workflowTableToCheck;
+        WorkflowVersionTable workflowVersionTableToCheck;
 
         select RecId from workflowTableToCheck
             where workflowTableToCheck.DataArea == _dataArea &&
-                  workflowTableToCheck.TemplateName == _templateName;
+                  workflowTableToCheck.TemplateName == _templateName
+            join ConfigurationId, VersionIdMajor, VersionIdMinor, VersionIdBuild ,VersionIdRevision from workflowVersionTableToCheck
+                where workflowVersionTableToCheck.WorkflowTable == workflowTableToCheck.RecId &&
+                      workflowVersionTableToCheck.Enabled == NoYes::Yes;
 
-        return workflowTableToCheck ? true : false;
+        if(workflowTableToCheck && this.compareVersion(workflowVersionTableToCheck,_workflowVersionTableOrigin) >= 0)
+        {
+            return true;
+        }
+        else
+        {
+            //Deactivate WF
+            if(workflowTableToCheck)
+            {
+                UBSWorkflowMultiEntityCopyBatchService::activeConfigurationV6(workflowVersionTableToCheck.ConfigurationId);
+            }
+
+            return false;
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>compareVersion</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Compare workflow version
+    /// </summary>
+    /// <param name = "_workflowVersionTableToCheck">WorkflowVersionTable</param>
+    /// <param name = "_workflowVersionTableOrigin">WorkflowVersionTable</param>
+    /// <returns>Integer if 0 same vesrion 
+    /// if > 0 current version is higher 
+    /// if < 0 current version is smaller</returns>
+    private int compareVersion(WorkflowVersionTable _workflowVersionTableToCheck, WorkflowVersionTable _workflowVersionTableOrigin)
+    {
+        if (_workflowVersionTableToCheck.VersionIdMajor != _workflowVersionTableOrigin.VersionIdMajor)
+        {
+            return _workflowVersionTableToCheck.VersionIdMajor - _workflowVersionTableOrigin.VersionIdMajor;
+        }
+
+        if (_workflowVersionTableToCheck.VersionIdMinor != _workflowVersionTableOrigin.VersionIdMinor)
+        {
+            return _workflowVersionTableToCheck.VersionIdMinor - _workflowVersionTableOrigin.VersionIdMinor;
+        }
+
+        if (_workflowVersionTableToCheck.VersionIdBuild != _workflowVersionTableOrigin.VersionIdBuild)
+        {
+            return _workflowVersionTableToCheck.VersionIdBuild - _workflowVersionTableOrigin.VersionIdBuild;
+        }
+
+        return _workflowVersionTableToCheck.VersionIdRevision - _workflowVersionTableOrigin.VersionIdRevision;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>updateAutomaticSubmitInvoiceToWorkflow</Name>
+				<Source><![CDATA[
+    private void updateAutomaticSubmitInvoiceToWorkflow(NoYes _activate = NoYes::No)
+    {
+        VendParameters vendParameters = VendParameters::find(true);
+        
+        ttsbegin;
+        vendParameters.AutomationWorkflowSubmission = _activate;
+        vendParameters.update();
+        ttscommit;
     }
 
 ]]></Source>
