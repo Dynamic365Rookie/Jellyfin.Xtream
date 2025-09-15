@@ -17,11 +17,18 @@ public final class UBSPurchaseOrderToSalesOrderToolkit
         InventModelGroupItem InventModelGroupItem;
         InventModelGroup InventModelGroup;
         PurchLine purchLine;
+        SalesParameters salesParameters = SalesParameters::find();
+        InventDim inventDim;
 
         select firstonly purchLine where purchLine.PurchId == _purchTable.PurchId
+
                 join InventModelGroupItem where InventModelGroupItem.ItemId == purchLine.ItemId
                 join InventModelGroup where InventModelGroup.ModelGroupId == InventModelGroupItem.ModelGroupId
-            && InventModelGroup.StockedProduct == 1;
+                && InventModelGroup.StockedProduct == 1
+
+                join inventDim
+                where inventDim.inventDimId == purchLine.InventDimId
+                && inventDim.InventSiteId != salesParameters.UBS_SAS_InventSiteId;
 
         if(purchLine) hasLine = 1;
 
