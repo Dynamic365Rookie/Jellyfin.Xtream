@@ -210,6 +210,18 @@
 			<DataField>UBSDisableReferencingCheck</DataField>
 			<DataSource>VendParameters</DataSource>
 		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSJournalName</Name>
+			<DataField>UBSJournalName</DataField>
+			<DataSource>VendParameters</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSPaymentOffsetLedgerDimension</Name>
+			<DataField>UBSPaymentOffsetLedgerDimension</DataField>
+			<DataSource>VendParameters</DataSource>
+		</AxDataEntityViewField>
 	</Fields>
 	<Mappings />
 	<PropertyModifications />
