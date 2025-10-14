@@ -131,6 +131,12 @@ public class UBSInterfaceAccrualsInvoiceEntry extends common
 			<DataField>TransactionCurrencyCode</DataField>
 			<DataSource>GeneralJournalAccountEntry</DataSource>
 		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>AccountingDate</Name>
+			<DataField>AccountingDate</DataField>
+			<DataSource>GeneralJournalEntry</DataSource>
+		</AxViewField>
 	</Fields>
 	<Indexes />
 	<Mappings />

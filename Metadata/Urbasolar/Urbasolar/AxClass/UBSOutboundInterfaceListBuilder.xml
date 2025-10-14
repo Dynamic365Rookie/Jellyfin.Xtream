@@ -299,6 +299,7 @@ internal final class UBSOutboundInterfaceListBuilder
             group by accrualEntryView.MainAccountValue,accrualEntryView.CostCenter,accrualEntryView.ExpenseNature,accrualEntryView.GroupChartOfAccount,
                 accrualEntryView.Project,accrualEntryView.Vendor,accrualEntryView.SubledgerVoucherDataAreaId,accrualEntryView.PurchId,accrualEntryView.PackingSlipId,accrualEntryView.TransactionCurrencyCode
             where  (_legalEntity == '' || accrualEntryView.SubledgerVoucherDataAreaId == _legalEntity)
+                &&  accrualEntryView.AccountingDate <= calendarPeriod.EndDate
         {
             if(accrualEntryView.AccountingCurrencyAmount != 0 || accrualEntryView.TransactionCurrencyAmount !=0)
             {

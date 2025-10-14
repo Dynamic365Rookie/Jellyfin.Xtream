@@ -80,6 +80,10 @@ public class UBSInterfaceAccrualsUnionQuery extends QueryRun
 					<Field>Vendor</Field>
 				</AxQuerySimpleDataSourceField>
 				<AxQuerySimpleDataSourceField>
+					<Name>AccountingDate</Name>
+					<Field>AccountingDate</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
 					<Name>unionAllBranchId</Name>
 					<Field>unionAllBranchId</Field>
 				</AxQuerySimpleDataSourceField>
@@ -151,6 +155,10 @@ public class UBSInterfaceAccrualsUnionQuery extends QueryRun
 				<AxQuerySimpleDataSourceField>
 					<Name>Vendor</Name>
 					<Field>Vendor</Field>
+				</AxQuerySimpleDataSourceField>
+				<AxQuerySimpleDataSourceField>
+					<Name>AccountingDate</Name>
+					<Field>AccountingDate</Field>
 				</AxQuerySimpleDataSourceField>
 				<AxQuerySimpleDataSourceField>
 					<Name>unionAllBranchId</Name>
