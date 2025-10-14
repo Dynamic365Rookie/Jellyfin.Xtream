@@ -148,6 +148,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="RestSharp, Version=112.1.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75">
+      <Name>RestSharp</Name>
+      <HintPath>K:\AosService\PackagesLocalDirectory\Urbasolar\bin\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="UBSInterfaceToolkit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <Name>UBSInterfaceToolkit</Name>
       <HintPath>K:\AosService\PackagesLocalDirectory\Urbasolar\Urbasolar\ExternalDLL\UBSInterfaceToolkit.dll</HintPath>

@@ -31,11 +31,11 @@ Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 3
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://dev.azure.com/labdevms
-		SccProjectUniqueName0 = ..\\UBSInterfaceToolkit\\UBSInterfaceToolkit\\UBSInterfaceToolkit.csproj
-		SccProjectName0 = ../UBSInterfaceToolkit/UBSInterfaceToolkit
-		SccLocalPath0 = ..\\UBSInterfaceToolkit\\UBSInterfaceToolkit
-		SccLocalPath1 = .
+		SccTeamFoundationServer = https://dev.azure.com/urbasolard365finance
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ..\\UBSInterfaceToolkit\\UBSInterfaceToolkit\\UBSInterfaceToolkit.csproj
+		SccProjectName1 = ../UBSInterfaceToolkit/UBSInterfaceToolkit
+		SccLocalPath1 = ..\\UBSInterfaceToolkit\\UBSInterfaceToolkit
 		SccProjectUniqueName2 = UP16_FNPCCAAccountingEntries.rnrproj
 		SccLocalPath2 = .
 	EndGlobalSection

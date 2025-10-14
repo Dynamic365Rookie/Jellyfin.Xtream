@@ -260,7 +260,9 @@ internal final class UBSOutboundInterfaceListBuilder
                       ccaEntryView.AccountingDate <= calendarPeriod.EndDate
                         && (_legalEntity == '' || ccaEntryView.SubledgerVoucherDataAreaId == _legalEntity)
         {
-            accrualList.Add([
+            if(ccaEntryView.AccountingCurrencyAmount != 0 || ccaEntryView.TransactionCurrencyAmount !=0)
+            {
+                accrualList.Add([
                 'CCA',
                 ccaEntryView.InvoiceId,
                 date2Str(calendarPeriod.EndDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
@@ -275,6 +277,7 @@ internal final class UBSOutboundInterfaceListBuilder
                 num2Str(ccaEntryView.TransactionCurrencyAmount,1,2,1,0),
                 ccaEntryView.TransactionCurrencyCode
                 ]);
+            }
         }
 
         while select crosscompany
@@ -297,7 +300,9 @@ internal final class UBSOutboundInterfaceListBuilder
                 accrualEntryView.Project,accrualEntryView.Vendor,accrualEntryView.SubledgerVoucherDataAreaId,accrualEntryView.PurchId,accrualEntryView.PackingSlipId,accrualEntryView.TransactionCurrencyCode
             where  (_legalEntity == '' || accrualEntryView.SubledgerVoucherDataAreaId == _legalEntity)
         {
-            accrualList.Add([
+            if(accrualEntryView.AccountingCurrencyAmount != 0 || accrualEntryView.TransactionCurrencyAmount !=0)
+            {
+                accrualList.Add([
                 'FNP',
                 accrualEntryView.PurchId + "-" + accrualEntryView.PackingSlipId,
                 date2Str(calendarPeriod.EndDate,123,DateDay::Digits2,DateSeparator::Hyphen,DateMonth::Digits2,DateSeparator::Hyphen,DateYear::Digits4),
@@ -312,6 +317,7 @@ internal final class UBSOutboundInterfaceListBuilder
                 num2Str(accrualEntryView.TransactionCurrencyAmount,1,2,1,0),
                 accrualEntryView.TransactionCurrencyCode
                 ]);
+            }
         }
 
         return accrualList;
