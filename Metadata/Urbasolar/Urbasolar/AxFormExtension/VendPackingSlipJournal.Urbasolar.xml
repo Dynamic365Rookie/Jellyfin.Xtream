@@ -17,6 +17,37 @@
 			</FormControl>
 			<Parent>OverviewGrid</Parent>
 		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlsm1schqw1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormRealControl">
+				<Name>UBSVendPackingSlipJour_Amount</Name>
+				<AllowEdit>No</AllowEdit>
+				<Type>Real</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataMethod>VendPackingSlipJour_Table_Urbasolar_Extension.displayTotalAmount</DataMethod>
+				<DataSource>VendPackingSlipJour</DataSource>
+				<Label>@UBS:UBSAmount</Label>
+				<ShowZero>Yes</ShowZero>
+			</FormControl>
+			<Parent>OverviewGrid</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControlglhapxma1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormCheckBoxControl">
+				<Name>UBSVendPackingSlipJour_Canceled</Name>
+				<AllowEdit>No</AllowEdit>
+				<Type>CheckBox</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataMethod>VendPackingSlipJour_Table_Urbasolar_Extension.displayIsCanceled</DataMethod>
+				<DataSource>VendPackingSlipJour</DataSource>
+				<Label>@UBS:UBSCanceled</Label>
+			</FormControl>
+			<Parent>OverviewGrid</Parent>
+		</AxFormExtensionControl>
 	</Controls>
 	<DataSourceModifications />
 	<DataSourceReferences />

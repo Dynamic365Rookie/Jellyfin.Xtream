@@ -223,6 +223,50 @@ public final class VendPackingSlipJour_Table_Urbasolar_Extension
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>displayTotalAmount</Name>
+				<Source><![CDATA[
+    public display AmountMST displayTotalAmount()
+    {
+        AmountMST totalAmount = 0;
+        VendPackingSlipTrans vendPackingSlipTrans;
+
+        select sum(ValueMST) from vendPackingSlipTrans
+            group by vendPackingSlipTrans.PackingSlipId
+            where vendPackingSlipTrans.PackingSlipId == this.PackingSlipId;
+
+        if(vendPackingSlipTrans)
+        {
+            totalAmount = vendPackingSlipTrans.ValueMST;
+        }
+
+        return totalAmount;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>displayIsCanceled</Name>
+				<Source><![CDATA[
+    public display NoYes displayIsCanceled()
+    {
+        NoYes isCanceled = NoYes::No;
+        VendPackingSlipTrans vendPackingSlipTrans;
+
+        select sum(Qty) from vendPackingSlipTrans
+            group by vendPackingSlipTrans.PackingSlipId
+            where vendPackingSlipTrans.PackingSlipId == this.PackingSlipId;
+
+        if(vendPackingSlipTrans && vendPackingSlipTrans.Qty == 0)
+        {
+            isCanceled = NoYes::Yes;
+        }
+
+        return isCanceled;
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 </AxClass>
