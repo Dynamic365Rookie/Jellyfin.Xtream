@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchParameters_Table_Urbasolar_Extension</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+[ExtensionOf(tableStr(PurchParameters))]
+final class PurchParameters_Table_Urbasolar_Extension
+{
+}
+
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>findByMainCompany</Name>
+				<Source><![CDATA[
+    public static PurchParameters findByMainCompany()
+    {
+        PurchParameters parameter;
+        DataAreaId      dataAreaId = UBSMainCompanyTable::find();
+
+        select firstonly crosscompany parameter
+            where parameter.DataAreaId == dataAreaId;
+            
+        return parameter;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

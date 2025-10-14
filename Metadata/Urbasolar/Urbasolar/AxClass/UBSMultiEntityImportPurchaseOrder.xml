@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>UBSMultiEntityImportPurchaseOrder</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class UBSMultiEntityImportPurchaseOrder extends RunBaseBatch
+{
+    private Dialog                  dialog;
+    private FileUploadBuild         dialogFileUpload;
+    private DMFDefinitionGroupName  definitionGroupName;
+    private Filename                uploadFileName;
+    private str                     uploadFileURL;
+    private SharedServiceUnitFileID uploadFileID;
+
+    private static const str FileUploadControlLabel = "@ApplicationFoundation:DocuFileSaveBrowseLocation";
+    private static const str OkButtonName           = 'OkButton';
+
+    #define.CurrentVersion(1)
+    #localmacro.CurrentList
+        uploadFileName,
+        uploadFileURL,
+        uploadFileID
+    #endmacro
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>caption</Name>
+				<Source><![CDATA[
+    public ClassDescription caption()
+    {
+        return "@UBS:UBSMultiEntityImportPurchaseOrder";
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>pack</Name>
+				<Source><![CDATA[
+    public container pack()
+    {
+        return [#CurrentVersion, #CurrentList];
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>unpack</Name>
+				<Source><![CDATA[
+    public boolean unpack(container _packedClass)
+    {
+        Version version = RunBase::getVersion(_packedClass);
+
+        switch (version)
+        {
+            case #CurrentVersion:
+                [version, #CurrentList] = _packedClass;
+                break;
+            default:
+                return false;
+        }
+
+        return true;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dialog</Name>
+				<Source><![CDATA[
+    public Object dialog()
+    {
+        #File
+        dialog = super();
+
+        DialogGroup         dialogGroup      = dialog.addGroup("@SYS54759");
+        FormBuildControl    formBuildControl = dialog.formBuildDesign().control(dialogGroup.name());
+         
+        dialogFileUpload = formBuildControl.addControlEx(classstr(FileUpload), FileUploadControlLabel);
+        dialogFileUpload.fileNameLabel("@UBS:UBSMultiEntityImportPurchaseOrder");
+        dialogFileUpload.fileTypesAccepted(#xls+','+#xlsx);
+
+        return dialog;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFromDialog</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Gets data from dialog.
+    /// </summary>
+    /// <returns>
+    /// Returns true if the operation succeed.
+    /// </returns>
+    public boolean getFromDialog()
+    {
+        boolean ret;
+
+        ret = super();
+
+        FileUpload                       fileUploadControl = this.getFormControl(dialog, FileUploadControlLabel);
+        FileUploadTemporaryStorageResult fileUploadResult  = fileUploadControl.getFileUploadResult();
+
+        if (fileUploadResult != null && fileUploadResult.getUploadStatus())
+        {
+            uploadFileURL   = fileUploadResult.getDownloadUrl();
+            uploadFileName  = fileUploadResult.getFileName();
+            uploadFileID    = fileUploadResult.getFileId();
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>new</Name>
+				<Source><![CDATA[
+    public void new()
+    {
+        super();
+
+        definitionGroupName = PurchParameters::findByMainCompany().UBSDMFDefinitionGroupName;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>run</Name>
+				<Source><![CDATA[
+    public void run()
+    {
+        this.import();
+        this.deleteFile(uploadFileID);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>import</Name>
+				<Source><![CDATA[
+    public void import()
+    {
+        DMFDefinitionGroupEntity definitionGroupEntity;
+        DMFDefinitionGroup       definitionGroup;
+        DMFEntity                entity;
+        DMFExecutionId           executionId;
+
+        // Determine if source to target should happen on initial import based on if we are in batch or not.
+        boolean executeTargetDuringInitialImport = !this.parmInBatch();
+
+        executionId = DMFUtil::setupNewExecution(definitionGroupName);
+
+        while select definitionGroupEntity
+            order by definitionGroupEntity.Sequence asc
+                where definitionGroupEntity.DefinitionGroup == definitionGroupName
+        {
+            this.applyTransforms(definitionGroupEntity.Entity,definitionGroupName,executionId,uploadFileID, executeTargetDuringInitialImport);
+        }
+
+        DMFQuickImportExport::doPGImport(definitionGroupName, executionId, true, executeTargetDuringInitialImport);
+
+        //Force the pending to stagging in case of Batch
+        if (!executeTargetDuringInitialImport)
+        {
+            DMFDefinitionGroupExecution executionSourceToTarget;
+
+            update_recordset executionSourceToTarget
+                setting IsSelected = NoYes::Yes
+                    where executionSourceToTarget.ExecutionId == executionId;
+
+            DMFWriteExecutionParameters executionParameters = DMFWriteExecutionParameters::construct();
+            executionParameters.parmDefinitionGroup(definitionGroupName);
+            executionParameters.parmsourceTarget(DMFSourceTarget::Source);
+            executionParameters.parmSelectedData(NoYes::No);
+            executionParameters.parmErrorStatus(NoYes::No);
+            executionParameters.parmSkipFormNavigation(NoYes::Yes);
+
+            DMFExecution dmfExecution = DMFExecution::find(executionId, true);
+            Args args = new Args();
+            args.record(dmfExecution);
+            args.parmObject(executionParameters);
+            args.parmEnum(NoYes::No);
+
+            new MenuFunction(menuItemActionStr(DMFEntityWriterBatch), MenuItemType::Action).run(args);
+        }
+
+        this.submitToWorkflow(executionId);
+        
+        if(executeTargetDuringInitialImport)
+        {
+            this.showExecutionhistory(executionId);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>showExecutionhistory</Name>
+				<Source><![CDATA[
+    protected void showExecutionhistory(DMFExecutionId _executionId)
+    {
+        Args args = new Args();
+        args.record(DMFExecution::find(_executionId));
+        args.caller(this);
+        
+        MenuFunction menuFunction = new MenuFunction(menuitemDisplayStr(DMFExecutionHistoryList),MenuItemType::Display);
+
+        if (menuFunction && menuFunction.checkAccessRights())
+        {
+            menuFunction.run(args);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>applyTransforms</Name>
+				<Source><![CDATA[
+    private DMFLocalFilePath applyTransforms(DMFEntityName _entityName,DMFDefinitionGroupName _definitionGroupName,
+                                             DMFExecutionId _executionId,SharedServiceUnitFileID _uploadedStatement, boolean _inBatch)
+    {
+        DMFDefinitionGroupExecution execution = DMFDefinitionGroupExecution::find(_definitionGroupName, _entityName, _executionId, true);
+
+        execution.IsTransformed   = NoYes::No;
+        DMFLocalFilePath filePath = execution.applyTransforms(_uploadedStatement);
+
+        execution.FilePath      = filePath;
+        execution.IsTransformed = NoYes::Yes;
+        execution.Company       = CompanyInfo::find().DataArea;
+        execution.ExcelLookUp   = DMFDefinitionGroupEntity::insertExcelLookUpValue(execution.DefinitionGroup,
+                                                                                   execution.Entity,
+                                                                                   execution.FilePath,
+                                                                                   execution.Source);
+        execution.ExecuteTargetStep = _inBatch;
+        execution.update();
+
+        return filePath;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>deleteFile</Name>
+				<Source><![CDATA[
+    private void deleteFile(SharedServiceUnitFileID _fileId)
+    {
+        FileUploadTemporaryStorageResult result = new FileUploadTemporaryStorageResult('', '', true, '', '', _fileId);
+        result.deleteResult();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>submitToWorkflow</Name>
+				<Source><![CDATA[
+    public void submitToWorkflow(DMFExecutionId _executionId)
+    {
+        UBSPurchPurchaseOrderHeaderV2Staging  headerStaging;
+        UBSPurchPurchaseOrderLineV2Staging    lineStaging;
+        PurchTable                            purchTable;
+        
+        if(PurchParameters::findByMainCompany().UBSAutoPOSubmission)
+        {
+            while select headerStaging
+                group by headerStaging.PurchaseOrderNumber,
+                         headerStaging.DataAreaIdImport
+                    where headerStaging.ExecutionId     == _executionId
+                       && headerStaging.DefinitionGroup == definitionGroupName
+                       && headerStaging.TransferStatus  == DMFTransferStatus::Completed
+            {
+                changecompany(headerStaging.DataAreaIdImport)
+                {
+                    select firstonly lineStaging
+                        where lineStaging.ExecutionId         == _executionId
+                           && lineStaging.DefinitionGroup     == definitionGroupName
+                           && lineStaging.PurchaseOrderNumber == headerStaging.PurchaseOrderNumber
+                           && lineStaging.TransferStatus      != DMFTransferStatus::Completed;
+
+                    if(!lineStaging.RecId)
+                    {
+                        purchTable = PurchTable::find(headerStaging.PurchaseOrderNumber, true);
+
+                        if(purchTable && purchTable.canSubmitToWorkflow() && Workflow::findWorkflowConfigurationToActivate(purchTable, workflowTypeStr(PurchTableTemplate)))
+                        {
+                            ttsbegin;
+              
+                            Workflow::activateFromWorkflowType(workFlowTypeStr(PurchTableTemplate),
+                                                               purchtable.RecId,
+                                                               '@UBS:UBSAutomacticSubmission',
+                                                               false,curUserId());
+
+                            VersioningPurchaseOrder::newPurchaseOrder(purchTable).submitChangeRequest();
+
+                            ttscommit;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>getFormControl</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Get form control instance of dialog control.
+    /// </summary>
+    /// <param name = "_dialog">current dialog.</param>
+    /// <param name = "_controlName">name of the control.</param>
+    /// <returns>form control instance of the given dialog control.</returns>
+    protected FormControl getFormControl(DialogRunbase _dialog, str _controlName)
+    {
+        return _dialog.formRun().control(_dialog.formRun().controlId( _controlName));
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>uploadCompleted</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// After the file has been uploaded, the Ok button is enabled.
+    /// </summary>
+    protected void uploadCompleted()
+    {
+        FileUpload fileUpload = this.getFormControl(dialog, FileUploadControlLabel);
+        fileUpload.notifyUploadCompleted -= eventhandler(this.UploadCompleted);
+        
+        this.setDialogOkButtonEnabled(dialog, true);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>setDialogOkButtonEnabled</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Enables or disables the dialog Ok button.
+    /// </summary>
+    /// <param name = "_dialog">The <c>Runbase</c> dialog object.</param>
+    /// <param name = "_isEnabled">Indicates to enable or disable the Ok button.</param>
+    protected void setDialogOkButtonEnabled(DialogRunbase _dialog, boolean _isEnabled)
+    {
+        FormControl okButtonControl = this.getFormControl(_dialog, OkButtonName);
+
+        if (okButtonControl)
+        {
+            okButtonControl.enabled(_isEnabled);
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>dialogPostRun</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Disables the dialog Ok button until the file upload is complete.
+    /// </summary>
+    /// <param name="_dialog">The <c>Runbase</c> dialog object.</param>
+    public void dialogPostRun(DialogRunbase _dialog)
+    {
+        FileUpload fileUpload               = this.getFormControl(_dialog, FileUploadControlLabel);
+        fileUpload.notifyUploadCompleted    += eventhandler(this.uploadCompleted);
+        this.setDialogOkButtonEnabled(_dialog, false);
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>validate</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Validates Purchase order import.
+    /// </summary>
+    /// <param name="calledFrom">
+    /// The called from object.
+    /// </param>
+    /// <returns>
+    /// Returns true if the validation succeed.
+    /// </returns>
+    public boolean validate(Object calledFrom = null)
+    {
+        boolean     ret;
+
+        ret = super(calledFrom);
+
+        if (!definitionGroupName)
+        {
+            ret = checkFailed(strFmt("@UBS:UBSFieldMustBeFilledInParameters", "@UBS:UBSDMFDefinitionGroupName", "@SYS336254"));
+        }
+
+        return ret;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>construct</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// The constructor of the intercompany item creation
+    /// </summary>
+    /// <returns>
+    /// The instance of the <c>= new APSTPIntercoProductImport</c> class.
+    /// </returns>
+    public static UBSMultiEntityImportPurchaseOrder construct()
+    {
+        return new UBSMultiEntityImportPurchaseOrder();
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>main</Name>
+				<Source><![CDATA[
+    public static void main(Args args)
+    {
+        UBSMultiEntityImportPurchaseOrder import = UBSMultiEntityImportPurchaseOrder::construct();
+
+        if (import.prompt())
+        {
+            import.runOperation();
+        }
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>canRunInNewSession</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Describes whether the class is designed for execution in a new session.
+    /// </summary>
+    /// <returns>
+    /// true if the class is designed for executing the operation in a new session; otherwise, false.
+    /// </returns>
+    protected boolean canRunInNewSession()
+    {
+        return false;
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>

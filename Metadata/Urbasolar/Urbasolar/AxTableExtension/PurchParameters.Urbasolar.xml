@@ -35,6 +35,19 @@
 			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
 			<Label>@UBS:UBSApproveReason</Label>
 		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldEnum">
+			<Name>UBSAutoPOSubmission</Name>
+			<Label>@UBS:UBSAutoPOSubmission</Label>
+			<EnumType>NoYes</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSDMFDefinitionGroupName</Name>
+			<ExtendedDataType>DMFDefinitionGroupName</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@UBS:UBSDMFDefinitionGroupName</Label>
+		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
 	<Indexes />
@@ -85,6 +98,20 @@
 					<Name>UBSApproveReason</Name>
 					<Field>UBSApproveReason</Field>
 					<RelatedField>Reason</RelatedField>
+				</AxTableRelationConstraint>
+			</Constraints>
+		</AxTableRelation>
+		<AxTableRelation>
+			<Name>DMFDefinitionGroup</Name>
+			<Cardinality>ZeroOne</Cardinality>
+			<RelatedTable>DMFDefinitionGroup</RelatedTable>
+			<RelatedTableCardinality>ExactlyOne</RelatedTableCardinality>
+			<Constraints>
+				<AxTableRelationConstraint xmlns=""
+					i:type="AxTableRelationConstraintField">
+					<Name>UBSDMFDefinitionGroupName</Name>
+					<Field>UBSDMFDefinitionGroupName</Field>
+					<RelatedField>DefinitionGroupName</RelatedField>
 				</AxTableRelationConstraint>
 			</Constraints>
 		</AxTableRelation>

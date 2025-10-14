@@ -14,6 +14,22 @@
 				<MenuItemType>Action</MenuItemType>
 			</MenuElement>
 		</AxMenuExtensionElement>
+		<AxMenuExtensionElement xmlns="">
+			<Parent>PurchaseOrders</Parent>
+			<MenuElement xmlns=""
+				i:type="AxMenuElementSubMenu">
+				<Name>Urbasolar</Name>
+				<Label>@UBS:UBSUrbasolar</Label>
+				<Elements>
+					<AxMenuElement xmlns=""
+						i:type="AxMenuElementMenuItem">
+						<Name>UBSMultiEntityImportPurchaseOrder</Name>
+						<MenuItemName>UBSMultiEntityImportPurchaseOrder</MenuItemName>
+						<MenuItemType>Action</MenuItemType>
+					</AxMenuElement>
+				</Elements>
+			</MenuElement>
+		</AxMenuExtensionElement>
 	</Elements>
 	<MenuElementModifications />
 	<PropertyModifications />

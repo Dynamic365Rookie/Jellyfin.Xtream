@@ -85,6 +85,24 @@
 										<DataField>UBSPurchaseOrderAutoSubmissonWF</DataField>
 										<DataSource>PurchParameters</DataSource>
 									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormStringControl">
+										<Name>PurchParameters_UBSDMFDefinitionGroupName</Name>
+										<Type>String</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSDMFDefinitionGroupName</DataField>
+										<DataSource>PurchParameters</DataSource>
+									</AxFormControl>
+									<AxFormControl xmlns=""
+										i:type="AxFormCheckBoxControl">
+										<Name>PurchParameters_UBSAutoPOSubmission</Name>
+										<Type>CheckBox</Type>
+										<FormControlExtension
+											i:nil="true" />
+										<DataField>UBSAutoPOSubmission</DataField>
+										<DataSource>PurchParameters</DataSource>
+									</AxFormControl>
 								</Controls>
 								<ColumnsMode>Fill</ColumnsMode>
 								<Caption>@Scm:PurchParametersUpdateTabPageTitle</Caption>

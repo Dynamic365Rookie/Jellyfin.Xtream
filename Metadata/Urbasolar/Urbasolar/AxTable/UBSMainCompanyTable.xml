@@ -15,7 +15,8 @@ public class UBSMainCompanyTable extends common
     {
         UBSMainCompanyTable mainCompanyTable;
 
-        select firstfast mainCompanyTable;
+        select firstfast DataArea 
+            from mainCompanyTable;
 
         return mainCompanyTable.DataArea;
     }

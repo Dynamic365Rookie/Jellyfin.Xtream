@@ -36,6 +36,12 @@
 			<Name>UBSHoldbackPercentage</Name>
 			<Label>@UBS:UBSHoldbackPercentage</Label>
 		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSTempPurchID</Name>
+			<ExtendedDataType>UBSTempPurchID</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
 	<Indexes />
