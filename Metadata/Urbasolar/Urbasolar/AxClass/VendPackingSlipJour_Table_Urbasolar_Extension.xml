@@ -113,14 +113,7 @@ public final class VendPackingSlipJour_Table_Urbasolar_Extension
     {
         VendPackingSlipJour VendPackingSlipJour;
         Amount monthTaxAmount = 0;
-        date monthStartDate = dateStartMth(this.DeliveryDate);
-        date monthEndDate = endMth(this.DeliveryDate);
-
-        while select VendPackingSlipJour where VendPackingSlipJour.DeliveryDate >= monthStartDate && VendPackingSlipJour.DeliveryDate <= monthEndDate
-            && VendPackingSlipJour.PurchId == this.PurchId
-        {
-            monthTaxAmount += VendPackingSlipJour.UBSgetTaxAmountFromAccountingDistribution();
-        }
+        monthTaxAmount += this.UBSgetTaxAmountFromAccountingDistribution();
         return monthTaxAmount;
     }
 
@@ -133,14 +126,7 @@ public final class VendPackingSlipJour_Table_Urbasolar_Extension
     {
         VendPackingSlipJour VendPackingSlipJour;
         Amount monthTotalAmount = 0;
-        date monthStartDate = dateStartMth(this.DeliveryDate);
-        date monthEndDate = endMth(this.DeliveryDate);
-
-        while select VendPackingSlipJour where VendPackingSlipJour.DeliveryDate >= monthStartDate && VendPackingSlipJour.DeliveryDate <= monthEndDate
-            && VendPackingSlipJour.PurchId == this.PurchId
-        {
-            monthTotalAmount += VendPackingSlipJour.UBSgetTotalAmountFromAccountingDistribution();
-        }
+        monthTotalAmount += this.UBSgetTotalAmountFromAccountingDistribution();
         return monthTotalAmount;
     }
 
@@ -153,14 +139,7 @@ public final class VendPackingSlipJour_Table_Urbasolar_Extension
     {
         VendPackingSlipJour VendPackingSlipJour;
         Amount monthTotalAmount = 0;
-        date monthStartDate = dateStartMth(this.DeliveryDate);
-        date monthEndDate = endMth(this.DeliveryDate);
-
-        while select VendPackingSlipJour where VendPackingSlipJour.DeliveryDate >= monthStartDate && VendPackingSlipJour.DeliveryDate <= monthEndDate
-            && VendPackingSlipJour.PurchId == this.PurchId
-        {
-            monthTotalAmount += VendPackingSlipJour.UBSgetTotalAmountFromAccountingDistribution_PurchReq();
-        }
+        monthTotalAmount += this.UBSgetTotalAmountFromAccountingDistribution_PurchReq();
         return monthTotalAmount;
     }
 
