@@ -51,7 +51,7 @@ public class UBSInterfaceAccrualsInvoiceEntry extends common
 			i:type="AxViewFieldBound">
 			<Name>AccountingCurrencyAmount</Name>
 			<DataField>AccountingCurrencyAmount</DataField>
-			<DataSource>InvoiceSLJAE</DataSource>
+			<DataSource>SubledgerJournalAccEntryLineRelieving</DataSource>
 		</AxViewField>
 		<AxViewField xmlns=""
 			i:type="AxViewFieldBound">
@@ -123,7 +123,7 @@ public class UBSInterfaceAccrualsInvoiceEntry extends common
 			i:type="AxViewFieldBound">
 			<Name>TransactionCurrencyAmount</Name>
 			<DataField>TransactionCurrencyAmount</DataField>
-			<DataSource>GeneralJournalAccountEntry</DataSource>
+			<DataSource>SubledgerJournalAccEntryLineRelieving</DataSource>
 		</AxViewField>
 		<AxViewField xmlns=""
 			i:type="AxViewFieldBound">
