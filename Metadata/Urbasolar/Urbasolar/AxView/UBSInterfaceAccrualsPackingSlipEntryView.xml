@@ -29,8 +29,14 @@ public class UBSInterfaceAccrualsPackingSlipEntryView extends common
                     '>',
                 SysComputedColumn::returnLiteral(0)
                 ),
-                SysComputedColumn::returnField(viewstr(UBSInterfaceAccrualsPackingSlipEntryView),tableStr(AccountingDistribution),fieldStr(AccountingDistribution,TransactionCurrencyAmount)),
-                SysComputedColumn::multiply('-1', SysComputedColumn::returnField(viewstr(UBSInterfaceAccrualsPackingSlipEntryView),tableStr(AccountingDistribution),fieldStr(AccountingDistribution,TransactionCurrencyAmount)))
+            SysComputedColumn::abs(
+                    SysComputedColumn::returnField(viewstr(UBSInterfaceAccrualsPackingSlipEntryView),tableStr(AccountingDistribution),fieldStr(AccountingDistribution,TransactionCurrencyAmount))
+            ),
+                SysComputedColumn::multiply('-1',
+                    SysComputedColumn::abs(
+                        SysComputedColumn::returnField(viewstr(UBSInterfaceAccrualsPackingSlipEntryView),tableStr(AccountingDistribution),fieldStr(AccountingDistribution,TransactionCurrencyAmount))
+                    )
+                )
             );
 
         return ret;
