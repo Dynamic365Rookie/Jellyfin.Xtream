@@ -62,6 +62,61 @@
 			</FormControl>
 			<Parent>Purch</Parent>
 		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControltcmgo1iu1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormStringControl">
+				<Name>itemName</Name>
+				<Type>String</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataMethod>itemName</DataMethod>
+				<DataSource>PurchLine</DataSource>
+			</FormControl>
+			<Parent>PurchLine</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>FormExtensionControl1arcxnrq1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormRealControl">
+				<Name>receivedQty</Name>
+				<Type>Real</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataMethod>PurchLine_Table_Urbasolar_Extension.UBSReceivedQty</DataMethod>
+				<DataSource>PurchLine</DataSource>
+				<Label>@UBS:UBSReceivedQty</Label>
+			</FormControl>
+			<Parent>PurchLine</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>Copy1xqja45f1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormRealControl">
+				<Name>receivedAmount</Name>
+				<Type>Real</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataMethod>PurchLine_Table_Urbasolar_Extension.UBSReceivedAmount</DataMethod>
+				<DataSource>PurchLine</DataSource>
+				<Label>@UBS:UBSReceivedAmount</Label>
+			</FormControl>
+			<Parent>PurchLine</Parent>
+		</AxFormExtensionControl>
+		<AxFormExtensionControl xmlns="">
+			<Name>Copyprzrryud1</Name>
+			<FormControl xmlns=""
+				i:type="AxFormStringControl">
+				<Name>projectName</Name>
+				<Type>String</Type>
+				<FormControlExtension
+					i:nil="true" />
+				<DataMethod>PurchLine_Table_Urbasolar_Extension.UBSProjectName</DataMethod>
+				<DataSource>PurchLine</DataSource>
+				<Label>@UBS:UBSProjectName</Label>
+			</FormControl>
+			<Parent>PurchLine</Parent>
+		</AxFormExtensionControl>
 	</Controls>
 	<DataSourceModifications />
 	<DataSourceReferences />

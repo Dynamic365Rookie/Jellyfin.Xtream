@@ -124,6 +124,7 @@ UBSPurchaseOrder_UPNet=P.U. Net
 UBSPurchReqTotalAmount=UBS - Montant total des lignes de DA liées
 UBSRank=Rang
 UBSReceiptStatus=Etat de la réception
+UBSReceivedAmount=Montant reçu
 UBSReceivedQty=Quantité reçue
 UBSReceptionDate=Date de réception
 UBSRECPEP=UBS - RECPEP

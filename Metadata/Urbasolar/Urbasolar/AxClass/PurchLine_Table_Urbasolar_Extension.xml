@@ -149,6 +149,65 @@ final class PurchLine_Table_Urbasolar_Extension
 
 ]]></Source>
 			</Method>
+			<Method>
+				<Name>UBSReceivedQty</Name>
+				<Source><![CDATA[
+    display Qty UBSReceivedQty()
+    {
+        Qty receivedQty = 0;
+        VendPackingSlipTrans vendPackingSlipTrans;
+
+        receivedQty = (select sum(Qty) from vendPackingSlipTrans
+            where vendPackingSlipTrans.OrigPurchId == this.PurchId && vendPackingSlipTrans.PurchaseLineLineNumber == this.LineNumber).Qty;
+
+        return receivedQty;
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSReceivedAmount</Name>
+				<Source><![CDATA[
+    display Amount UBSReceivedAmount()
+    {
+        Amount receivedAmount = 0;
+        VendPackingSlipTrans vendPackingSlipTrans;
+
+        receivedAmount = (select sum(ValueMST) from vendPackingSlipTrans 
+            where vendPackingSlipTrans.OrigPurchId == this.PurchId && vendPackingSlipTrans.PurchaseLineLineNumber == this.LineNumber).ValueMST;
+
+        return receivedAmount;
+
+
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>UBSProjectName</Name>
+				<Source><![CDATA[
+    display str UBSProjectName()
+    {
+
+        #define.Project("Project");
+        DimensionValue dimValue = "";
+        str dimName = "";
+        DimensionAttributeValueSetStorage dimStorage;
+        DimensionAttribute dimAttribute;
+        DimensionAttributeValue dimAttributeValue;
+        dimAttribute = DimensionAttribute::findByName(#Project);
+
+        dimStorage = DimensionAttributeValueSetStorage::find(this.DefaultDimension);
+        dimValue = dimStorage.getDisplayValueByDimensionAttribute(dimAttribute.RecId);
+        dimAttributeValue = DimensionAttributeValue::findByDimensionAttributeAndValue(dimAttribute, dimValue);
+        dimName = dimAttributeValue.getName();
+
+        return dimName;
+    }
+
+]]></Source>
+			</Method>
 		</Methods>
 	</SourceCode>
 </AxClass>

@@ -131,6 +131,7 @@ UBSPurchaseOrder_UPNet=U.P. Net
 UBSPurchReqTotalAmount=UBS - Purchase requisition lines total amount
 UBSRank=Rank
 UBSReceiptStatus=Receipt status
+UBSReceivedAmount=Received amount
 UBSReceivedQty=Received quantity
 UBSReceptionDate=Reception date
 UBSRECPEP=UBS - RECPEP
