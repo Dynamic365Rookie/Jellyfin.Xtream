@@ -24,12 +24,6 @@
 					</AxMenuElement>
 					<AxMenuElement xmlns=""
 						i:type="AxMenuElementMenuItem">
-						<Name>UBSProcessedVendorInvoices</Name>
-						<MenuItemName>UBSProcessedVendorInvoices</MenuItemName>
-						<MenuItemType>Action</MenuItemType>
-					</AxMenuElement>
-					<AxMenuElement xmlns=""
-						i:type="AxMenuElementMenuItem">
 						<Name>UBSPurchPackingSlipPost</Name>
 						<MenuItemName>UBSPurchPackingSlipPost</MenuItemName>
 						<MenuItemType>Action</MenuItemType>
@@ -46,7 +40,7 @@
 				<Elements>
 					<AxMenuElement xmlns=""
 						i:type="AxMenuElementMenuItem">
-						<Name>UBSProcessedVendorInvioices</Name>
+						<Name>UBSProcessedVendorInvoice</Name>
 						<MenuItemName>UBSProcessedVendorInvioices</MenuItemName>
 					</AxMenuElement>
 					<AxMenuElement xmlns=""
