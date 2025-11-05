@@ -37,16 +37,43 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="Base Enums\" />
+    <Folder Include="Classes\" />
     <Folder Include="Data Entities\" />
+    <Folder Include="Display Menu Items\" />
+    <Folder Include="Form Extensions\" />
+    <Folder Include="Forms\" />
     <Folder Include="Label Files\" />
+    <Folder Include="Menu Extensions\" />
     <Folder Include="Security Privileges\" />
+    <Folder Include="Table Extensions\" />
     <Folder Include="Tables\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AxDataEntityView\UBSProcessedVendorInvioicesEntity">
+    <Content Include="AxClass\UBSProcessedVendorInvoicesBatchService">
       <SubType>Content</SubType>
-      <Name>UBSProcessedVendorInvioicesEntity</Name>
-      <Link>Data Entities\UBSProcessedVendorInvioicesEntity</Link>
+      <Name>UBSProcessedVendorInvoicesBatchService</Name>
+      <Link>Classes\UBSProcessedVendorInvoicesBatchService</Link>
+    </Content>
+    <Content Include="AxDataEntityView\UBSProcessedVendorInvoiceEntity">
+      <SubType>Content</SubType>
+      <Name>UBSProcessedVendorInvoiceEntity</Name>
+      <Link>Data Entities\UBSProcessedVendorInvoiceEntity</Link>
+    </Content>
+    <Content Include="AxEnum\UBSProcessingStatus">
+      <SubType>Content</SubType>
+      <Name>UBSProcessingStatus</Name>
+      <Link>Base Enums\UBSProcessingStatus</Link>
+    </Content>
+    <Content Include="AxFormExtension\VendParameters.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>VendParameters.Urbasolar</Name>
+      <Link>Form Extensions\VendParameters.Urbasolar</Link>
+    </Content>
+    <Content Include="AxForm\UBSProcessedVendorInvoice">
+      <SubType>Content</SubType>
+      <Name>UBSProcessedVendorInvoice</Name>
+      <Link>Forms\UBSProcessedVendorInvoice</Link>
     </Content>
     <Content Include="AxLabelFile\UBS_en-US">
       <SubType>Content</SubType>
@@ -58,25 +85,40 @@
       <Name>UBS_fr</Name>
       <Link>Label Files\UBS_fr</Link>
     </Content>
-    <Content Include="AxSecurityPrivilege\UBSProcessedVendorInvioicesEntityMaintain">
+    <Content Include="AxMenuExtension\AccountsPayable.Urbasolar">
       <SubType>Content</SubType>
-      <Name>UBSProcessedVendorInvioicesEntityMaintain</Name>
-      <Link>Security Privileges\UBSProcessedVendorInvioicesEntityMaintain</Link>
+      <Name>AccountsPayable.Urbasolar</Name>
+      <Link>Menu Extensions\AccountsPayable.Urbasolar</Link>
     </Content>
-    <Content Include="AxSecurityPrivilege\UBSProcessedVendorInvioicesEntityView">
-      <SubType>Content</SubType>
-      <Name>UBSProcessedVendorInvioicesEntityView</Name>
-      <Link>Security Privileges\UBSProcessedVendorInvioicesEntityView</Link>
-    </Content>
-    <Content Include="AxTable\UBSProcessedVendorInvioices">
+    <Content Include="AxMenuItemDisplay\UBSProcessedVendorInvioices">
       <SubType>Content</SubType>
       <Name>UBSProcessedVendorInvioices</Name>
-      <Link>Tables\UBSProcessedVendorInvioices</Link>
+      <Link>Display Menu Items\UBSProcessedVendorInvioices</Link>
     </Content>
-    <Content Include="AxTable\UBSProcessedVendorInvioicesStaging">
+    <Content Include="AxSecurityPrivilege\UBSProcessedVendorInvoiceEntityMaintain">
       <SubType>Content</SubType>
-      <Name>UBSProcessedVendorInvioicesStaging</Name>
-      <Link>Tables\UBSProcessedVendorInvioicesStaging</Link>
+      <Name>UBSProcessedVendorInvoiceEntityMaintain</Name>
+      <Link>Security Privileges\UBSProcessedVendorInvoiceEntityMaintain</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\UBSProcessedVendorInvoiceEntityView">
+      <SubType>Content</SubType>
+      <Name>UBSProcessedVendorInvoiceEntityView</Name>
+      <Link>Security Privileges\UBSProcessedVendorInvoiceEntityView</Link>
+    </Content>
+    <Content Include="AxTableExtension\VendParameters.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>VendParameters.Urbasolar</Name>
+      <Link>Table Extensions\VendParameters.Urbasolar</Link>
+    </Content>
+    <Content Include="AxTable\UBSProcessedVendorInvoice">
+      <SubType>Content</SubType>
+      <Name>UBSProcessedVendorInvoice</Name>
+      <Link>Tables\UBSProcessedVendorInvoice</Link>
+    </Content>
+    <Content Include="AxTable\UBSProcessedVendorInvoiceStaging">
+      <SubType>Content</SubType>
+      <Name>UBSProcessedVendorInvoiceStaging</Name>
+      <Link>Tables\UBSProcessedVendorInvoiceStaging</Link>
     </Content>
     <Content Include="UBS.en-US.label.txt">
       <SubType>Content</SubType>
