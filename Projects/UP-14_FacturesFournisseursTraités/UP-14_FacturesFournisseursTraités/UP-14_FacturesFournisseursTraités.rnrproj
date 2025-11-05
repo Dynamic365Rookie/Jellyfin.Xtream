@@ -13,7 +13,7 @@
     <LogAppcheckerDiagsAsErrors>False</LogAppcheckerDiagsAsErrors>
     <DeployOnline>False</DeployOnline>
     <ProjectGuid>{9b4d72ff-a039-4fbd-8c1d-287249229dbb}</ProjectGuid>
-    <Name>UP-16_FacturesFournisseursTraités</Name>
+    <Name>UP-14_FacturesFournisseursTraités</Name>
     <RootNamespace>UP-16_FacturesFournisseursTraités</RootNamespace>
     <StartupType>Class</StartupType>
     <SccProjectName>SAK</SccProjectName>
@@ -37,6 +37,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="Action Menu Items\" />
     <Folder Include="Base Enums\" />
     <Folder Include="Classes\" />
     <Folder Include="Data Entities\" />
@@ -50,15 +51,20 @@
     <Folder Include="Tables\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AxClass\UBSProcessedVendorInvoicesBatchController">
+      <SubType>Content</SubType>
+      <Name>UBSProcessedVendorInvoicesBatchController</Name>
+      <Link>Classes\UBSProcessedVendorInvoicesBatchController</Link>
+    </Content>
     <Content Include="AxClass\UBSProcessedVendorInvoicesBatchService">
       <SubType>Content</SubType>
       <Name>UBSProcessedVendorInvoicesBatchService</Name>
       <Link>Classes\UBSProcessedVendorInvoicesBatchService</Link>
     </Content>
-    <Content Include="AxDataEntityView\UBSProcessedVendorInvoiceEntity">
+    <Content Include="AxClass\VendInvoiceJour_Table_Urbasolar_Extension">
       <SubType>Content</SubType>
-      <Name>UBSProcessedVendorInvoiceEntity</Name>
-      <Link>Data Entities\UBSProcessedVendorInvoiceEntity</Link>
+      <Name>VendInvoiceJour_Table_Urbasolar_Extension</Name>
+      <Link>Classes\VendInvoiceJour_Table_Urbasolar_Extension</Link>
     </Content>
     <Content Include="AxEnum\UBSProcessingStatus">
       <SubType>Content</SubType>
@@ -69,11 +75,6 @@
       <SubType>Content</SubType>
       <Name>VendParameters.Urbasolar</Name>
       <Link>Form Extensions\VendParameters.Urbasolar</Link>
-    </Content>
-    <Content Include="AxForm\UBSProcessedVendorInvoice">
-      <SubType>Content</SubType>
-      <Name>UBSProcessedVendorInvoice</Name>
-      <Link>Forms\UBSProcessedVendorInvoice</Link>
     </Content>
     <Content Include="AxLabelFile\UBS_en-US">
       <SubType>Content</SubType>
@@ -90,35 +91,20 @@
       <Name>AccountsPayable.Urbasolar</Name>
       <Link>Menu Extensions\AccountsPayable.Urbasolar</Link>
     </Content>
+    <Content Include="AxMenuItemAction\UBSProcessedVendorInvoices">
+      <SubType>Content</SubType>
+      <Name>UBSProcessedVendorInvoices</Name>
+      <Link>Action Menu Items\UBSProcessedVendorInvoices</Link>
+    </Content>
     <Content Include="AxMenuItemDisplay\UBSProcessedVendorInvioices">
       <SubType>Content</SubType>
       <Name>UBSProcessedVendorInvioices</Name>
       <Link>Display Menu Items\UBSProcessedVendorInvioices</Link>
     </Content>
-    <Content Include="AxSecurityPrivilege\UBSProcessedVendorInvoiceEntityMaintain">
-      <SubType>Content</SubType>
-      <Name>UBSProcessedVendorInvoiceEntityMaintain</Name>
-      <Link>Security Privileges\UBSProcessedVendorInvoiceEntityMaintain</Link>
-    </Content>
-    <Content Include="AxSecurityPrivilege\UBSProcessedVendorInvoiceEntityView">
-      <SubType>Content</SubType>
-      <Name>UBSProcessedVendorInvoiceEntityView</Name>
-      <Link>Security Privileges\UBSProcessedVendorInvoiceEntityView</Link>
-    </Content>
     <Content Include="AxTableExtension\VendParameters.Urbasolar">
       <SubType>Content</SubType>
       <Name>VendParameters.Urbasolar</Name>
       <Link>Table Extensions\VendParameters.Urbasolar</Link>
-    </Content>
-    <Content Include="AxTable\UBSProcessedVendorInvoice">
-      <SubType>Content</SubType>
-      <Name>UBSProcessedVendorInvoice</Name>
-      <Link>Tables\UBSProcessedVendorInvoice</Link>
-    </Content>
-    <Content Include="AxTable\UBSProcessedVendorInvoiceStaging">
-      <SubType>Content</SubType>
-      <Name>UBSProcessedVendorInvoiceStaging</Name>
-      <Link>Tables\UBSProcessedVendorInvoiceStaging</Link>
     </Content>
     <Content Include="UBS.en-US.label.txt">
       <SubType>Content</SubType>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>UBSProcessedVendorInvioices</Name>
+	<Name>UBSProcessedVendorInvoice</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
-public class UBSProcessedVendorInvioices extends common
+public class UBSProcessedVendorInvoice extends common
 {
 }
 
@@ -61,28 +61,44 @@ public class UBSProcessedVendorInvioices extends common
 		</AxTableField>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldReal">
-			<Name>InvoiceOpenCurrencyAmount</Name>
+			<Name>PaymentAmount</Name>
+			<Label>@SYS1943</Label>
 			<Scale>2</Scale>
 		</AxTableField>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldString">
 			<Name>PaymentReference</Name>
+			<Label>@SYS22514</Label>
 			<StringSize>35</StringSize>
 		</AxTableField>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldDate">
 			<Name>PaymentEffectiveDate</Name>
+			<Label>@SYS114292</Label>
 		</AxTableField>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldEnum">
-			<Name>IsSettled</Name>
-			<Label>@SYS103900</Label>
+			<Name>Settlement</Name>
+			<Label>@SYS10163</Label>
 			<EnumType>NoYes</EnumType>
 		</AxTableField>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldEnum">
 			<Name>UBSProcessingStatus</Name>
 			<EnumType>UBSProcessingStatus</EnumType>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldReal">
+			<Name>AmountTech</Name>
+			<ExtendedDataType>AmountCur</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
+			<Label>@CreditCollections:AmountDue</Label>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>ErrorMsg</Name>
+			<ExtendedDataType>ErrorMsg</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
@@ -106,7 +122,7 @@ public class UBSProcessedVendorInvioices extends common
 			<AllowDuplicates>Yes</AllowDuplicates>
 			<Fields>
 				<AxTableIndexField>
-					<DataField>IsSettled</DataField>
+					<DataField>Settlement</DataField>
 				</AxTableIndexField>
 			</Fields>
 		</AxTableIndex>

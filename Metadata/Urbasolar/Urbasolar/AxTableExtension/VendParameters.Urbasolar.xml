@@ -40,12 +40,6 @@
 			<ExtendedDataType>LedgerJournalNameId</ExtendedDataType>
 		</AxTableField>
 		<AxTableField xmlns=""
-			i:type="AxTableFieldString">
-			<Name>UBSAccountID</Name>
-			<AssetClassification>Customer Content</AssetClassification>
-			<ExtendedDataType>CompanyBankAccountId</ExtendedDataType>
-		</AxTableField>
-		<AxTableField xmlns=""
 			i:type="AxTableFieldEnum">
 			<Name>UBSLockDim</Name>
 			<Label>@UBS:UBSLockDim</Label>
@@ -126,17 +120,17 @@
 			</Constraints>
 		</AxTableRelation>
 		<AxTableRelation>
-			<Name>BankAccountTable</Name>
+			<Name>UBSPaymentOffsetLedgerDimension</Name>
 			<Cardinality>ZeroOne</Cardinality>
-			<RelatedTable>BankAccountTable</RelatedTable>
-			<RelatedTableCardinality>ExactlyOne</RelatedTableCardinality>
+			<RelatedTable>DimensionAttributeValueCombination</RelatedTable>
+			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
 			<RelationshipType>Association</RelationshipType>
 			<Constraints>
 				<AxTableRelationConstraint xmlns=""
 					i:type="AxTableRelationConstraintField">
-					<Name>UBSAccountID</Name>
-					<Field>UBSAccountID</Field>
-					<RelatedField>AccountID</RelatedField>
+					<Name>UBSPaymentOffsetLedgerDimension</Name>
+					<Field>UBSPaymentOffsetLedgerDimension</Field>
+					<RelatedField>RecId</RelatedField>
 				</AxTableRelationConstraint>
 			</Constraints>
 		</AxTableRelation>

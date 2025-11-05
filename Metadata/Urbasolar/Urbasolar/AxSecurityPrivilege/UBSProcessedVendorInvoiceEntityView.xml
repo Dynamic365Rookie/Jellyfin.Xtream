@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxSecurityPrivilege xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>UBSProcessedVendorInvioicesEntityMaintain</Name>
+	<Name>UBSProcessedVendorInvoiceEntityView</Name>
 	<DataEntityPermissions>
 		<AxSecurityDataEntityPermission>
 			<Grant>
-				<Correct>Allow</Correct>
-				<Create>Allow</Create>
-				<Delete>Allow</Delete>
 				<Read>Allow</Read>
-				<Update>Allow</Update>
 			</Grant>
-			<Name>UBSProcessedVendorInvioicesEntity</Name>
+			<Name>UBSProcessedVendorInvoiceEntity</Name>
 			<Fields />
 			<Methods />
 		</AxSecurityDataEntityPermission>
