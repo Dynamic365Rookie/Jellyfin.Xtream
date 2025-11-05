@@ -21,42 +21,34 @@ internal final class UBSProcessedVendorInvoicesBatchService extends SysOperation
 				<Source><![CDATA[
     public void Process()
     {
-        UBSProcessedVendorInvoice _processedVendorInvoices;
+        UBSProcessedVendorInvioices _processedVendorInvoices;
         VendInvoiceJour             invoiceJourDataArea;
        
         while select forupdate _processedVendorInvoices
-            where _processedVendorInvoices.UBSProcessingStatus == UBSProcessingStatus::ToProcess
-            && _processedVendorInvoices.Settlement == NoYes::Yes
+                where _processedVendorInvoices.IsSettled == NoYes::No
         {
             select firstonly crossCompany  DataAreaId from invoiceJourDataArea
                     where invoiceJourDataArea.RecId == _processedVendorInvoices.InvoiceId;
 
             changecompany (invoiceJourDataArea.DataAreaId)
             {
-                System.Exception                generalEx;
+                class_vendParameters = VendParameters::find();
 
-                try
+                if(class_vendParameters.UBSJournalName && class_vendParameters.UBSAccountID)
                 {
-                    class_vendParameters = VendParameters::find();
-
-                    if(class_vendParameters.UBSJournalName && class_vendParameters.UBSPaymentOffsetLedgerDimension)
+                    try
                     {
                         this.settlementJournalCreation(_processedVendorInvoices);
                     }
-                    else
+                    catch
                     {
-                        this.updateUBSProcessedVendorInvoices(UBSProcessingStatus::Error,_processedVendorInvoices,"@UBS:UBSProcessedVendorInvoicesCheck");
+                        this.updateUBSProcessedVendorInvoices(UBSProcessingStatus::Error,_processedVendorInvoices);
                     }
                 }
-                catch(generalEx)
+                else
                 {
-                    this.updateUBSProcessedVendorInvoices(UBSProcessingStatus::Error,_processedVendorInvoices,generalEx.Message);
+                    throw Global::error("@UBS:UBSProcessedVendorInvoicesCheck");
                 }
-                catch
-                {
-                    this.updateUBSProcessedVendorInvoices(UBSProcessingStatus::Error,_processedVendorInvoices,"@SYS83461");
-                }
-                
             }
         }
     }
@@ -66,59 +58,78 @@ internal final class UBSProcessedVendorInvoicesBatchService extends SysOperation
 			<Method>
 				<Name>settlementJournalCreation</Name>
 				<Source><![CDATA[
-    private void settlementJournalCreation(UBSProcessedVendorInvoice _processedVendorInvoices)
+    private void settlementJournalCreation(UBSProcessedVendorInvioices _processedVendorInvoices)
     {
         LedgerJournalId                 journalNum,      journalNumWarr;
         VendInvoiceJour                 vendInvoiceJour, vendInvoiceJourWarr;
         vendTrans                       vendTrans,       vendTransWarr;
         VendTransOpen                   vendTransOpen,   vendTransOpenWarr;
 
-        class_InvoiceOpenCurrencyAmount = _processedVendorInvoices.PaymentAmount;
+        class_InvoiceOpenCurrencyAmount = _processedVendorInvoices.InvoiceOpenCurrencyAmount;
 
-        
+        journalNum                      = this.createJournalTable(class_vendParameters.UBSJournalName);
         vendInvoiceJour                 = VendInvoiceJour::findRecId(_processedVendorInvoices.InvoiceId);
         vendTrans                       = VendTrans::findByInvoiceAccountNumber(vendInvoiceJour.InvoiceId,
                                                                                 vendInvoiceJour.InvoiceAccount,
                                                                                 vendInvoiceJour.InvoiceDate);
+        vendTransOpen                   = vendTransOpen::findRefId(vendTrans.RecId);
+        vendInvoiceJourWarr             = VendInvoiceJour::findWarrantyRefInvoice(vendInvoiceJour.recid);
 
-        if(vendInvoiceJour.UBSHasWarrantyRetention)
+        if(vendInvoiceJourWarr)
         {
-            vendInvoiceJourWarr    = VendInvoiceJour::findWarrantyRefInvoice(vendInvoiceJour.recid);
-            vendTransWarr           = VendTrans::findByInvoiceAccountNumber(vendInvoiceJourWarr.InvoiceId,
-                                                                                vendInvoiceJourWarr.InvoiceAccount,
-                                                                                vendInvoiceJourWarr.InvoiceDate);
-
-            if(abs(vendTrans.AmountCur-vendTransWarr.AmountCur) != _processedVendorInvoices.AmountTech)
-            {
-                if(abs(vendTransWarr.AmountCur) == abs(_processedVendorInvoices.AmountTech))
-                {
-                    vendInvoiceJour = vendInvoiceJourWarr;
-                    vendTrans = vendTransWarr;
-                }
-                else
-                {
-                    this.updateUBSProcessedVendorInvoices(UBSProcessingStatus::Error,_processedVendorInvoices,strFmt("@UBS:UBSWarrentyInvoiceIdenficiation",vendInvoiceJour.InvoiceId));
-                    return;
-                }
-            }
+            journalNumWarr      = this.createJournalTable(class_vendParameters.UBSJournalName);
+            vendTransWarr       = VendTrans::findByInvoiceAccountNumber(vendInvoiceJourWarr.InvoiceId,
+                                                                        vendInvoiceJourWarr.InvoiceAccount,
+                                                                        vendInvoiceJourWarr.InvoiceDate);
+            vendTransOpenWarr   = vendTransOpen::findRefId(vendTransWarr.RecId);
         }
 
-        vendTransOpen                   = vendTransOpen::findRefId(vendTrans.RecId);
-        
+        this.processingType(_processedVendorInvoices, vendTrans, vendTransWarr, vendTransOpen, vendTransOpenWarr);
 
-        this.processingType(_processedVendorInvoices, vendTrans, vendTransOpen);
-
-        if(class_openSendEqual   || class_openSendLess)
+        if(class_openSendEqual   || class_openSendLess ||
+           class_originSendEqual || class_originSendLess)
         {
+            if(class_originSendEqual || class_originSendLess)
+            {
+                if(vendTransOpen)
+                {
+                    vendTransOpen     = this.vendTransOpenReversal(vendInvoiceJour, vendTrans, vendTransOpen,_processedVendorInvoices);
+                }
+                if(vendTransOpenWarr)
+                {
+                    if(this.calculateDebitAmount(_processedVendorInvoices,vendTransWarr,vendTransOpenWarr,true) >0)
+                    {
+                        vendTransOpenWarr = this.vendTransOpenReversal(vendInvoiceJourWarr, vendTransWarr, vendTransOpenWarr, _processedVendorInvoices);
+                    }
+                }
+            }
+
             if(vendTransOpen)
             {
-                journalNum = this.createJournalTable(class_vendParameters.UBSJournalName);
                 this.createSettlement(journalNum, vendInvoiceJour, vendTrans, vendTransOpen, _processedVendorInvoices);
+            }
+
+            if(vendInvoiceJourWarr && vendTransOpenWarr && class_InvoiceOpenCurrencyAmount)
+            {
+                this.createSettlement(journalNumWarr, vendInvoiceJourWarr, vendTransWarr, vendTransOpenWarr, _processedVendorInvoices);
+            }
+            else
+            {
+                if(journalNumWarr)
+                {
+                    LedgerJournalTable ledgerJournalTable = LedgerJournalTable::find(journalNumWarr,true);
+
+                    ttsbegin;
+                    ledgerJournalTable.delete();
+                    ttscommit;
+                }
             }
         }
         else
         {
-            this.updateUBSProcessedVendorInvoices(UBSProcessingStatus::Error,_processedVendorInvoices,strFmt("@UBS:UBSPaymentAmountOverTransaction",vendInvoiceJour.InvoiceId));
+            LedgerJournalTrans  ledgerJournalTrans  = this.createLedgerJournalTrans(journalNum, vendInvoiceJour, vendTrans,
+                                                                                    vendTransOpen,_processedVendorInvoices);
+            this.updateUBSProcessedVendorInvoices(UBSProcessingStatus::Error,_processedVendorInvoices);
         }
     }
 
@@ -147,7 +158,7 @@ internal final class UBSProcessedVendorInvoicesBatchService extends SysOperation
 				<Name>createSettlement</Name>
 				<Source><![CDATA[
     private void createSettlement(LedgerJournalId _journalNum, VendInvoiceJour _vendInvoiceJour, VendTrans _vendTrans,
-                                  VendTransOpen _vendTransOpen, UBSProcessedVendorInvoice _processedVendorInvoices)
+                                  VendTransOpen _vendTransOpen, UBSProcessedVendorInvioices _processedVendorInvoices)
     {
         LedgerJournalTrans  ledgerJournalTrans  = this.createLedgerJournalTrans(_journalNum, _vendInvoiceJour, _vendTrans,
                                                                                 _vendTransOpen ,_processedVendorInvoices);
@@ -163,28 +174,34 @@ internal final class UBSProcessedVendorInvoicesBatchService extends SysOperation
 				<Name>createLedgerJournalTrans</Name>
 				<Source><![CDATA[
     private LedgerJournalTrans createLedgerJournalTrans(LedgerJournalId _journalNum, VendInvoiceJour _vendInvoiceJour,
-                                                        VendTrans _vendTrans, VendTransOpen _vendTransOpen, UBSProcessedVendorInvoice _processedVendorInvoices)
+                                                        VendTrans _vendTrans, VendTransOpen _vendTransOpen, UBSProcessedVendorInvioices _processedVendorInvoices,
+                                                        boolean reversedOp = false)
     {
         LedgerJournalTrans  ledgerJournalTrans;
         NumberSequenceTable numberSequenceTable     = NumberSequenceTable::find(LedgerJournalName::find(class_vendParameters.UBSJournalName).NumberSequenceTable);
         NumberSeq           numberSeq               = NumberSeq::newGetVoucherFromCode(numberSequenceTable.NumberSequence);
         VendTable           vendTable               = vendtable::find(_vendInvoiceJour.InvoiceAccount);
+        BankAccountTable    bankAccountTable        = BankAccountTable::findOnAccountNum(class_vendParameters.UBSAccountID);
         
         ttsbegin;
         ledgerJournalTrans.initValue();
         ledgerJournalTrans.JournalNum               = _journalNum;
         ledgerJournalTrans.Voucher                  = numberSeq.voucher();
         ledgerJournalTrans.AccountType              = LedgerJournalACType::Vend;
-        ledgerJournalTrans.AmountCurDebit           = _processedVendorInvoices.PaymentAmount;
+        ledgerJournalTrans.AmountCurDebit           = this.calculateDebitAmount(_processedVendorInvoices,_vendTrans,
+                                                                                _vendTransOpen, reversedOp);
         ledgerJournalTrans.TransDate                = _processedVendorInvoices.PaymentEffectiveDate;
         ledgerJournalTrans.LedgerDimension          = LedgerDynamicAccountHelper::
                                                         getDynamicAccountFromAccountNumber(_vendInvoiceJour.InvoiceAccount,
                                                                                            ledgerJournalACType::Vend);
-        ledgerJournalTrans.OffsetAccountType        = LedgerJournalACType::Ledger;
-        ledgerJournalTrans.OffsetLedgerDimension    = LedgerDimensionFacade::serviceCreateLedgerDimension(class_vendParameters.UBSPaymentOffsetLedgerDimension,vendTable.DefaultDimension);
-        ledgerJournalTrans.Txt                      = _processedVendorInvoices.PaymentReference;
+        ledgerJournalTrans.OffsetAccountType        = LedgerJournalACType::Bank;
+        ledgerJournalTrans.OffsetLedgerDimension    = LedgerDynamicAccountHelper::
+                                                        getDynamicAccountFromAccountNumber(bankAccountTable.AccountID,
+                                                                                           ledgerJournalACType::Bank);
+        ledgerJournalTrans.Txt                      = reversedOp ? strFmt('@UBS:UBSProcessedVendorInvoicesReverse',_processedVendorInvoices.PaymentReference)
+                                                                 : _processedVendorInvoices.PaymentReference;
         ledgerJournalTrans.DefaultDimension         = vendTable.DefaultDimension;
-        //ledgerJournalTrans.OffsetDefaultDimension   = vendTable.DefaultDimension;
+        ledgerJournalTrans.OffsetDefaultDimension   = vendTable.DefaultDimension;
         ledgerJournalTrans.CurrencyCode             = _vendInvoiceJour.CurrencyCode;
         ledgerJournalTrans.SettleVoucher            = SettlementType::SelectedTransact;
         ledgerJournalTrans.PaymMode                 = vendTable.PaymMode;
@@ -224,12 +241,91 @@ internal final class UBSProcessedVendorInvoicesBatchService extends SysOperation
 			<Method>
 				<Name>processingType</Name>
 				<Source><![CDATA[
-    private void processingType(UBSProcessedVendorInvoice _processedVendorInvoice, VendTrans _vendTrans, VendTransOpen _vendTransOpen)
+    private void processingType(UBSProcessedVendorInvioices _processedVendorInvioices, VendTrans _vendTrans, VendTrans _vendTransWarr, VendTransOpen _vendTransOpen, VendTransOpen _vendTransOpenWarr)
     {
-        real vendTransOpenSum   = abs(_vendTransOpen.AmountCur);
+        real vendTransOpenSum   = abs(_vendTransOpen.AmountCur) + abs(_vendTransOpenWarr.AmountCur);
+        real vendTransSum       = abs(_vendTrans.AmountCur)     + abs(_vendTransWarr.AmountCur);
 
-        class_openSendEqual     = _processedVendorInvoice.PaymentAmount == vendTransOpenSum;
-        class_openSendLess      = _processedVendorInvoice.PaymentAmount <  vendTransOpenSum;
+        class_openSendEqual     = _processedVendorInvioices.InvoiceOpenCurrencyAmount == vendTransOpenSum;
+        class_openSendLess      = _processedVendorInvioices.InvoiceOpenCurrencyAmount <  vendTransOpenSum;
+
+        class_originSendEqual   = _processedVendorInvioices.InvoiceOpenCurrencyAmount >  vendTransOpenSum &&
+                                  _processedVendorInvioices.InvoiceOpenCurrencyAmount == vendTransSum;
+        class_originSendLess    = _processedVendorInvioices.InvoiceOpenCurrencyAmount >  vendTransOpenSum &&
+                                  _processedVendorInvioices.InvoiceOpenCurrencyAmount < vendTransSum;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>calculateDebitAmount</Name>
+				<Source><![CDATA[
+    private real calculateDebitAmount(UBSProcessedVendorInvioices _processedVendorInvioices, VendTrans _vendTrans,
+                                      VendTransOpen _vendTransOpen, boolean _reversedOp)
+    {
+        real ret;
+
+        if(!_reversedOp)
+        {
+            if(class_openSendEqual)
+            {
+                ret = abs(_vendTransOpen.AmountCur);
+            }
+            else if(class_openSendLess)
+            {
+                if(abs(_vendTransOpen.AmountCur) >= class_InvoiceOpenCurrencyAmount)
+                {
+                    if(abs(_vendTransOpen.AmountCur) > class_InvoiceOpenCurrencyAmount)
+                    {
+                        ret = abs(_vendTransOpen.AmountCur) - class_InvoiceOpenCurrencyAmount;
+                    }
+                    else
+                    {
+                        ret = abs(_vendTransOpen.AmountCur);
+                    }
+
+                    class_InvoiceOpenCurrencyAmount = 0;
+                }
+                else
+                {
+                    ret = abs(_vendTransOpen.AmountCur);
+                    class_InvoiceOpenCurrencyAmount -= abs(_vendTransOpen.AmountCur);
+                }
+            }
+            else if(class_originSendEqual)
+            {
+                ret = abs(_vendTrans.AmountCur);
+            }
+            else if(class_originSendLess)
+            {
+                if(abs(_vendTrans.AmountCur) >= class_InvoiceOpenCurrencyAmount)
+                {
+                    if(abs(_vendTrans.AmountCur) > class_InvoiceOpenCurrencyAmount)
+                    {
+                        ret = abs(_vendTrans.AmountCur) - class_InvoiceOpenCurrencyAmount;
+                    }
+                    else
+                    {
+                        ret = abs(_vendTrans.AmountCur);
+                    }
+                    class_InvoiceOpenCurrencyAmount = 0;
+                }
+                else
+                {
+                    ret = abs(_vendTrans.AmountCur);
+                    class_InvoiceOpenCurrencyAmount -= abs(_vendTrans.AmountCur);
+                }
+            }
+            else
+            {
+                ret = _processedVendorInvioices.InvoiceOpenCurrencyAmount;
+            }
+        }
+        else
+        {
+            ret = _vendTrans.AmountCur - _vendTransOpen.AmountCur;
+        }
+        return ret;
     }
 
 ]]></Source>
@@ -237,14 +333,38 @@ internal final class UBSProcessedVendorInvoicesBatchService extends SysOperation
 			<Method>
 				<Name>updateUBSProcessedVendorInvoices</Name>
 				<Source><![CDATA[
-    private void updateUBSProcessedVendorInvoices(UBSProcessingStatus _processingStatus, UBSProcessedVendorInvoice _processedVendorInvoices,ErrorMsg _error = '')
+    private void updateUBSProcessedVendorInvoices(UBSProcessingStatus _processingStatus, UBSProcessedVendorInvioices _processedVendorInvoices)
     {
         ttsbegin;
-        _processedVendorInvoices.Settlement           = NoYes::Yes;
+        _processedVendorInvoices.IsSettled           = NoYes::Yes;
         _processedVendorInvoices.UBSProcessingStatus = _processingStatus;
-        _processedVendorInvoices.ErrorMsg = _error;
         _processedVendorInvoices.update();
         ttscommit;
+    }
+
+]]></Source>
+			</Method>
+			<Method>
+				<Name>vendTransOpenReversal</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Create reverse journal
+    /// </summary>
+    /// <param name = "_vendInvoiceJour">VendInvoiceJour</param>
+    /// <param name = "_vendTrans">VendTrans</param>
+    /// <param name = "_vendTransOpen">VendTransOpen</param>
+    /// <param name = "_processedVendorInvoices">UBSProcessedVendorInvioices</param>
+    /// <returns>VendTransOpen</returns>
+    private VendTransOpen vendTransOpenReversal(VendInvoiceJour _vendInvoiceJour, VendTrans _vendTrans,
+                                                VendTransOpen _vendTransOpen, UBSProcessedVendorInvioices _processedVendorInvoices )
+    {
+        LedgerJournalId     journalNumReversed  = this.createJournalTable(class_vendParameters.UBSJournalName);
+        LedgerJournalTrans  ledgerJournalTrans  = this.createLedgerJournalTrans(journalNumReversed, _vendInvoiceJour, _vendTrans, _vendTransOpen, _processedVendorInvoices, true);
+
+        this.markTransForSettlemenent(_vendTransOpen,ledgerJournalTrans);
+        this.postLedgerJournalTable(journalNumReversed);
+
+        return vendTransOpen::findRefId(_vendTrans.RecId);
     }
 
 ]]></Source>

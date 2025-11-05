@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxDataEntityView xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>UBSProcessedVendorInvoiceEntity</Name>
+	<Name>UBSProcessedVendorInvioicesEntity</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
-public class UBSProcessedVendorInvoiceEntity extends common
+public class UBSProcessedVendorInvioicesEntity extends common
 {
 }
 
@@ -14,11 +14,11 @@ public class UBSProcessedVendorInvoiceEntity extends common
 		<Read>Allow</Read>
 	</SubscriberAccessLevel>
 	<DataManagementEnabled>Yes</DataManagementEnabled>
-	<DataManagementStagingTable>UBSProcessedVendorInvoiceStaging</DataManagementStagingTable>
+	<DataManagementStagingTable>UBSProcessedVendorInvioicesStaging</DataManagementStagingTable>
 	<IsPublic>Yes</IsPublic>
 	<PrimaryKey>EntityKey</PrimaryKey>
-	<PublicCollectionName>ProcessedVendorInvoices</PublicCollectionName>
-	<PublicEntityName>ProcessedVendorInvoices</PublicEntityName>
+	<PublicCollectionName>ProcessedVendorInvioices</PublicCollectionName>
+	<PublicEntityName>ProcessedVendorInvioices</PublicEntityName>
 	<SupportsSetBasedSqlOperations>Yes</SupportsSetBasedSqlOperations>
 	<DeleteActions />
 	<FieldGroups>
@@ -50,45 +50,33 @@ public class UBSProcessedVendorInvoiceEntity extends common
 			<Name>InvoiceRecId</Name>
 			<Mandatory>Yes</Mandatory>
 			<DataField>InvoiceId</DataField>
-			<DataSource>UBSProcessedVendorInvoice</DataSource>
+			<DataSource>UBSProcessedVendorInvioices</DataSource>
 		</AxDataEntityViewField>
 		<AxDataEntityViewField xmlns=""
 			i:type="AxDataEntityViewMappedField">
 			<Name>AccountingDate</Name>
 			<Mandatory>Yes</Mandatory>
 			<DataField>AccountingDate</DataField>
-			<DataSource>UBSProcessedVendorInvoice</DataSource>
+			<DataSource>UBSProcessedVendorInvioices</DataSource>
 		</AxDataEntityViewField>
 		<AxDataEntityViewField xmlns=""
 			i:type="AxDataEntityViewMappedField">
-			<Name>Settlement</Name>
-			<DataField>Settlement</DataField>
-			<DataSource>UBSProcessedVendorInvoice</DataSource>
-		</AxDataEntityViewField>
-		<AxDataEntityViewField xmlns=""
-			i:type="AxDataEntityViewMappedField">
-			<Name>PaymentAmount</Name>
-			<DataField>PaymentAmount</DataField>
-			<DataSource>UBSProcessedVendorInvoice</DataSource>
+			<Name>InvoiceOpenCurrencyAmount</Name>
+			<DataField>InvoiceOpenCurrencyAmount</DataField>
+			<DataSource>UBSProcessedVendorInvioices</DataSource>
 		</AxDataEntityViewField>
 		<AxDataEntityViewField xmlns=""
 			i:type="AxDataEntityViewMappedField">
 			<Name>PaymentReference</Name>
 			<Mandatory>Yes</Mandatory>
 			<DataField>PaymentReference</DataField>
-			<DataSource>UBSProcessedVendorInvoice</DataSource>
+			<DataSource>UBSProcessedVendorInvioices</DataSource>
 		</AxDataEntityViewField>
 		<AxDataEntityViewField xmlns=""
 			i:type="AxDataEntityViewMappedField">
 			<Name>PaymentEffectiveDate</Name>
 			<DataField>PaymentEffectiveDate</DataField>
-			<DataSource>UBSProcessedVendorInvoice</DataSource>
-		</AxDataEntityViewField>
-		<AxDataEntityViewField xmlns=""
-			i:type="AxDataEntityViewMappedField">
-			<Name>AmountTech</Name>
-			<DataField>AmountTech</DataField>
-			<DataSource>UBSProcessedVendorInvoice</DataSource>
+			<DataSource>UBSProcessedVendorInvioices</DataSource>
 		</AxDataEntityViewField>
 	</Fields>
 	<Keys>
@@ -128,9 +116,9 @@ public class Metadata extends QueryRun
 		</SourceCode>
 		<DataSources>
 			<AxQuerySimpleRootDataSource>
-				<Name>UBSProcessedVendorInvoice</Name>
+				<Name>UBSProcessedVendorInvioices</Name>
 				<DynamicFields>Yes</DynamicFields>
-				<Table>UBSProcessedVendorInvoice</Table>
+				<Table>UBSProcessedVendorInvioices</Table>
 				<DataSources />
 				<DerivedDataSources />
 				<Fields />

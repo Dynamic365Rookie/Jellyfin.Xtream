@@ -69,58 +69,13 @@
 												<DataSource>VendParameters</DataSource>
 											</AxFormControl>
 											<AxFormControl xmlns=""
-												i:type="AxFormSegmentedEntryControl">
-												<Name>VendParameters_UBSPaymentOffsetLedgerDimension</Name>
-												<FilterExpression>%1</FilterExpression>
-												<Type>SegmentedEntry</Type>
-												<FormControlExtension>
-													<Name>SegmentedEntryControl</Name>
-													<ExtensionComponents />
-													<ExtensionProperties>
-														<AxFormControlExtensionProperty>
-															<Name>parmControllerClassName</Name>
-															<Type>String</Type>
-															<Value>LedgerDimensionDefaultAccountController</Value>
-														</AxFormControlExtensionProperty>
-														<AxFormControlExtensionProperty>
-															<Name>parmAccountTypeEnumName</Name>
-															<Type>String</Type>
-														</AxFormControlExtensionProperty>
-														<AxFormControlExtensionProperty>
-															<Name>parmIsDefaultAccount</Name>
-															<Type>Enum</Type>
-															<TypeName>boolean</TypeName>
-															<Value>False</Value>
-														</AxFormControlExtensionProperty>
-														<AxFormControlExtensionProperty>
-															<Name>parmValidateBlockedForManualEntry</Name>
-															<Type>Enum</Type>
-															<TypeName>NoYes</TypeName>
-														</AxFormControlExtensionProperty>
-														<AxFormControlExtensionProperty>
-															<Name>parmLockMainAccountSegment</Name>
-															<Type>Enum</Type>
-															<TypeName>NoYes</TypeName>
-														</AxFormControlExtensionProperty>
-														<AxFormControlExtensionProperty>
-															<Name>parmPostingType</Name>
-															<Type>Enum</Type>
-															<TypeName>LedgerPostingType</TypeName>
-														</AxFormControlExtensionProperty>
-														<AxFormControlExtensionProperty>
-															<Name>parmIncludeTotalAccounts</Name>
-															<Type>Enum</Type>
-															<TypeName>NoYes</TypeName>
-														</AxFormControlExtensionProperty>
-														<AxFormControlExtensionProperty>
-															<Name>parmIncludeFinancialAccounts</Name>
-															<Type>Enum</Type>
-															<TypeName>NoYes</TypeName>
-														</AxFormControlExtensionProperty>
-													</ExtensionProperties>
-												</FormControlExtension>
+												i:type="AxFormStringControl">
+												<Name>VendParameters_UBSAccountID</Name>
+												<Type>String</Type>
+												<FormControlExtension
+													i:nil="true" />
+												<DataField>UBSAccountID</DataField>
 												<DataSource>VendParameters</DataSource>
-												<ReferenceField>UBSPaymentOffsetLedgerDimension</ReferenceField>
 											</AxFormControl>
 										</Controls>
 										<Caption>@UBS:UBSProcessedVendorInvoicesParameters</Caption>
