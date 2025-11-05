@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AxClass xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+	<Name>PurchTableListPageAssignedToMe_Query_Urbasolar</Name>
+	<SourceCode>
+		<Declaration><![CDATA[
+public class PurchTableListPageAssignedToMe_Query_Urbasolar
+{
+
+}
+]]></Declaration>
+		<Methods>
+			<Method>
+				<Name>PurchTableListPageAssignedToMe_Post_init</Name>
+				<Source><![CDATA[
+    /// <summary>
+    /// Add logic to get the TPDimensionSetView DS otherwise
+    /// We have an error on PurchTableListPageAssignedToMe form/Query
+    /// </summary>
+    /// <param name="args">QueryRun PurchTableListPageAssignedToMe</param>
+    [PostHandlerFor(queryStr(PurchTableListPageAssignedToMe), queryMethodStr(PurchTableListPageAssignedToMe, init))]
+    public static void PurchTableListPageAssignedToMe_Post_init(XppPrePostArgs args)
+    {
+        QueryBuildDataSource qbdsProjectDim, qbdsPurchSalesTable;
+
+        QueryRun queryRun = args.getThis();
+        Query    qr       = queryRun.query();
+
+        qbdsProjectDim = qr.dataSourceTable(Tablenum(PurchTable)).addDataSource(tableNum(UBSPurchTableProjectDimensionView));
+        qbdsProjectDim.joinMode(JoinMode::OuterJoin);
+        qbdsProjectDim.relations(true);
+
+        qbdsPurchSalesTable = qr.dataSourceTable(Tablenum(PurchTable)).addDataSource(tableNum(UBSPurchSalesTableLink));
+        qbdsPurchSalesTable.joinMode(JoinMode::InnerJoin);
+        qbdsPurchSalesTable.relations(true);
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
+	</SourceCode>
+</AxClass>
