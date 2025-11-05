@@ -2,20 +2,17 @@
 <AxEnum xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
 	<Name>UBSProcessingStatus</Name>
 	<Label>@UBS:UBSProcessingStatus</Label>
+	<UseEnumValue>No</UseEnumValue>
 	<EnumValues>
-		<AxEnumValue>
-			<Name>ToProcess</Name>
-			<Label>@GBR227</Label>
-		</AxEnumValue>
 		<AxEnumValue>
 			<Name>Processed</Name>
 			<Label>@UBS:UBSProcessingStatus_Processed</Label>
-			<Value>1</Value>
 		</AxEnumValue>
 		<AxEnumValue>
 			<Name>Error</Name>
 			<Label>@UBS:UBSProcessingStatus_Error</Label>
-			<Value>2</Value>
+			<Value>1</Value>
 		</AxEnumValue>
 	</EnumValues>
+	<IsExtensible>true</IsExtensible>
 </AxEnum>

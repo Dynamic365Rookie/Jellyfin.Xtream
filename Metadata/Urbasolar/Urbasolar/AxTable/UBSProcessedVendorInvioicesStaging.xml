@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>UBSProcessedVendorInvoiceStaging</Name>
+	<Name>UBSProcessedVendorInvioicesStaging</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
-public class UBSProcessedVendorInvoiceStaging extends common
+public class UBSProcessedVendorInvioicesStaging extends common
 {
 }
 
@@ -110,15 +110,8 @@ public class UBSProcessedVendorInvoiceStaging extends common
 			<Mandatory>Yes</Mandatory>
 		</AxTableField>
 		<AxTableField xmlns=""
-			i:type="AxTableFieldEnum">
-			<Name>Settlement</Name>
-			<IsSystemGenerated>Yes</IsSystemGenerated>
-			<Label>@SYS103900</Label>
-			<EnumType>NoYes</EnumType>
-		</AxTableField>
-		<AxTableField xmlns=""
 			i:type="AxTableFieldReal">
-			<Name>PaymentAmount</Name>
+			<Name>InvoiceOpenCurrencyAmount</Name>
 			<IsSystemGenerated>Yes</IsSystemGenerated>
 		</AxTableField>
 		<AxTableField xmlns=""
@@ -131,12 +124,6 @@ public class UBSProcessedVendorInvoiceStaging extends common
 		<AxTableField xmlns=""
 			i:type="AxTableFieldDate">
 			<Name>PaymentEffectiveDate</Name>
-			<IsSystemGenerated>Yes</IsSystemGenerated>
-		</AxTableField>
-		<AxTableField xmlns=""
-			i:type="AxTableFieldReal">
-			<Name>AmountTech</Name>
-			<ExtendedDataType>AmountCur</ExtendedDataType>
 			<IsSystemGenerated>Yes</IsSystemGenerated>
 		</AxTableField>
 	</Fields>
@@ -173,7 +160,7 @@ public class UBSProcessedVendorInvoiceStaging extends common
 			<Cardinality>ExactlyOne</Cardinality>
 			<EntityRelationshipRole>@DMF:StagingToDataEntityRelationshipRole</EntityRelationshipRole>
 			<IsSystemGenerated>Yes</IsSystemGenerated>
-			<RelatedTable>UBSProcessedVendorInvoiceEntity</RelatedTable>
+			<RelatedTable>UBSProcessedVendorInvioicesEntity</RelatedTable>
 			<RelatedTableCardinality>ZeroOne</RelatedTableCardinality>
 			<RelationshipType>Link</RelationshipType>
 			<Validate>No</Validate>
