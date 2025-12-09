@@ -114,6 +114,18 @@ public class UBSBCProcessedVendorInvoiceView extends common
 			<DataField>PostingProfile</DataField>
 			<DataSource>VendInvoiceJour</DataSource>
 		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>UBSBankIBAN</Name>
+			<DataField>UBSBankIBAN</DataField>
+			<DataSource>VendInvoiceInfoTable</DataSource>
+		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>VendBankAccountID</Name>
+			<DataField>VendBankAccountID</DataField>
+			<DataSource>VendInvoiceInfoTable</DataSource>
+		</AxViewField>
 	</Fields>
 	<Indexes />
 	<Mappings />
@@ -166,6 +178,29 @@ public class UBSBCProcessedVendorInvoiceView extends common
 								<Name>QueryDataSourceRelation1</Name>
 								<JoinDataSource>VendInvoiceJour</JoinDataSource>
 								<JoinRelationName>VendInvoiceJour</JoinRelationName>
+							</AxQuerySimpleDataSourceRelation>
+						</Relations>
+					</AxQuerySimpleEmbeddedDataSource>
+					<AxQuerySimpleEmbeddedDataSource>
+						<Name>VendInvoiceInfoTable</Name>
+						<DynamicFields>Yes</DynamicFields>
+						<Table>VendInvoiceInfoTable</Table>
+						<DataSources />
+						<DerivedDataSources />
+						<Fields />
+						<Ranges />
+						<Relations>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation1</Name>
+								<Field>InvoiceId</Field>
+								<JoinDataSource>VendInvoiceJour</JoinDataSource>
+								<RelatedField>Num</RelatedField>
+							</AxQuerySimpleDataSourceRelation>
+							<AxQuerySimpleDataSourceRelation>
+								<Name>QueryDataSourceRelation1Copy1</Name>
+								<Field>ParmId</Field>
+								<JoinDataSource>VendInvoiceJour</JoinDataSource>
+								<RelatedField>ParmId</RelatedField>
 							</AxQuerySimpleDataSourceRelation>
 						</Relations>
 					</AxQuerySimpleEmbeddedDataSource>

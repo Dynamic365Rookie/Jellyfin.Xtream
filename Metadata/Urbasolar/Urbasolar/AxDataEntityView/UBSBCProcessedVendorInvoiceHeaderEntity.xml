@@ -204,6 +204,18 @@ public class UBSBCProcessedVendorInvoiceHeaderEntity extends common
 			<Name>docuValuePath</Name>
 			<ComputedFieldMethod>getdocuValuePath</ComputedFieldMethod>
 		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>VendBankAccountID</Name>
+			<DataField>VendBankAccountID</DataField>
+			<DataSource>UBSBCProcessedVendorInvoiceView</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>UBSBankIBAN</Name>
+			<DataField>UBSBankIBAN</DataField>
+			<DataSource>UBSBCProcessedVendorInvoiceView</DataSource>
+		</AxDataEntityViewField>
 	</Fields>
 	<Keys>
 		<AxDataEntityViewKey>

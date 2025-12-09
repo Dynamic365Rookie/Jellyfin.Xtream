@@ -228,6 +228,24 @@ public class UBSBCProcessedVendorInvoiceHeaderStaging extends common
 			<ExtendedDataType>VendPostingProfile</ExtendedDataType>
 			<IsSystemGenerated>Yes</IsSystemGenerated>
 		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>docuValuePath</Name>
+			<AllowEdit>No</AllowEdit>
+			<AllowEditOnCreate>No</AllowEditOnCreate>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>VendBankAccountID</Name>
+			<ExtendedDataType>VendBankAccountId</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>UBSBankIBAN</Name>
+			<ExtendedDataType>BankIBAN</ExtendedDataType>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
 	<Indexes>
