@@ -109,6 +109,12 @@ public class UBSBCVendInvoicePrepaymentApplyView extends common
 			<DataField>PostingType</DataField>
 			<DataSource>GeneralJournalAccountEntry</DataSource>
 		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>TaxItemGroup</Name>
+			<DataField>TaxItemGroup</DataField>
+			<DataSource>VendInvoiceTrans</DataSource>
+		</AxViewField>
 	</Fields>
 	<Indexes />
 	<Mappings />

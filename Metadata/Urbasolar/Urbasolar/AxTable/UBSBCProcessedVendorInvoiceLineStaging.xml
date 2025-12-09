@@ -247,6 +247,13 @@ public class UBSBCProcessedVendorInvoiceLineStaging extends common
 			<IsSystemGenerated>Yes</IsSystemGenerated>
 			<EnumType>LedgerPostingType</EnumType>
 		</AxTableField>
+		<AxTableField xmlns=""
+			i:type="AxTableFieldString">
+			<Name>TaxItemGroup</Name>
+			<ExtendedDataType>TaxItemGroup</ExtendedDataType>
+			<HelpText>@TaxTrans:TaxItemGroupHelpText</HelpText>
+			<IsSystemGenerated>Yes</IsSystemGenerated>
+		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
 	<Indexes>

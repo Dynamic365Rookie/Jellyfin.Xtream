@@ -205,6 +205,12 @@ public class UBSBCProcessedVendorInvoiceLineEntity extends common
 			<DataField>PostingType</DataField>
 			<DataSource>UBSBCInterfaceVendInvoiceLineView</DataSource>
 		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>TaxItemGroup</Name>
+			<DataField>TaxItemGroup</DataField>
+			<DataSource>UBSBCInterfaceVendInvoiceLineView</DataSource>
+		</AxDataEntityViewField>
 	</Fields>
 	<Keys>
 		<AxDataEntityViewKey>

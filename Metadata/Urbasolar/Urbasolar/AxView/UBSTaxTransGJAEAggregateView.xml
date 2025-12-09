@@ -49,6 +49,12 @@ public class UBSTaxTransGJAEAggregateView extends common
 			<DataField>TaxCode</DataField>
 			<DataSource>TaxTrans</DataSource>
 		</AxViewField>
+		<AxViewField xmlns=""
+			i:type="AxViewFieldBound">
+			<Name>TaxItemGroup</Name>
+			<DataField>TaxItemGroup</DataField>
+			<DataSource>TaxTrans</DataSource>
+		</AxViewField>
 	</Fields>
 	<Indexes />
 	<Mappings />

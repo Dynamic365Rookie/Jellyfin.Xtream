@@ -73,6 +73,11 @@
       <Name>UBSBCRoutingEntity</Name>
       <Link>Data Entities\UBSBCRoutingEntity</Link>
     </Content>
+    <Content Include="AxDataEntityView\UBSBCVendInvoiceExportLogEntity">
+      <SubType>Content</SubType>
+      <Name>UBSBCVendInvoiceExportLogEntity</Name>
+      <Link>Data Entities\UBSBCVendInvoiceExportLogEntity</Link>
+    </Content>
     <Content Include="AxEdt\UBSBCCompany">
       <SubType>Content</SubType>
       <Name>UBSBCCompany</Name>
@@ -153,6 +158,16 @@
       <Name>UBSBCRoutingEntityView</Name>
       <Link>Security Privileges\UBSBCRoutingEntityView</Link>
     </Content>
+    <Content Include="AxSecurityPrivilege\UBSBCVendInvoiceExportLogEntityMaintain">
+      <SubType>Content</SubType>
+      <Name>UBSBCVendInvoiceExportLogEntityMaintain</Name>
+      <Link>Security Privileges\UBSBCVendInvoiceExportLogEntityMaintain</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\UBSBCVendInvoiceExportLogEntityView">
+      <SubType>Content</SubType>
+      <Name>UBSBCVendInvoiceExportLogEntityView</Name>
+      <Link>Security Privileges\UBSBCVendInvoiceExportLogEntityView</Link>
+    </Content>
     <Content Include="AxTable\UBSBCProcessedVendorInvoiceHeaderStaging">
       <SubType>Content</SubType>
       <Name>UBSBCProcessedVendorInvoiceHeaderStaging</Name>
@@ -178,6 +193,11 @@
       <Name>UBSBCRoutingStaging</Name>
       <Link>Tables\UBSBCRoutingStaging</Link>
     </Content>
+    <Content Include="AxTable\UBSBCVendInvoiceExportLogStaging">
+      <SubType>Content</SubType>
+      <Name>UBSBCVendInvoiceExportLogStaging</Name>
+      <Link>Tables\UBSBCVendInvoiceExportLogStaging</Link>
+    </Content>
     <Content Include="AxTable\UBSVendInvoiceSageExport">
       <SubType>Content</SubType>
       <Name>UBSVendInvoiceSageExport</Name>
@@ -186,7 +206,7 @@
     <Content Include="AxView\UBSBCInterfaceVendInvoiceAllView">
       <SubType>Content</SubType>
       <Name>UBSBCInterfaceVendInvoiceAllView</Name>
-      <Link>Views\UBSBCInterfaceVendInvoiceAllView</Link>
+      <Link>Views\TODELETE\UBSBCInterfaceVendInvoiceAllView</Link>
     </Content>
     <Content Include="AxView\UBSBCInterfaceVendInvoiceLineView">
       <SubType>Content</SubType>
@@ -196,12 +216,12 @@
     <Content Include="AxView\UBSBCInterfaceVendInvoiceNoWarrantyView">
       <SubType>Content</SubType>
       <Name>UBSBCInterfaceVendInvoiceNoWarrantyView</Name>
-      <Link>Views\UBSBCInterfaceVendInvoiceNoWarrantyView</Link>
+      <Link>Views\TODELETE\UBSBCInterfaceVendInvoiceNoWarrantyView</Link>
     </Content>
     <Content Include="AxView\UBSBCInterfaceVendInvoiceWarrantyView">
       <SubType>Content</SubType>
       <Name>UBSBCInterfaceVendInvoiceWarrantyView</Name>
-      <Link>Views\UBSBCInterfaceVendInvoiceWarrantyView</Link>
+      <Link>Views\TODELETE\UBSBCInterfaceVendInvoiceWarrantyView</Link>
     </Content>
     <Content Include="AxView\UBSBCProcessedVendorInvoiceView">
       <SubType>Content</SubType>
@@ -217,6 +237,11 @@
       <SubType>Content</SubType>
       <Name>UBSDimensionCombinationView</Name>
       <Link>Views\UBSDimensionCombinationView</Link>
+    </Content>
+    <Content Include="AxView\UBSTaxTransGJAEAggregateView">
+      <SubType>Content</SubType>
+      <Name>UBSTaxTransGJAEAggregateView</Name>
+      <Link>Views\UBSTaxTransGJAEAggregateView</Link>
     </Content>
     <Content Include="UBS.en-US.label.txt">
       <SubType>Content</SubType>

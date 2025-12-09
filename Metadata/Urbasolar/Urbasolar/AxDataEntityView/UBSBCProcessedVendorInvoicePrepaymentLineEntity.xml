@@ -133,6 +133,12 @@ public class UBSBCProcessedVendorInvoicePrepaymentLineEntity extends common
 			<DataField>PostingType</DataField>
 			<DataSource>UBSBCVendInvoicePrepaymentApplyView</DataSource>
 		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewMappedField">
+			<Name>TaxItemGroup</Name>
+			<DataField>TaxItemGroup</DataField>
+			<DataSource>UBSBCVendInvoicePrepaymentApplyView</DataSource>
+		</AxDataEntityViewField>
 	</Fields>
 	<Keys>
 		<AxDataEntityViewKey>

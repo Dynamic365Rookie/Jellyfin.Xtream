@@ -5,10 +5,62 @@
 		<Declaration><![CDATA[
 public class UBSBCProcessedVendorInvoiceHeaderEntity extends common
 {
-}
+    
 
+    /*private str docuValuePath()
+    {
+        str path = "";
+        DocuRef docuRef;
+        DocuValue docuValue;
+        VendInvoiceJour vendInvoiceJour = VendInvoiceJour::findRecId(this.VendInvoiceJourRecId);
+
+        select firstonly docuValue.Path from docuValue
+            join docuRef where docuRef.ValueRecId == docuValue.RecId
+            join vendInvoiceJour where docuRef.RefTableId == vendInvoiceJour.TableId && docuRef.RefRecId == vendInvoiceJour.RecId
+            && docuRef.DefaultAttachment == NoYes::Yes;
+
+        path = docuValue.Path;
+
+        return path;
+    }*/
+
+}
 ]]></Declaration>
-		<Methods />
+		<Methods>
+			<Method>
+				<Name>getdocuValuePath</Name>
+				<Source><![CDATA[
+    public static str getdocuValuePath()
+    {
+        str ret = strFmt(@"select TOP 1 docuValue.Path from docuValue
+            join docuRef on docuRef.ValueRecId = docuValue.RecId
+            join vendInvoiceJour on docuRef.RefRecId = %1
+            and docuRef.DefaultAttachment = 1",
+
+                SysComputedColumn::returnField(viewstr(UBSBCProcessedVendorInvoiceHeaderEntity), tableStr(UBSBCProcessedVendorInvoiceView), fieldStr(UBSBCProcessedVendorInvoiceView, VendInvoiceJourRecId)
+                ));
+
+        return ret;
+
+        /*
+        str ret = strFmt(@" select 1 from %1
+        where %1.%2 = %3 and %1.%4 = %5 and %1.%6 = %7
+        ",tableStr(TaxIntegrationBusinessProcessTable)
+        ,fieldStr(TaxIntegrationBusinessProcessTable,BusinessProcess)
+        ,enum2int(TaxIntegrationBusinessProcess::Purchase)
+        ,fieldStr(TaxIntegrationBusinessProcessTable,SolutionProviderType)
+        ,enum2int(TaxSolutionProviderType::Microsoft)
+        ,fieldStr(TaxIntegrationBusinessProcessTable,DataAreaId),
+        SysComputedColumn::returnField(viewstr(UBSTaxServiceParametersEntity),tableStr(TaxIntegrationTaxServiceParameters),fieldStr(TaxIntegrationTaxServiceParameters,DataAreaId)));
+
+        return ret;
+
+        */
+    }
+
+]]></Source>
+			</Method>
+		</Methods>
 	</SourceCode>
 	<SubscriberAccessLevel>
 		<Read>Allow</Read>
@@ -146,6 +198,11 @@ public class UBSBCProcessedVendorInvoiceHeaderEntity extends common
 			<Name>PostingProfile</Name>
 			<DataField>PostingProfile</DataField>
 			<DataSource>UBSBCProcessedVendorInvoiceView</DataSource>
+		</AxDataEntityViewField>
+		<AxDataEntityViewField xmlns=""
+			i:type="AxDataEntityViewUnmappedFieldString">
+			<Name>docuValuePath</Name>
+			<ComputedFieldMethod>getdocuValuePath</ComputedFieldMethod>
 		</AxDataEntityViewField>
 	</Fields>
 	<Keys>
