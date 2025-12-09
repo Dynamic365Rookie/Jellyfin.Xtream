@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <AxTable xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
-	<Name>UBSVendInvoiceSageExport</Name>
+	<Name>UBSBCRouting</Name>
 	<SourceCode>
 		<Declaration><![CDATA[
-public class UBSVendInvoiceSageExport extends common
+public class UBSBCRouting extends common
 {
-
 }
 ]]></Declaration>
 		<Methods>
 			<Method>
-				<Name>resetExportState</Name>
+				<Name>shouldThrowExceptionOnZeroDelete</Name>
 				<Source><![CDATA[
-    public static void resetExportState(RefRecId _VendInvoiceJourRecId)
+    /// <summary>
+    /// Determines if concurrent deletes should throw exception.
+    /// </summary>
+    /// <returns>true, if exception should be thrown; otherwise, false.</returns>
+    public boolean shouldThrowExceptionOnZeroDelete()
     {
-        UBSVendInvoiceSageExport vendInvoiceSageExport;
-
-        select forupdate vendInvoiceSageExport where vendInvoiceSageExport.VendInvoiceJourRecId == _VendInvoiceJourRecId;
-
-        if(vendInvoiceSageExport)
-        {
-            vendInvoiceSageExport.ExecutionDateTime = utcdatetimenull();
-            vendInvoiceSageExport.ErrorMessage = "";
-            vendInvoiceSageExport.UBSExportStatus = UBSExportStatus::ToProcess;
-            vendInvoiceSageExport.update();
-        }
+        boolean ret;
+    
+        ret = super();
+    
+        return ret;
     }
 
 ]]></Source>
 			</Method>
 		</Methods>
 	</SourceCode>
+	<Label>@UBS:UBSBCRouting</Label>
 	<SubscriberAccessLevel>
 		<Read>Allow</Read>
 	</SubscriberAccessLevel>
+	<TitleField1>DataArea</TitleField1>
 	<AllowRowVersionChangeTracking>Yes</AllowRowVersionChangeTracking>
+	<SaveDataPerCompany>No</SaveDataPerCompany>
 	<DeleteActions />
 	<FieldGroups>
 		<AxTableFieldGroup>
@@ -61,42 +61,34 @@ public class UBSVendInvoiceSageExport extends common
 	</FieldGroups>
 	<Fields>
 		<AxTableField xmlns=""
-			i:type="AxTableFieldInt64">
-			<Name>VendInvoiceJourRecId</Name>
+			i:type="AxTableFieldString">
+			<Name>DataArea</Name>
 			<AllowEdit>No</AllowEdit>
-			<AllowEditOnCreate>No</AllowEditOnCreate>
+			<AssetClassification>Customer Content</AssetClassification>
+			<ExtendedDataType>SelectableDataArea</ExtendedDataType>
 			<Mandatory>Yes</Mandatory>
 		</AxTableField>
 		<AxTableField xmlns=""
-			i:type="AxTableFieldEnum">
-			<Name>UBSExportStatus</Name>
-			<EnumType>UBSExportStatus</EnumType>
+			i:type="AxTableFieldString">
+			<Name>UBSBCCompany</Name>
+			<ExtendedDataType>UBSBCCompany</ExtendedDataType>
+			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
 		</AxTableField>
 		<AxTableField xmlns=""
 			i:type="AxTableFieldString">
-			<Name>ErrorMessage</Name>
-			<ExtendedDataType>DMFErrorMessage</ExtendedDataType>
+			<Name>UBSBCEnvironment</Name>
+			<ExtendedDataType>UBSBCEnvironment</ExtendedDataType>
 			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
-		</AxTableField>
-		<AxTableField xmlns=""
-			i:type="AxTableFieldUtcDateTime">
-			<Name>ExecutionDateTime</Name>
-			<ExtendedDataType>ExecutionTime</ExtendedDataType>
-			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
-		</AxTableField>
-		<AxTableField xmlns=""
-			i:type="AxTableFieldEnum">
-			<Name>UBSExportTargetSystem</Name>
-			<EnumType>UBSExportTargetSystem</EnumType>
 		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
 	<Indexes>
 		<AxTableIndex>
 			<Name>Key</Name>
+			<AlternateKey>Yes</AlternateKey>
 			<Fields>
 				<AxTableIndexField>
-					<DataField>VendInvoiceJourRecId</DataField>
+					<DataField>DataArea</DataField>
 				</AxTableIndexField>
 			</Fields>
 		</AxTableIndex>
@@ -104,17 +96,14 @@ public class UBSVendInvoiceSageExport extends common
 	<Mappings />
 	<Relations>
 		<AxTableRelation>
-			<Name>VendorInvoice</Name>
-			<Cardinality>ZeroOne</Cardinality>
-			<RelatedTable>VendInvoiceJour</RelatedTable>
-			<RelatedTableCardinality>ExactlyOne</RelatedTableCardinality>
-			<RelationshipType>Association</RelationshipType>
+			<Name>CompanyInfo</Name>
+			<RelatedTable>CompanyInfo</RelatedTable>
 			<Constraints>
 				<AxTableRelationConstraint xmlns=""
 					i:type="AxTableRelationConstraintField">
-					<Name>VendInvoiceJourRecId</Name>
-					<Field>VendInvoiceJourRecId</Field>
-					<RelatedField>RecId</RelatedField>
+					<Name>DataArea</Name>
+					<Field>DataArea</Field>
+					<RelatedField>DataArea</RelatedField>
 				</AxTableRelationConstraint>
 			</Constraints>
 		</AxTableRelation>

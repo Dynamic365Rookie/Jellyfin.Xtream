@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <BuildTasksDirectory Condition=" '$(BuildTasksDirectory)' == ''">$(MSBuildProgramFiles32)\MSBuild\Microsoft\Dynamics\AX</BuildTasksDirectory>
+    <Model>Urbasolar</Model>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <OutputPath>bin</OutputPath>
+    <SchemaVersion>2.0</SchemaVersion>
+    <GenerateCrossReferences>True</GenerateCrossReferences>
+    <RunAppCheckerRules>False</RunAppCheckerRules>
+    <LogAppcheckerDiagsAsErrors>False</LogAppcheckerDiagsAsErrors>
+    <DeployOnline>False</DeployOnline>
+    <ProjectGuid>{fd4e15a3-3160-45e0-b7f8-579ee1ca9301}</ProjectGuid>
+    <Name>LM-755_InterfaceBC_ToBePaidInvoices</Name>
+    <RootNamespace>LM-755_InterfaceBC_ToBePaidInvoices</RootNamespace>
+    <StartupType>Class</StartupType>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Configuration>Debug</Configuration>
+    <DBSyncInBuild>False</DBSyncInBuild>
+    <GenerateFormAdaptors>False</GenerateFormAdaptors>
+    <Company>
+    </Company>
+    <Partition>initial</Partition>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DataEntityExpandParentChildRelations>False</DataEntityExpandParentChildRelations>
+    <DataEntityUseLabelTextAsFieldName>False</DataEntityUseLabelTextAsFieldName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="Action Menu Items\" />
+    <Folder Include="Base Enums\" />
+    <Folder Include="Data Entities\" />
+    <Folder Include="Data Entity Extensions\" />
+    <Folder Include="Display Menu Items\" />
+    <Folder Include="EDT Strings\" />
+    <Folder Include="Extended Data Types\" />
+    <Folder Include="Forms\" />
+    <Folder Include="Label Files\" />
+    <Folder Include="Menu Extensions\" />
+    <Folder Include="Security Privileges\" />
+    <Folder Include="Tables\" />
+    <Folder Include="Views\" />
+    <Folder Include="Views\TODELETE" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AxDataEntityView\UBSBCProcessedVendorInvoiceHeaderEntity">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoiceHeaderEntity</Name>
+      <Link>Data Entities\UBSBCProcessedVendorInvoiceHeaderEntity</Link>
+    </Content>
+    <Content Include="AxDataEntityView\UBSBCProcessedVendorInvoiceLineEntity">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoiceLineEntity</Name>
+      <Link>Data Entities\UBSBCProcessedVendorInvoiceLineEntity</Link>
+    </Content>
+    <Content Include="AxDataEntityView\UBSBCProcessedVendorInvoicePrepaymentLineEntity">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoicePrepaymentLineEntity</Name>
+      <Link>Data Entities\UBSBCProcessedVendorInvoicePrepaymentLineEntity</Link>
+    </Content>
+    <Content Include="AxDataEntityView\UBSBCRoutingEntity">
+      <SubType>Content</SubType>
+      <Name>UBSBCRoutingEntity</Name>
+      <Link>Data Entities\UBSBCRoutingEntity</Link>
+    </Content>
+    <Content Include="AxEdt\UBSBCCompany">
+      <SubType>Content</SubType>
+      <Name>UBSBCCompany</Name>
+      <Link>EDT Strings\UBSBCCompany</Link>
+    </Content>
+    <Content Include="AxEdt\UBSBCEnvironment">
+      <SubType>Content</SubType>
+      <Name>UBSBCEnvironment</Name>
+      <Link>EDT Strings\UBSBCEnvironment</Link>
+    </Content>
+    <Content Include="AxEnum\UBSExportTargetSystem">
+      <SubType>Content</SubType>
+      <Name>UBSExportTargetSystem</Name>
+      <Link>Base Enums\UBSExportTargetSystem</Link>
+    </Content>
+    <Content Include="AxForm\UBSBCRouting">
+      <SubType>Content</SubType>
+      <Name>UBSBCRouting</Name>
+      <Link>Forms\UBSBCRouting</Link>
+    </Content>
+    <Content Include="AxLabelFile\UBS_en-US">
+      <SubType>Content</SubType>
+      <Name>UBS_en-US</Name>
+      <Link>Label Files\UBS_en-US</Link>
+    </Content>
+    <Content Include="AxLabelFile\UBS_fr">
+      <SubType>Content</SubType>
+      <Name>UBS_fr</Name>
+      <Link>Label Files\UBS_fr</Link>
+    </Content>
+    <Content Include="AxMenuExtension\OrganizationAdministration.Urbasolar">
+      <SubType>Content</SubType>
+      <Name>OrganizationAdministration.Urbasolar</Name>
+      <Link>Menu Extensions\OrganizationAdministration.Urbasolar</Link>
+    </Content>
+    <Content Include="AxMenuItemDisplay\UBSBCRouting">
+      <SubType>Content</SubType>
+      <Name>UBSBCRouting</Name>
+      <Link>Display Menu Items\UBSBCRouting</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\UBSBCProcessedVendorInvoiceHeaderEntityMaintain">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoiceHeaderEntityMaintain</Name>
+      <Link>Security Privileges\UBSBCProcessedVendorInvoiceHeaderEntityMaintain</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\UBSBCProcessedVendorInvoiceHeaderEntityView">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoiceHeaderEntityView</Name>
+      <Link>Security Privileges\UBSBCProcessedVendorInvoiceHeaderEntityView</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\UBSBCProcessedVendorInvoiceLineEntityMaintain">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoiceLineEntityMaintain</Name>
+      <Link>Security Privileges\UBSBCProcessedVendorInvoiceLineEntityMaintain</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\UBSBCProcessedVendorInvoiceLineEntityView">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoiceLineEntityView</Name>
+      <Link>Security Privileges\UBSBCProcessedVendorInvoiceLineEntityView</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\UBSBCProcessedVendorInvoicePrepaymentLineEntityMaintain">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoicePrepaymentLineEntityMaintain</Name>
+      <Link>Security Privileges\UBSBCProcessedVendorInvoicePrepaymentLineEntityMaintain</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\UBSBCProcessedVendorInvoicePrepaymentLineEntityView">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoicePrepaymentLineEntityView</Name>
+      <Link>Security Privileges\UBSBCProcessedVendorInvoicePrepaymentLineEntityView</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\UBSBCRoutingEntityMaintain">
+      <SubType>Content</SubType>
+      <Name>UBSBCRoutingEntityMaintain</Name>
+      <Link>Security Privileges\UBSBCRoutingEntityMaintain</Link>
+    </Content>
+    <Content Include="AxSecurityPrivilege\UBSBCRoutingEntityView">
+      <SubType>Content</SubType>
+      <Name>UBSBCRoutingEntityView</Name>
+      <Link>Security Privileges\UBSBCRoutingEntityView</Link>
+    </Content>
+    <Content Include="AxTable\UBSBCProcessedVendorInvoiceHeaderStaging">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoiceHeaderStaging</Name>
+      <Link>Tables\UBSBCProcessedVendorInvoiceHeaderStaging</Link>
+    </Content>
+    <Content Include="AxTable\UBSBCProcessedVendorInvoiceLineStaging">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoiceLineStaging</Name>
+      <Link>Tables\UBSBCProcessedVendorInvoiceLineStaging</Link>
+    </Content>
+    <Content Include="AxTable\UBSBCProcessedVendorInvoicePrepaymentLineStaging">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoicePrepaymentLineStaging</Name>
+      <Link>Tables\UBSBCProcessedVendorInvoicePrepaymentLineStaging</Link>
+    </Content>
+    <Content Include="AxTable\UBSBCRouting">
+      <SubType>Content</SubType>
+      <Name>UBSBCRouting</Name>
+      <Link>Tables\UBSBCRouting</Link>
+    </Content>
+    <Content Include="AxTable\UBSBCRoutingStaging">
+      <SubType>Content</SubType>
+      <Name>UBSBCRoutingStaging</Name>
+      <Link>Tables\UBSBCRoutingStaging</Link>
+    </Content>
+    <Content Include="AxTable\UBSVendInvoiceSageExport">
+      <SubType>Content</SubType>
+      <Name>UBSVendInvoiceSageExport</Name>
+      <Link>Tables\UBSVendInvoiceSageExport</Link>
+    </Content>
+    <Content Include="AxView\UBSBCInterfaceVendInvoiceAllView">
+      <SubType>Content</SubType>
+      <Name>UBSBCInterfaceVendInvoiceAllView</Name>
+      <Link>Views\UBSBCInterfaceVendInvoiceAllView</Link>
+    </Content>
+    <Content Include="AxView\UBSBCInterfaceVendInvoiceLineView">
+      <SubType>Content</SubType>
+      <Name>UBSBCInterfaceVendInvoiceLineView</Name>
+      <Link>Views\UBSBCInterfaceVendInvoiceLineView</Link>
+    </Content>
+    <Content Include="AxView\UBSBCInterfaceVendInvoiceNoWarrantyView">
+      <SubType>Content</SubType>
+      <Name>UBSBCInterfaceVendInvoiceNoWarrantyView</Name>
+      <Link>Views\UBSBCInterfaceVendInvoiceNoWarrantyView</Link>
+    </Content>
+    <Content Include="AxView\UBSBCInterfaceVendInvoiceWarrantyView">
+      <SubType>Content</SubType>
+      <Name>UBSBCInterfaceVendInvoiceWarrantyView</Name>
+      <Link>Views\UBSBCInterfaceVendInvoiceWarrantyView</Link>
+    </Content>
+    <Content Include="AxView\UBSBCProcessedVendorInvoiceView">
+      <SubType>Content</SubType>
+      <Name>UBSBCProcessedVendorInvoiceView</Name>
+      <Link>Views\UBSBCProcessedVendorInvoiceView</Link>
+    </Content>
+    <Content Include="AxView\UBSBCVendInvoicePrepaymentApplyView">
+      <SubType>Content</SubType>
+      <Name>UBSBCVendInvoicePrepaymentApplyView</Name>
+      <Link>Views\UBSBCVendInvoicePrepaymentApplyView</Link>
+    </Content>
+    <Content Include="AxView\UBSDimensionCombinationView">
+      <SubType>Content</SubType>
+      <Name>UBSDimensionCombinationView</Name>
+      <Link>Views\UBSDimensionCombinationView</Link>
+    </Content>
+    <Content Include="UBS.en-US.label.txt">
+      <SubType>Content</SubType>
+      <Name>UBS.en-US.label.txt</Name>
+      <DependentUpon>AxLabelFile\UBS_en-US</DependentUpon>
+    </Content>
+    <Content Include="UBS.fr.label.txt">
+      <SubType>Content</SubType>
+      <Name>UBS.fr.label.txt</Name>
+      <DependentUpon>AxLabelFile\UBS_fr</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
+  <Import Project="$(BuildTasksDirectory)\Microsoft.Dynamics.Framework.Tools.BuildTasks.17.0.targets" />
+</Project>
