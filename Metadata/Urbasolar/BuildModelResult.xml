@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Diagnostics
-  GenerationTime="2025-01-22T19:58:53.977595+00:00">
+  GenerationTime="2026-01-13T15:43:30.1953729+00:00">
   <Items>
     <Diagnostic>
       <DiagnosticType>Generation</DiagnosticType>
       <Severity>Informational</Severity>
-      <Path>dynamics://View/UBSProcessedVendorInvioicesEntity</Path>
+      <Path>dynamics://View/UBSBCRoutingEntity</Path>
       <ElementType>View</ElementType>
       <Moniker>IsRuntimeServicesMode</Moniker>
       <Line>0</Line>
@@ -18,59 +18,11 @@
       <Path>dynamics://Class/UBSProcessVendInvoiceRetention/Method/UBSCreateInvoiceRetentionTransaction</Path>
       <ElementType>Class Method</ElementType>
       <Moniker>TaskListItem</Moniker>
-      <Line>121</Line>
+      <Line>122</Line>
       <Column>9</Column>
-      <EndLine>121</EndLine>
+      <EndLine>122</EndLine>
       <EndColumn>178</EndColumn>
       <Message>TODO: Another development is currently ongoing and will grant the possibility to specify a custom amount percentage. In the time being, it remains fixed to 5 percents</Message>
-    </Diagnostic>
-    <Diagnostic>
-      <DiagnosticType>Compile</DiagnosticType>
-      <Severity>Warning</Severity>
-      <Path>dynamics://Class/PurchTable_Form_Urbasolar_Extension</Path>
-      <ElementType>Class</ElementType>
-      <Moniker>EventHandlerInClassExtension</Moniker>
-      <Line>8</Line>
-      <Column>6</Column>
-      <EndLine>8</EndLine>
-      <EndColumn>71</EndColumn>
-      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
-    </Diagnostic>
-    <Diagnostic>
-      <DiagnosticType>Compile</DiagnosticType>
-      <Severity>Warning</Severity>
-      <Path>dynamics://Class/PurchTable_Form_Urbasolar_Extension</Path>
-      <ElementType>Class</ElementType>
-      <Moniker>EventHandlerInClassExtension</Moniker>
-      <Line>20</Line>
-      <Column>6</Column>
-      <EndLine>20</EndLine>
-      <EndColumn>121</EndColumn>
-      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
-    </Diagnostic>
-    <Diagnostic>
-      <DiagnosticType>Compile</DiagnosticType>
-      <Severity>Warning</Severity>
-      <Path>dynamics://Class/DirPartyTable_Form_Urbasolar_Extension</Path>
-      <ElementType>Class</ElementType>
-      <Moniker>EventHandlerInClassExtension</Moniker>
-      <Line>5</Line>
-      <Column>6</Column>
-      <EndLine>5</EndLine>
-      <EndColumn>127</EndColumn>
-      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
-    </Diagnostic>
-    <Diagnostic>
-      <DiagnosticType>Compile</DiagnosticType>
-      <Severity>Warning</Severity>
-      <Path>dynamics://Class/PurchTable_Form_Urbasolar_Extension</Path>
-      <ElementType>Class</ElementType>
-      <Moniker>EventHandlerInClassExtension</Moniker>
-      <Line>41</Line>
-      <Column>6</Column>
-      <EndLine>41</EndLine>
-      <EndColumn>113</EndColumn>
-      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
@@ -123,49 +75,49 @@
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/VendTable_Form_Urbasolar_Extension</Path>
+      <Path>dynamics://Class/PurchTable_Form_Urbasolar_Extension</Path>
       <ElementType>Class</ElementType>
       <Moniker>EventHandlerInClassExtension</Moniker>
-      <Line>5</Line>
+      <Line>10</Line>
       <Column>6</Column>
-      <EndLine>5</EndLine>
-      <EndColumn>70</EndColumn>
+      <EndLine>10</EndLine>
+      <EndColumn>71</EndColumn>
       <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/VendTable_Form_Urbasolar_Extension</Path>
+      <Path>dynamics://Class/PurchTable_Form_Urbasolar_Extension</Path>
       <ElementType>Class</ElementType>
       <Moniker>EventHandlerInClassExtension</Moniker>
-      <Line>55</Line>
+      <Line>22</Line>
       <Column>6</Column>
-      <EndLine>55</EndLine>
+      <EndLine>22</EndLine>
       <EndColumn>121</EndColumn>
       <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/VendTable_Form_Urbasolar_Extension</Path>
+      <Path>dynamics://Class/PurchTable_Form_Urbasolar_Extension</Path>
       <ElementType>Class</ElementType>
       <Moniker>EventHandlerInClassExtension</Moniker>
-      <Line>75</Line>
+      <Line>43</Line>
       <Column>6</Column>
-      <EndLine>75</EndLine>
-      <EndColumn>123</EndColumn>
+      <EndLine>43</EndLine>
+      <EndColumn>113</EndColumn>
       <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/EcoResCategory_Form_Urbasolar_Extension</Path>
+      <Path>dynamics://Class/DirPartyTable_Form_Urbasolar_Extension</Path>
       <ElementType>Class</ElementType>
       <Moniker>EventHandlerInClassExtension</Moniker>
-      <Line>4</Line>
+      <Line>5</Line>
       <Column>6</Column>
-      <EndLine>4</EndLine>
-      <EndColumn>134</EndColumn>
+      <EndLine>5</EndLine>
+      <EndColumn>127</EndColumn>
       <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
     </Diagnostic>
     <Diagnostic>
@@ -195,6 +147,66 @@
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
+      <Path>dynamics://Class/VendTable_Form_Urbasolar_Extension</Path>
+      <ElementType>Class</ElementType>
+      <Moniker>EventHandlerInClassExtension</Moniker>
+      <Line>5</Line>
+      <Column>6</Column>
+      <EndLine>5</EndLine>
+      <EndColumn>70</EndColumn>
+      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/VendTable_Form_Urbasolar_Extension</Path>
+      <ElementType>Class</ElementType>
+      <Moniker>EventHandlerInClassExtension</Moniker>
+      <Line>45</Line>
+      <Column>6</Column>
+      <EndLine>45</EndLine>
+      <EndColumn>121</EndColumn>
+      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/VendTable_Form_Urbasolar_Extension</Path>
+      <ElementType>Class</ElementType>
+      <Moniker>EventHandlerInClassExtension</Moniker>
+      <Line>65</Line>
+      <Column>6</Column>
+      <EndLine>65</EndLine>
+      <EndColumn>123</EndColumn>
+      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/EcoResCategory_Form_Urbasolar_Extension</Path>
+      <ElementType>Class</ElementType>
+      <Moniker>EventHandlerInClassExtension</Moniker>
+      <Line>4</Line>
+      <Column>6</Column>
+      <EndLine>4</EndLine>
+      <EndColumn>134</EndColumn>
+      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/SalesTable_Form_Urbasolar_Extension</Path>
+      <ElementType>Class</ElementType>
+      <Moniker>EventHandlerInClassExtension</Moniker>
+      <Line>6</Line>
+      <Column>6</Column>
+      <EndLine>6</EndLine>
+      <EndColumn>113</EndColumn>
+      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
       <Path>dynamics://Class/DimensionValueDetails_Form_Urbasolar_Extension</Path>
       <ElementType>Class</ElementType>
       <Moniker>EventHandlerInClassExtension</Moniker>
@@ -202,18 +214,6 @@
       <Column>6</Column>
       <EndLine>60</EndLine>
       <EndColumn>158</EndColumn>
-      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
-    </Diagnostic>
-    <Diagnostic>
-      <DiagnosticType>Compile</DiagnosticType>
-      <Severity>Warning</Severity>
-      <Path>dynamics://Class/PurchCreateOrder_Form_Urbasolar_Extension</Path>
-      <ElementType>Class</ElementType>
-      <Moniker>EventHandlerInClassExtension</Moniker>
-      <Line>10</Line>
-      <Column>6</Column>
-      <EndLine>10</EndLine>
-      <EndColumn>119</EndColumn>
       <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
     </Diagnostic>
     <Diagnostic>
@@ -231,6 +231,30 @@
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
+      <Path>dynamics://Class/VendParameters_Form_Urbasolar_Extension</Path>
+      <ElementType>Class</ElementType>
+      <Moniker>EventHandlerInClassExtension</Moniker>
+      <Line>10</Line>
+      <Column>6</Column>
+      <EndLine>10</EndLine>
+      <EndColumn>135</EndColumn>
+      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/PurchCreateOrder_Form_Urbasolar_Extension</Path>
+      <ElementType>Class</ElementType>
+      <Moniker>EventHandlerInClassExtension</Moniker>
+      <Line>10</Line>
+      <Column>6</Column>
+      <EndLine>10</EndLine>
+      <EndColumn>119</EndColumn>
+      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
       <Path>dynamics://Class/VendEditInvoice_Form_Urbasolar_Extension</Path>
       <ElementType>Class</ElementType>
       <Moniker>EventHandlerInClassExtension</Moniker>
@@ -238,6 +262,18 @@
       <Column>6</Column>
       <EndLine>7</EndLine>
       <EndColumn>76</EndColumn>
+      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/VendEditInvoice_Form_Urbasolar_Extension</Path>
+      <ElementType>Class</ElementType>
+      <Moniker>EventHandlerInClassExtension</Moniker>
+      <Line>23</Line>
+      <Column>6</Column>
+      <EndLine>23</EndLine>
+      <EndColumn>123</EndColumn>
       <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
     </Diagnostic>
     <Diagnostic>
@@ -267,38 +303,14 @@
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/VendEditInvoice_Form_Urbasolar_Extension</Path>
-      <ElementType>Class</ElementType>
-      <Moniker>EventHandlerInClassExtension</Moniker>
-      <Line>23</Line>
-      <Column>6</Column>
-      <EndLine>23</EndLine>
-      <EndColumn>123</EndColumn>
-      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
-    </Diagnostic>
-    <Diagnostic>
-      <DiagnosticType>Compile</DiagnosticType>
-      <Severity>Warning</Severity>
-      <Path>dynamics://Class/VendParameters_Form_Urbasolar_Extension</Path>
-      <ElementType>Class</ElementType>
-      <Moniker>EventHandlerInClassExtension</Moniker>
-      <Line>10</Line>
-      <Column>6</Column>
-      <EndLine>10</EndLine>
-      <EndColumn>135</EndColumn>
-      <Message>Adding event handlers in extension classes is not recommended, please use instead a regular X++ class for that purpose.</Message>
-    </Diagnostic>
-    <Diagnostic>
-      <DiagnosticType>Compile</DiagnosticType>
-      <Severity>Warning</Severity>
-      <Path>dynamics://Class/UBSSReferencingDocumentBatchService/Method/sumPurchTableCrossCompany</Path>
-      <ElementType>Class Method</ElementType>
-      <Moniker>TypeConversionLosesRange</Moniker>
-      <Line>140</Line>
-      <Column>9</Column>
-      <EndLine>140</EndLine>
-      <EndColumn>33</EndColumn>
-      <Message>The type conversion from 'int64' to 'int' loses range.</Message>
+      <Path>dynamics://Table/UBSPurchPurchaseOrderLineV2Entity/Method/mapBudgetReservationDocumentNumberFromPurchReqLineToEntity</Path>
+      <ElementType>Table Method</ElementType>
+      <Moniker>IntrinsicArgIsMarkedAsObsolete</Moniker>
+      <Line>545</Line>
+      <Column>110</Column>
+      <EndLine>545</EndLine>
+      <EndColumn>190</EndColumn>
+      <Message>ReferencedObject is marked as Obsolete.  The 'PurchPurchaseOrderLineEntity::BudgetReservationLine_PSN' argument of the 'dataEntityDataSourceStr' compile-time function specifying a dataentity datasource is marked as obsolete.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Metadata</DiagnosticType>
@@ -324,6 +336,20 @@
     <Diagnostic>
       <DiagnosticType>Metadata</DiagnosticType>
       <Severity>Warning</Severity>
+      <Path>AxDataEntityView/UBSVendVendorV2Entity/Fields/EnterpriseNumber/DataField</Path>
+      <Moniker>ReferencedObjectIsObsolete</Moniker>
+      <Message>Referenced object 'EnterpriseNumber' is marked as obsolete. </Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Metadata</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>AxDataEntityViewExtension/DimensionSetEntity.DimensionIntegration/Relations/MainAccount/Constraints</Path>
+      <Moniker>RelationHasNoContraints</Moniker>
+      <Message>Relation 'MainAccount' has no constraints defined.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Metadata</DiagnosticType>
+      <Severity>Warning</Severity>
       <Path>AxDataEntityViewExtension/VendVendorV2Entity.Urbasolar/Fields/CommercialRegisterName/DataField</Path>
       <Moniker>ReferencedObjectIsObsolete</Moniker>
       <Message>Referenced object 'CommercialRegister' is marked as obsolete. </Message>
@@ -345,9 +371,9 @@
     <Diagnostic>
       <DiagnosticType>Metadata</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>AxDataEntityView/UBSVendVendorV2Entity/Fields/EnterpriseNumber/DataField</Path>
-      <Moniker>ReferencedObjectIsObsolete</Moniker>
-      <Message>Referenced object 'EnterpriseNumber' is marked as obsolete. </Message>
+      <Path>AxQuerySimple/UBSVoucherStockReferenceCategoryQuery/DataSources/UBSVoucherStockReferenceCategoryPhysicalView/DynamicFields</Path>
+      <Moniker>FieldListMustBeNo</Moniker>
+      <Message>The dynamic property of the query data source is set to 'Yes'. For query of type Union, dynamic property of the query data source should be set to 'No'</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Metadata</DiagnosticType>
@@ -359,30 +385,64 @@
     <Diagnostic>
       <DiagnosticType>Metadata</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>AxDataEntityViewExtension/DimensionSetEntity.DimensionIntegration/Relations/MainAccount/Constraints</Path>
-      <Moniker>RelationHasNoContraints</Moniker>
-      <Message>Relation 'MainAccount' has no constraints defined.</Message>
-    </Diagnostic>
-    <Diagnostic>
-      <DiagnosticType>BestPractices</DiagnosticType>
-      <Severity>Warning</Severity>
-      <Path>AxFormExtension/VendParameters.Urbasolar/Design/Controls/Tab/TabVendInvoiceAutomation/AutomationSetup/UBSAutomaticRetentionTabPage</Path>
-      <Moniker>BPErrorFormControlPatternUnspecified</Moniker>
-      <Message>'AxFormExtension/VendParameters.Urbasolar/Design/Controls/Tab/TabVendInvoiceAutomation/AutomationSetup/UBSAutomaticRetentionTabPage' has not specified a pattern. Please apply one of the available patterns.</Message>
-    </Diagnostic>
-    <Diagnostic>
-      <DiagnosticType>Metadata</DiagnosticType>
-      <Severity>Warning</Severity>
-      <Path>AxQuerySimple/UBSVoucherStockReferenceCategoryQuery/DataSources/UBSVoucherStockReferenceCategoryPhysicalView/DynamicFields</Path>
-      <Moniker>FieldListMustBeNo</Moniker>
-      <Message>The dynamic property of the query data source is set to 'Yes'. For query of type Union, dynamic property of the query data source should be set to 'No'</Message>
-    </Diagnostic>
-    <Diagnostic>
-      <DiagnosticType>Metadata</DiagnosticType>
-      <Severity>Warning</Severity>
       <Path>AxQuerySimpleExtension/DataSources/VendTable/Fields/EnterpriseNumber/Field</Path>
       <Moniker>ReferencedObjectIsObsolete</Moniker>
       <Message>Referenced object 'EnterpriseNumber' is marked as obsolete. </Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>FormPatternValidation</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>AxFormExtension/VendParameters.Urbasolar/Design/Controls/Tab/TabVendInvoiceAutomation/AutomationSetup/UBSAutomaticRetentionTabPage</Path>
+      <Moniker>ErrorFormControlPatternUnspecified</Moniker>
+      <Message>'AxFormExtension/VendParameters.Urbasolar/Design/Controls/Tab/TabVendInvoiceAutomation/AutomationSetup/UBSAutomaticRetentionTabPage' has not specified a pattern. Please apply one of the available patterns.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/VendBankAccount_VendBankAccountAccountID_Urbasolar_Extension/Method/modified</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>TypeConversionLosesRange</Moniker>
+      <Line>13</Line>
+      <Column>9</Column>
+      <EndLine>13</EndLine>
+      <EndColumn>130</EndColumn>
+      <Message>The type conversion from 'int64' to 'int' loses range.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/UBSSReferencingDocumentBatchService/Method/sumPurchTableCrossCompany</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>TypeConversionLosesRange</Moniker>
+      <Line>146</Line>
+      <Column>9</Column>
+      <EndLine>146</EndLine>
+      <EndColumn>33</EndColumn>
+      <Message>The type conversion from 'int64' to 'int' loses range.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/UBSPurchPackingSlipPost/Method/purchPackingSlipPost</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>ObsoleteEntityUsageWithReason</Moniker>
+      <Line>197</Line>
+      <Column>30</Column>
+      <EndLine>197</EndLine>
+      <EndColumn>44</EndColumn>
+      <Message>'line' is obsolete: '"On the Info class or the infolog global variable, the line method is obsolete. For better performance, use the infologLine method on the Global class."'.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/UBSPurchPackingSlipPost/Method/purchPackingSlipCorrect</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>ObsoleteEntityUsageWithReason</Moniker>
+      <Line>377</Line>
+      <Column>30</Column>
+      <EndLine>377</EndLine>
+      <EndColumn>44</EndColumn>
+      <Message>'line' is obsolete: '"On the Info class or the infolog global variable, the line method is obsolete. For better performance, use the infologLine method on the Global class."'.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
@@ -390,35 +450,23 @@
       <Path>dynamics://Class/UBSProcessVendInvoiceRetention/Method/UBSCreateInvoiceRetentionTransaction</Path>
       <ElementType>Class Method</ElementType>
       <Moniker>ObsoleteEntityUsageWithReason</Moniker>
-      <Line>184</Line>
+      <Line>187</Line>
       <Column>32</Column>
-      <EndLine>184</EndLine>
+      <EndLine>187</EndLine>
       <EndColumn>79</EndColumn>
       <Message>'construct' is obsolete: ''This method has been deprecated. Please use the newFromSpec method instead.''.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/SubBillDeferralTransactionLineDeferral_Table_Urbasolar_Extension/Method/processedEventHandler</Path>
+      <Path>dynamics://Class/UBSProcessVendInvoiceRetention/Method/roundWithPrecision</Path>
       <ElementType>Class Method</ElementType>
-      <Moniker>InternalUseOnlyTypeInaccessible</Moniker>
-      <Line>7</Line>
-      <Column>13</Column>
-      <EndLine>7</EndLine>
-      <EndColumn>54</EndColumn>
-      <Message>Type 'SubBillDeferralEnableFeature' is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' .</Message>
-    </Diagnostic>
-    <Diagnostic>
-      <DiagnosticType>Compile</DiagnosticType>
-      <Severity>Warning</Severity>
-      <Path>dynamics://Class/SubBillDeferralTransactionLineDeferral_Table_Urbasolar_Extension/Method/processedEventHandler</Path>
-      <ElementType>Class Method</ElementType>
-      <Moniker>InternalUseOnlyMethodInaccessible</Moniker>
-      <Line>7</Line>
-      <Column>13</Column>
-      <EndLine>7</EndLine>
-      <EndColumn>54</EndColumn>
-      <Message>Method 'isEnabled' or type 'SubBillDeferralEnableFeature' in which it is declared is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' ''.</Message>
+      <Moniker>TypeConversionLosesRangeAndPrecision</Moniker>
+      <Line>209</Line>
+      <Column>44</Column>
+      <EndLine>209</EndLine>
+      <EndColumn>57</EndColumn>
+      <Message>The type conversion from 'real' to 'int' loses range and precision.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
@@ -435,74 +483,98 @@
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/UBSOutboundInterfaceIntegrator/Method/postInterface</Path>
-      <ElementType>EqualExpression</ElementType>
-      <Moniker>TypeConversionCSharpExplicit</Moniker>
-      <Line>27</Line>
-      <Column>24</Column>
-      <EndLine>27</EndLine>
-      <EndColumn>55</EndColumn>
-      <Message>The explicit type conversion from 'System.Object' to 'System.Int32' may return a truncated version of the original value or construct a new value with a difference in precision. Use a built-in conversion method if this truncation or loss of precision is both allowed and expected.</Message>
+      <Path>dynamics://Class/UBSSubBillCommon/Method/copyDimensionsToMainAccount</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>ObsoleteEntityUsageWithReason</Moniker>
+      <Line>7</Line>
+      <Column>20</Column>
+      <EndLine>7</EndLine>
+      <EndColumn>96</EndColumn>
+      <Message>'getDefaultAccountFromMainAccountId' is obsolete: ''Use getDefaultAccountFromMainAccountIdAndCOA() instead''.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/UBSOutboundInterfaceIntegrator/Method/postInterface</Path>
-      <ElementType>EqualExpression</ElementType>
-      <Moniker>TypeConversionCSharpExplicit</Moniker>
-      <Line>70</Line>
-      <Column>24</Column>
-      <EndLine>70</EndLine>
-      <EndColumn>55</EndColumn>
-      <Message>The explicit type conversion from 'System.Object' to 'System.Int32' may return a truncated version of the original value or construct a new value with a difference in precision. Use a built-in conversion method if this truncation or loss of precision is both allowed and expected.</Message>
+      <Path>dynamics://Class/UBSWorkflowMultiEntityCopyBatchService/Method/activeConfigurationV6</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>InternalUseOnlyVariableTypeInaccessible</Moniker>
+      <Line>212</Line>
+      <Column>9</Column>
+      <EndLine>212</EndLine>
+      <EndColumn>115</EndColumn>
+      <Message>Type 'SysWorkflowConfigurationValidate' of variable 'workflowConfigurationValidate' is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' .</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/UBSOutboundInterfaceIntegrator/Method/postInterface</Path>
-      <ElementType>EqualExpression</ElementType>
-      <Moniker>TypeConversionCSharpExplicit</Moniker>
-      <Line>112</Line>
-      <Column>24</Column>
-      <EndLine>112</EndLine>
-      <EndColumn>55</EndColumn>
-      <Message>The explicit type conversion from 'System.Object' to 'System.Int32' may return a truncated version of the original value or construct a new value with a difference in precision. Use a built-in conversion method if this truncation or loss of precision is both allowed and expected.</Message>
+      <Path>dynamics://Class/UBSWorkflowMultiEntityCopyBatchService/Method/activeConfigurationV6</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>InternalUseOnlyTypeInaccessible</Moniker>
+      <Line>214</Line>
+      <Column>88</Column>
+      <EndLine>214</EndLine>
+      <EndColumn>189</EndColumn>
+      <Message>Type 'SysWorkflowHelper' is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' .</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/UBSOutboundInterfaceIntegrator/Method/postInterface</Path>
-      <ElementType>EqualExpression</ElementType>
-      <Moniker>TypeConversionCSharpExplicit</Moniker>
-      <Line>166</Line>
-      <Column>24</Column>
-      <EndLine>166</EndLine>
-      <EndColumn>55</EndColumn>
-      <Message>The explicit type conversion from 'System.Object' to 'System.Int32' may return a truncated version of the original value or construct a new value with a difference in precision. Use a built-in conversion method if this truncation or loss of precision is both allowed and expected.</Message>
+      <Path>dynamics://Class/UBSWorkflowMultiEntityCopyBatchService/Method/activeConfigurationV6</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>InternalUseOnlyMethodInaccessible</Moniker>
+      <Line>214</Line>
+      <Column>88</Column>
+      <EndLine>214</EndLine>
+      <EndColumn>189</EndColumn>
+      <Message>Method 'getConfigDataChangeEventHandler' or type 'SysWorkflowHelper' in which it is declared is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' ''.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/UBSOutboundInterfaceIntegrator/Method/postInterface</Path>
-      <ElementType>EqualExpression</ElementType>
-      <Moniker>TypeConversionCSharpExplicit</Moniker>
-      <Line>222</Line>
-      <Column>24</Column>
-      <EndLine>222</EndLine>
-      <EndColumn>55</EndColumn>
-      <Message>The explicit type conversion from 'System.Object' to 'System.Int32' may return a truncated version of the original value or construct a new value with a difference in precision. Use a built-in conversion method if this truncation or loss of precision is both allowed and expected.</Message>
+      <Path>dynamics://Class/UBSWorkflowMultiEntityCopyBatchService/Method/activeConfigurationV6</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>InternalUseOnlyTypeInaccessible</Moniker>
+      <Line>235</Line>
+      <Column>45</Column>
+      <EndLine>235</EndLine>
+      <EndColumn>149</EndColumn>
+      <Message>Type 'SysWorkflowConfigurationValidate' is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' .</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/UBSOutboundInterfaceIntegrator/Method/postInterface</Path>
-      <ElementType>EqualExpression</ElementType>
-      <Moniker>TypeConversionCSharpExplicit</Moniker>
-      <Line>281</Line>
-      <Column>24</Column>
-      <EndLine>281</EndLine>
-      <EndColumn>55</EndColumn>
-      <Message>The explicit type conversion from 'System.Object' to 'System.Int32' may return a truncated version of the original value or construct a new value with a difference in precision. Use a built-in conversion method if this truncation or loss of precision is both allowed and expected.</Message>
+      <Path>dynamics://Class/UBSWorkflowMultiEntityCopyBatchService/Method/activeConfigurationV6</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>InternalUseOnlyMethodInaccessible</Moniker>
+      <Line>235</Line>
+      <Column>45</Column>
+      <EndLine>235</EndLine>
+      <EndColumn>149</EndColumn>
+      <Message>Method 'newValidation' or type 'SysWorkflowConfigurationValidate' in which it is declared is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' ''.</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/UBSWorkflowMultiEntityCopyBatchService/Method/activeConfigurationV6</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>InternalUseOnlyQualifierTypeInaccessible</Moniker>
+      <Line>236</Line>
+      <Column>13</Column>
+      <EndLine>236</EndLine>
+      <EndColumn>43</EndColumn>
+      <Message>Type 'SysWorkflowConfigurationValidate' of qualifier 'workflowConfigurationValidate' is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' .</Message>
+    </Diagnostic>
+    <Diagnostic>
+      <DiagnosticType>Compile</DiagnosticType>
+      <Severity>Warning</Severity>
+      <Path>dynamics://Class/UBSWorkflowMultiEntityCopyBatchService/Method/activeConfigurationV6</Path>
+      <ElementType>Class Method</ElementType>
+      <Moniker>InternalUseOnlyMethodInaccessible</Moniker>
+      <Line>236</Line>
+      <Column>13</Column>
+      <EndLine>236</EndLine>
+      <EndColumn>54</EndColumn>
+      <Message>Method 'toInfolog' or type 'SysWorkflowConfigurationValidate' in which it is declared is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' ''.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
@@ -519,38 +591,26 @@
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/SubBillDeferralTransactionDeferral_Button_DefaultValues_Urbasolar_Extension/Method/clicked</Path>
-      <ElementType>Class Method</ElementType>
-      <Moniker>ObsoleteEntityUsageWithReason</Moniker>
-      <Line>6</Line>
-      <Column>27</Column>
-      <EndLine>6</EndLine>
-      <EndColumn>41</EndColumn>
-      <Message>'line' is obsolete: '"On the Info class or the infolog global variable, the line method is obsolete. For better performance, use the infologLine method on the Global class."'.</Message>
-    </Diagnostic>
-    <Diagnostic>
-      <DiagnosticType>Compile</DiagnosticType>
-      <Severity>Warning</Severity>
-      <Path>dynamics://Class/AccountingDistribution_Table_Urbasolar_Extension/Method/ubsSubBillDeferralAccDistIsDeferred</Path>
+      <Path>dynamics://Class/SysDataSharingSqlObjectsDataCopy_Urbasolar_Extension/Method/promptCopyData</Path>
       <ElementType>Class Method</ElementType>
       <Moniker>InternalUseOnlyTypeInaccessible</Moniker>
-      <Line>38</Line>
-      <Column>13</Column>
-      <EndLine>38</EndLine>
-      <EndColumn>54</EndColumn>
-      <Message>Type 'SubBillDeferralEnableFeature' is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' .</Message>
+      <Line>12</Line>
+      <Column>43</Column>
+      <EndLine>12</EndLine>
+      <EndColumn>105</EndColumn>
+      <Message>Type 'SysDataSharingSqlObjects' is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' .</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/AccountingDistribution_Table_Urbasolar_Extension/Method/ubsSubBillDeferralAccDistIsDeferred</Path>
+      <Path>dynamics://Class/SysDataSharingSqlObjectsDataCopy_Urbasolar_Extension/Method/promptCopyData</Path>
       <ElementType>Class Method</ElementType>
       <Moniker>InternalUseOnlyMethodInaccessible</Moniker>
-      <Line>38</Line>
-      <Column>13</Column>
-      <EndLine>38</EndLine>
-      <EndColumn>54</EndColumn>
-      <Message>Method 'isEnabled' or type 'SubBillDeferralEnableFeature' in which it is declared is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' ''.</Message>
+      <Line>12</Line>
+      <Column>43</Column>
+      <EndLine>12</EndLine>
+      <EndColumn>105</EndColumn>
+      <Message>Method 'getTopologicalOrdering' or type 'SysDataSharingSqlObjects' in which it is declared is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' ''.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
@@ -567,26 +627,26 @@
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/AccountingDistribution_Table_Urbasolar_Extension/Method/ubsSubBillDeferralUpdateChildAccDistAccount</Path>
+      <Path>dynamics://Class/SubBillDeferralTransactionDeferral_Button_DefaultValues_Urbasolar_Extension/Method/clicked</Path>
       <ElementType>Class Method</ElementType>
-      <Moniker>InternalUseOnlyTypeInaccessible</Moniker>
-      <Line>151</Line>
-      <Column>13</Column>
-      <EndLine>151</EndLine>
-      <EndColumn>54</EndColumn>
-      <Message>Type 'SubBillDeferralEnableFeature' is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' .</Message>
+      <Moniker>ObsoleteEntityUsageWithReason</Moniker>
+      <Line>6</Line>
+      <Column>27</Column>
+      <EndLine>6</EndLine>
+      <EndColumn>41</EndColumn>
+      <Message>'line' is obsolete: '"On the Info class or the infolog global variable, the line method is obsolete. For better performance, use the infologLine method on the Global class."'.</Message>
     </Diagnostic>
     <Diagnostic>
       <DiagnosticType>Compile</DiagnosticType>
       <Severity>Warning</Severity>
-      <Path>dynamics://Class/AccountingDistribution_Table_Urbasolar_Extension/Method/ubsSubBillDeferralUpdateChildAccDistAccount</Path>
+      <Path>dynamics://Class/UBSProcessedVendorInvoicesBatchService/Method/Process</Path>
       <ElementType>Class Method</ElementType>
-      <Moniker>InternalUseOnlyMethodInaccessible</Moniker>
-      <Line>151</Line>
-      <Column>13</Column>
-      <EndLine>151</EndLine>
-      <EndColumn>54</EndColumn>
-      <Message>Method 'isEnabled' or type 'SubBillDeferralEnableFeature' in which it is declared is marked InternalUseOnly and is not accessible from the current module 'Urbasolar' ''.</Message>
+      <Moniker>UnreachableStatement</Moniker>
+      <Line>45</Line>
+      <Column>17</Column>
+      <EndLine>47</EndLine>
+      <EndColumn>18</EndColumn>
+      <Message>The statement is unreachable.</Message>
     </Diagnostic>
   </Items>
   <Aliases />

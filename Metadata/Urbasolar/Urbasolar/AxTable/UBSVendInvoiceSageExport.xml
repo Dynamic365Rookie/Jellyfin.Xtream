@@ -84,11 +84,6 @@ public class UBSVendInvoiceSageExport extends common
 			<ExtendedDataType>ExecutionTime</ExtendedDataType>
 			<IgnoreEDTRelation>Yes</IgnoreEDTRelation>
 		</AxTableField>
-		<AxTableField xmlns=""
-			i:type="AxTableFieldEnum">
-			<Name>UBSExportTargetSystem</Name>
-			<EnumType>UBSExportTargetSystem</EnumType>
-		</AxTableField>
 	</Fields>
 	<FullTextIndexes />
 	<Indexes>
