@@ -38,23 +38,23 @@ public class XtreamController(IXtreamClient xtreamClient) : ControllerBase
     private static CategoryResponse CreateCategoryResponse(Category category) =>
         new()
         {
-            Id = category.CategoryId,
+            Id = (int)category.CategoryId,
             Name = category.CategoryName,
         };
 
     private static ItemResponse CreateItemResponse(StreamInfo stream) =>
         new()
         {
-            Id = stream.StreamId,
+            Id = (int)stream.StreamId,
             Name = stream.Name,
             HasCatchup = stream.TvArchive,
-            CatchupDuration = stream.TvArchiveDuration,
+            CatchupDuration = (int)stream.TvArchiveDuration,
         };
 
     private static ItemResponse CreateItemResponse(Series series) =>
         new()
         {
-            Id = series.SeriesId,
+            Id = (int)series.SeriesId,
             Name = series.Name,
             HasCatchup = false,
             CatchupDuration = 0,
@@ -63,10 +63,10 @@ public class XtreamController(IXtreamClient xtreamClient) : ControllerBase
     private static ChannelResponse CreateChannelResponse(StreamInfo stream) =>
         new()
         {
-            Id = stream.StreamId,
+            Id = (int)stream.StreamId,
             LogoUrl = stream.StreamIcon,
             Name = stream.Name,
-            Number = stream.Num,
+            Number = (int)stream.Num,
         };
 
     /// <summary>

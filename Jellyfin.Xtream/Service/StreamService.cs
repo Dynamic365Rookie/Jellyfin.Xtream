@@ -160,7 +160,7 @@ public partial class StreamService(IXtreamClient xtreamClient)
         PluginConfiguration config = Plugin.Instance.Configuration;
 
         IEnumerable<StreamInfo> streams = await xtreamClient.GetLiveStreamsAsync(Plugin.Instance.Creds, cancellationToken).ConfigureAwait(false);
-        return streams.Where((StreamInfo channel) => channel.CategoryId.HasValue && IsConfigured(config.LiveTv, channel.CategoryId.Value, channel.StreamId));
+        return streams.Where((StreamInfo channel) => channel.CategoryId.HasValue && IsConfigured(config.LiveTv, (int)channel.CategoryId.Value, (int)channel.StreamId));
     }
 
     /// <summary>
@@ -174,7 +174,7 @@ public partial class StreamService(IXtreamClient xtreamClient)
         IEnumerable<StreamInfo> streams = await GetLiveStreams(cancellationToken).ConfigureAwait(false);
         return streams.Select((StreamInfo stream) =>
         {
-            if (config.LiveTvOverrides.TryGetValue(stream.StreamId, out ChannelOverrides? overrides))
+            if (config.LiveTvOverrides.TryGetValue((int)stream.StreamId, out ChannelOverrides? overrides) && overrides != null)
             {
                 stream.Num = overrides.Number ?? stream.Num;
                 stream.Name = overrides.Name ?? stream.Name;
@@ -196,7 +196,7 @@ public partial class StreamService(IXtreamClient xtreamClient)
         ParsedName parsedName = ParseName(category.CategoryName);
         return new ChannelItemInfo()
         {
-            Id = ToGuid(prefix, category.CategoryId, 0, 0).ToString(),
+            Id = ToGuid(prefix, (int)category.CategoryId, 0, 0).ToString(),
             Name = category.CategoryName,
             Tags = new List<string>(parsedName.Tags),
             Type = ChannelItemType.Folder,
@@ -211,7 +211,7 @@ public partial class StreamService(IXtreamClient xtreamClient)
     public async Task<IEnumerable<Category>> GetVodCategories(CancellationToken cancellationToken)
     {
         List<Category> categories = await xtreamClient.GetVodCategoryAsync(Plugin.Instance.Creds, cancellationToken).ConfigureAwait(false);
-        return categories.Where((Category category) => Plugin.Instance.Configuration.Vod.ContainsKey(category.CategoryId));
+        return categories.Where((Category category) => Plugin.Instance.Configuration.Vod.ContainsKey((int)category.CategoryId));
     }
 
     /// <summary>
@@ -228,7 +228,7 @@ public partial class StreamService(IXtreamClient xtreamClient)
         }
 
         List<StreamInfo> streams = await xtreamClient.GetVodStreamsByCategoryAsync(Plugin.Instance.Creds, categoryId, cancellationToken).ConfigureAwait(false);
-        return streams.Where((StreamInfo stream) => IsConfigured(Plugin.Instance.Configuration.Vod, categoryId, stream.StreamId));
+        return streams.Where((StreamInfo stream) => IsConfigured(Plugin.Instance.Configuration.Vod, categoryId, (int)stream.StreamId));
     }
 
     /// <summary>
@@ -239,7 +239,7 @@ public partial class StreamService(IXtreamClient xtreamClient)
     public async Task<IEnumerable<Category>> GetSeriesCategories(CancellationToken cancellationToken)
     {
         List<Category> categories = await xtreamClient.GetSeriesCategoryAsync(Plugin.Instance.Creds, cancellationToken).ConfigureAwait(false);
-        return categories.Where((Category category) => Plugin.Instance.Configuration.Series.ContainsKey(category.CategoryId));
+        return categories.Where((Category category) => Plugin.Instance.Configuration.Series.ContainsKey((int)category.CategoryId));
     }
 
     /// <summary>
@@ -256,7 +256,7 @@ public partial class StreamService(IXtreamClient xtreamClient)
         }
 
         List<Series> series = await xtreamClient.GetSeriesByCategoryAsync(Plugin.Instance.Creds, categoryId, cancellationToken).ConfigureAwait(false);
-        return series.Where((Series series) => IsConfigured(Plugin.Instance.Configuration.Series, series.CategoryId, series.SeriesId));
+        return series.Where((Series series) => IsConfigured(Plugin.Instance.Configuration.Series, (int)series.CategoryId, (int)series.SeriesId));
     }
 
     /// <summary>

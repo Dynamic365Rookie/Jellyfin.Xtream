@@ -25,7 +25,7 @@ namespace Jellyfin.Xtream.Client.Models;
 public class StreamInfo
 {
     /// <summary>
-    /// Position index in the server's list.
+    /// Gets or sets the position index in the server's list.
     /// </summary>
     [JsonProperty("num")]
     [JsonConverter(typeof(FlexibleLongConverter))]
@@ -38,7 +38,7 @@ public class StreamInfo
     public string StreamType { get; set; } = string.Empty;
 
     /// <summary>
-    /// Unique stream identifier.
+    /// Gets or sets the unique stream identifier.
     /// Dispatcharr may return this as a quoted string.
     /// </summary>
     [JsonProperty("stream_id")]
@@ -52,7 +52,7 @@ public class StreamInfo
     public string EpgChannelId { get; set; } = string.Empty;
 
     /// <summary>
-    /// Unix timestamp (as string) of when the stream was added.
+    /// Gets or sets the Unix timestamp (as string) of when the stream was added.
     /// Kept as string because some providers send epoch strings, others send
     /// date strings — we only need it for informational purposes.
     /// </summary>
@@ -60,7 +60,7 @@ public class StreamInfo
     public string Added { get; set; } = string.Empty;
 
     /// <summary>
-    /// Primary category identifier.
+    /// Gets or sets the primary category identifier.
     /// Nullable because some servers omit this field.
     /// </summary>
     [JsonProperty("category_id")]
@@ -80,7 +80,7 @@ public class StreamInfo
     public string DirectSource { get; set; } = string.Empty;
 
     /// <summary>
-    /// Catchup/archive duration in hours.
+    /// Gets or sets the catchup/archive duration in hours.
     /// </summary>
     [JsonProperty("tv_archive_duration")]
     [JsonConverter(typeof(FlexibleLongConverter))]

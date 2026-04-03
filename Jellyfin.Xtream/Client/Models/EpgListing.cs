@@ -11,6 +11,7 @@
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -20,6 +21,9 @@ using Newtonsoft.Json.Converters;
 #pragma warning disable CS1591
 namespace Jellyfin.Xtream.Client.Models;
 
+// Alias for backward compatibility
+using EpgInfo = EpgListing;
+
 /// <summary>
 /// Represents EPG information for a single channel as returned by
 /// the /player_api.php?action=get_simple_data_table endpoint.
@@ -27,7 +31,7 @@ namespace Jellyfin.Xtream.Client.Models;
 public class EpgListing
 {
     /// <summary>
-    /// Unique row identifier.
+    /// Gets or sets the unique row identifier.
     /// Dispatcharr (>= 0.18) returns this as a quoted string instead of a
     /// bare integer, so we use <see cref="FlexibleLongConverter"/>.
     /// </summary>
@@ -36,7 +40,7 @@ public class EpgListing
     public long Id { get; set; }
 
     /// <summary>
-    /// EPG source identifier.
+    /// Gets or sets the EPG source identifier.
     /// Also subject to the string-vs-integer ambiguity.
     /// </summary>
     [JsonProperty("epg_id")]
@@ -73,13 +77,4 @@ public class EpgListing
 
     [JsonProperty("has_archive")]
     public bool HasArchive { get; set; }
-}
-
-/// <summary>
-/// Top-level wrapper returned by get_simple_data_table.
-/// </summary>
-public class EpgInfo
-{
-    [JsonProperty("epg_listings")]
-    public EpgListing[] EpgListings { get; set; } = Array.Empty<EpgListing>();
 }

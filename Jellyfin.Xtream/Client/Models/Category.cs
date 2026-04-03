@@ -25,7 +25,7 @@ namespace Jellyfin.Xtream.Client.Models;
 public class Category
 {
     /// <summary>
-    /// Unique category identifier.
+    /// Gets or sets the unique category identifier.
     /// Dispatcharr may return this as a quoted string.
     /// </summary>
     [JsonProperty("category_id")]
@@ -36,7 +36,7 @@ public class Category
     public string CategoryName { get; set; } = string.Empty;
 
     /// <summary>
-    /// Parent category identifier (0 = top-level).
+    /// Gets or sets the parent category identifier (0 = top-level).
     /// Dispatcharr may return this as a quoted string.
     /// </summary>
     [JsonProperty("parent_id")]

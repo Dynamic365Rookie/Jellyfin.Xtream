@@ -38,7 +38,7 @@ public class Series
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// Unique series identifier.
+    /// Gets or sets the unique series identifier.
     /// Dispatcharr may return this as a quoted string.
     /// </summary>
     [JsonProperty("series_id")]
@@ -61,7 +61,7 @@ public class Series
     public string Genre { get; set; } = string.Empty;
 
     /// <summary>
-    /// Last-modified Unix timestamp.
+    /// Gets or sets the last-modified Unix timestamp.
     /// Some providers send a float string, others an integer — kept as string.
     /// </summary>
     [JsonConverter(typeof(UnixDateTimeConverter))]
@@ -69,7 +69,7 @@ public class Series
     public DateTime LastModified { get; set; }
 
     /// <summary>
-    /// Rating value. Some providers return "8.5", others return 8.5 (bare number).
+    /// Gets or sets the rating value. Some providers return "8.5", others return 8.5 (bare number).
     /// Typed as decimal to handle both via JSON coercion.
     /// </summary>
     [JsonProperty("rating")]
@@ -88,7 +88,7 @@ public class Series
     public string YoutubeTrailer { get; set; } = string.Empty;
 
     /// <summary>
-    /// Episode run time in minutes.
+    /// Gets or sets the episode run time in minutes.
     /// Some providers return this as a string (""), some as an integer (0).
     /// FlexibleLongConverter handles both gracefully.
     /// </summary>
@@ -97,7 +97,7 @@ public class Series
     public long EpisodeRunTime { get; set; }
 
     /// <summary>
-    /// Category identifier.
+    /// Gets or sets the category identifier.
     /// Dispatcharr may return this as a quoted string.
     /// </summary>
     [JsonProperty("category_id")]

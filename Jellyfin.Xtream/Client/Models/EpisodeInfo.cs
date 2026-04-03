@@ -11,6 +11,7 @@
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using Jellyfin.Xtream.Client;
 using Newtonsoft.Json;
 
 #pragma warning disable CS1591
@@ -35,13 +36,13 @@ public class EpisodeInfo
     public DateTime? ReleaseDate { get; set; }
 
     /// <summary>
-    /// Episode rating. Nullable to handle missing values.
+    /// Gets or sets the episode rating. Nullable to handle missing values.
     /// </summary>
     [JsonProperty("rating")]
     public decimal? Rating { get; set; }
 
     /// <summary>
-    /// Duration in seconds.
+    /// Gets or sets the duration in seconds.
     /// Dispatcharr may return this as a quoted string → FlexibleLongConverter.
     /// Nullable because the field is sometimes absent.
     /// </summary>
@@ -50,7 +51,7 @@ public class EpisodeInfo
     public long? DurationSecs { get; set; }
 
     /// <summary>
-    /// Stream bitrate in kbps.
+    /// Gets or sets the stream bitrate in kbps.
     /// Dispatcharr may return this as a quoted string → FlexibleLongConverter.
     /// Nullable because the field is sometimes absent.
     /// </summary>
@@ -59,10 +60,10 @@ public class EpisodeInfo
     public long? Bitrate { get; set; }
 
     [JsonProperty("video")]
-    [JsonConverter(typeof(OnlyObjectConverter))]
+    [JsonConverter(typeof(OnlyObjectConverter<VideoInfo>))]
     public VideoInfo? Video { get; set; }
 
     [JsonProperty("audio")]
-    [JsonConverter(typeof(OnlyObjectConverter))]
+    [JsonConverter(typeof(OnlyObjectConverter<AudioInfo>))]
     public AudioInfo? Audio { get; set; }
 }

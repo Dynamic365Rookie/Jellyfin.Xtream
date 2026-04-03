@@ -11,6 +11,7 @@
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 using System;
+using Jellyfin.Xtream.Client;
 using Newtonsoft.Json;
 
 #pragma warning disable CS1591
@@ -36,7 +37,7 @@ public class VodInfo
     public string? Director { get; set; }
 
     /// <summary>
-    /// Rating value. Kept as decimal? — same as original.
+    /// Gets or sets the rating value. Kept as decimal? — same as original.
     /// Most servers send a number; the nullable handles missing values.
     /// </summary>
     [JsonProperty("rating")]
@@ -46,7 +47,7 @@ public class VodInfo
     public DateTime? ReleaseDate { get; set; }
 
     /// <summary>
-    /// Duration in seconds.
+    /// Gets or sets the duration in seconds.
     /// Dispatcharr may return this as a quoted string → FlexibleLongConverter.
     /// Nullable because the field is sometimes absent.
     /// </summary>
@@ -55,7 +56,7 @@ public class VodInfo
     public long? DurationSecs { get; set; }
 
     /// <summary>
-    /// TMDB identifier.
+    /// Gets or sets the TMDB identifier.
     /// Dispatcharr may return this as a quoted string → FlexibleLongConverter.
     /// Nullable because the field is sometimes absent.
     /// </summary>
@@ -64,7 +65,7 @@ public class VodInfo
     public long? TmdbId { get; set; }
 
     /// <summary>
-    /// Stream bitrate in kbps.
+    /// Gets or sets the stream bitrate in kbps.
     /// Dispatcharr may return this as a quoted string → FlexibleLongConverter.
     /// </summary>
     [JsonProperty("bitrate")]
@@ -72,10 +73,10 @@ public class VodInfo
     public long Bitrate { get; set; }
 
     [JsonProperty("video")]
-    [JsonConverter(typeof(OnlyObjectConverter))]
+    [JsonConverter(typeof(OnlyObjectConverter<VideoInfo>))]
     public VideoInfo? Video { get; set; }
 
     [JsonProperty("audio")]
-    [JsonConverter(typeof(OnlyObjectConverter))]
+    [JsonConverter(typeof(OnlyObjectConverter<AudioInfo>))]
     public AudioInfo? Audio { get; set; }
 }

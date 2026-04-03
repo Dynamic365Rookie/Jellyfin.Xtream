@@ -134,7 +134,7 @@ public class SeriesChannel(ILogger<SeriesChannel> logger) : IChannel, IDisableMe
             DateModified = series.LastModified,
             FolderType = ChannelFolderType.Series,
             Genres = GetGenres(series.Genre),
-            Id = StreamService.ToGuid(StreamService.SeriesPrefix, series.CategoryId, series.SeriesId, 0).ToString(),
+            Id = StreamService.ToGuid(StreamService.SeriesPrefix, (int)series.CategoryId, (int)series.SeriesId, 0).ToString(),
             ImageUrl = series.Cover,
             Name = parsedName.Title,
             SeriesName = parsedName.Title,

@@ -66,7 +66,7 @@ public class XtreamVodProvider(ILogger<VodChannel> logger, IProviderManager prov
             item.Overview ??= i.Plot;
             item.PremiereDate ??= i.ReleaseDate;
             item.RunTimeTicks ??= i.DurationSecs * TimeSpan.TicksPerSecond;
-            item.TotalBitrate ??= i.Bitrate;
+            item.TotalBitrate ??= (int)i.Bitrate;
 
             if (i.Genre is string genres)
             {
@@ -75,7 +75,7 @@ public class XtreamVodProvider(ILogger<VodChannel> logger, IProviderManager prov
 
             if (!item.HasProviderId(MetadataProvider.Tmdb))
             {
-                if (i.TmdbId is int tmdbId)
+                if (i.TmdbId is long tmdbId && tmdbId > 0)
                 {
                     options.ReplaceAllMetadata = true;
                     item.SetProviderId(MetadataProvider.Tmdb, tmdbId.ToString(CultureInfo.InvariantCulture));

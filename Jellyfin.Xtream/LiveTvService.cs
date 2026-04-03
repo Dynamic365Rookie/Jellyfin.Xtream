@@ -61,7 +61,7 @@ public class LiveTvService(IServerApplicationHost appHost, IHttpClientFactory ht
             ParsedName parsed = StreamService.ParseName(channel.Name);
             items.Add(new ChannelInfo()
             {
-                Id = StreamService.ToGuid(StreamService.LiveTvPrefix, channel.StreamId, 0, 0).ToString(),
+                Id = StreamService.ToGuid(StreamService.LiveTvPrefix, (int)channel.StreamId, 0, 0).ToString(),
                 Number = channel.Num.ToString(CultureInfo.InvariantCulture),
                 ImageUrl = channel.StreamIcon,
                 Name = parsed.Title,
@@ -175,11 +175,11 @@ public class LiveTvService(IServerApplicationHost appHost, IHttpClientFactory ht
             Plugin plugin = Plugin.Instance;
             {
                 EpgListings epgs = await xtreamClient.GetEpgInfoAsync(plugin.Creds, streamId, cancellationToken).ConfigureAwait(false);
-                foreach (EpgInfo epg in epgs.Listings)
+                foreach (EpgListing epg in epgs.Listings)
                 {
                     items.Add(new()
                     {
-                        Id = StreamService.ToGuid(StreamService.EpgPrefix, streamId, epg.Id, 0).ToString(),
+                        Id = StreamService.ToGuid(StreamService.EpgPrefix, streamId, (int)epg.Id, 0).ToString(),
                         ChannelId = channelId,
                         StartDate = epg.Start,
                         EndDate = epg.End,

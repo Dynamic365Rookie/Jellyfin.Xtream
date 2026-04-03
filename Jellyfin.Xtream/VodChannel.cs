@@ -123,7 +123,7 @@ public class VodChannel(ILogger<VodChannel> logger) : IChannel, IDisableMediaSou
         [
             Plugin.Instance.StreamService.GetMediaSourceInfo(
                 StreamType.Vod,
-                stream.StreamId,
+                (int)stream.StreamId,
                 stream.ContainerExtension)
         ];
 
