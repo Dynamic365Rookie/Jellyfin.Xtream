@@ -37,6 +37,8 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - upload
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Jellyfin plugin repo
         uses: Kevinjil/jellyfin-plugin-repo-action@v0.4.3
