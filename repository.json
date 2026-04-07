@@ -9,12 +9,12 @@
     "imageUrl": "",
     "versions": [
       {
-        "checksum": "23de2971b8b2e557acc94b931fa7e8e9",
-        "changelog": "Automatic release from commit f46902ffcaf9062fe6f6f92412873ef3ee0a5476",
+        "checksum": "67f18ae14dadbdedae61cc333a3fd318",
+        "changelog": "Automatic release from commit 556e552e3592aa98f561db4880436fa65867406e",
         "targetAbi": "10.11.0.0",
-        "sourceUrl": "https://github.com/Dynamic365Rookie/Jellyfin.Xtream/releases/download/v0.8.1.0-build.20260407134208/jellyfin-xtream_0.8.1.0.zip",
+        "sourceUrl": "https://github.com/Dynamic365Rookie/Jellyfin.Xtream/releases/download/v0.8.1.0-build.20260407142352/jellyfin-xtream_0.8.1.0.zip",
         "version": "0.8.1.0",
-        "timestamp": "2026-04-07T13:42:25Z"
+        "timestamp": "2026-04-07T14:24:15Z"
       }
     ]
   }
