@@ -1,4 +1,4 @@
-name: "Publish Plugin"
+name: Publish Plugin
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -54,8 +54,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.version.outputs.tag }}
-          name: "${{ steps.version.outputs.tag }}"
-          body: "Automatic release from commit ${{ github.sha }}"
+          name: ${{ steps.version.outputs.tag }}
+          body: Automatic release
           draft: false
           prerelease: false
 
@@ -93,13 +93,10 @@ jobs:
           fi
 
           echo "Final ZIP file: $ZIP_FILE"
-
           MD5=$(md5sum "$ZIP_FILE" | awk '{print $1}')
           echo "MD5: $MD5"
-
           echo "zip_name=${ZIP_FILE}" >> $GITHUB_OUTPUT
           echo "md5=${MD5}" >> $GITHUB_OUTPUT
-
           md5sum "$ZIP_FILE" > "${ZIP_FILE%.zip}.md5"
           sha256sum "$ZIP_FILE" > "${ZIP_FILE%.zip}.sha256"
           ls -la
@@ -124,7 +121,7 @@ jobs:
         with:
           ref: gh-pages
 
-      - name: Checkout source to get Plugin.cs and csproj
+      - name: Checkout source
         uses: actions/checkout@v4
         with:
           ref: master
@@ -144,53 +141,47 @@ jobs:
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           ABI=$(grep -oP '(?<=<JellyfinVersion>)[^<]+' source/Jellyfin.Xtream/Jellyfin.Xtream.csproj || echo "10.11.0.0")
 
-          echo "=== repository.json values ==="
-          echo "GUID      : $GUID"
-          echo "VERSION   : $RELEASE_VERSION"
-          echo "TAG       : $RELEASE_TAG"
-          echo "MD5       : $UPLOAD_MD5"
-          echo "ZIP_NAME  : $UPLOAD_ZIP"
-          echo "SOURCE_URL: $SOURCE_URL"
-          echo "ABI       : $ABI"
-          echo "COMMIT    : $COMMIT_SHA"
+          echo "GUID       : $GUID"
+          echo "VERSION    : $RELEASE_VERSION"
+          echo "TAG        : $RELEASE_TAG"
+          echo "MD5        : $UPLOAD_MD5"
+          echo "ZIP        : $UPLOAD_ZIP"
+          echo "SOURCE_URL : $SOURCE_URL"
+          echo "ABI        : $ABI"
 
-          cat > repository.json << 'ENDJSON'
-[
-  {
-    "guid": "GUID_PLACEHOLDER",
-    "name": "Jellyfin Xtream",
-    "description": "Plugin Xtream Codes - Fork avec support Dispatcharr",
-    "overview": "Plugin Xtream Codes - Fork avec support Dispatcharr",
-    "owner": "Dynamic365Rookie",
-    "category": "Live TV",
-    "imageUrl": "",
-    "versions": [
-      {
-        "checksum": "MD5_PLACEHOLDER",
-        "changelog": "Automatic release from commit SHA_PLACEHOLDER",
-        "targetAbi": "ABI_PLACEHOLDER",
-        "sourceUrl": "URL_PLACEHOLDER",
-        "version": "VERSION_PLACEHOLDER",
-        "timestamp": "TIMESTAMP_PLACEHOLDER"
-      }
-    ]
-  }
-]
-ENDJSON
+          python3 -c "
+          import json
+          import os
 
-          # Remplacer les placeholders par les vraies valeurs
-          sed -i "s|GUID_PLACEHOLDER|${GUID}|g" repository.json
-          sed -i "s|MD5_PLACEHOLDER|${UPLOAD_MD5}|g" repository.json
-          sed -i "s|SHA_PLACEHOLDER|${COMMIT_SHA}|g" repository.json
-          sed -i "s|ABI_PLACEHOLDER|${ABI}|g" repository.json
-          sed -i "s|URL_PLACEHOLDER|${SOURCE_URL}|g" repository.json
-          sed -i "s|VERSION_PLACEHOLDER|${RELEASE_VERSION}|g" repository.json
-          sed -i "s|TIMESTAMP_PLACEHOLDER|${TIMESTAMP}|g" repository.json
+          data = [
+            {
+              'guid': os.environ['GUID'],
+              'name': 'Jellyfin Xtream',
+              'description': 'Plugin Xtream Codes - Fork avec support Dispatcharr',
+              'overview': 'Plugin Xtream Codes - Fork avec support Dispatcharr',
+              'owner': 'Dynamic365Rookie',
+              'category': 'Live TV',
+              'imageUrl': '',
+              'versions': [
+                {
+                  'checksum': os.environ['UPLOAD_MD5'],
+                  'changelog': 'Automatic release from commit ' + os.environ['COMMIT_SHA'],
+                  'targetAbi': os.environ['ABI'],
+                  'sourceUrl': os.environ['SOURCE_URL'],
+                  'version': os.environ['RELEASE_VERSION'],
+                  'timestamp': os.environ['TIMESTAMP']
+                }
+              ]
+            }
+          ]
 
-          echo "=== Final repository.json ==="
-          cat repository.json
+          with open('repository.json', 'w') as f:
+            json.dump(data, f, indent=2)
 
-      - name: Commit and push repository.json to gh-pages
+          print(json.dumps(data, indent=2))
+          " GUID=$GUID SOURCE_URL=$SOURCE_URL ABI=$ABI TIMESTAMP=$TIMESTAMP
+
+      - name: Commit and push repository.json
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
