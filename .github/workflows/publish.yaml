@@ -1,5 +1,8 @@
 name: "🚀 Publish Plugin"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   push:
     branches:
@@ -25,13 +28,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
       - name: Get version from csproj
         id: version
         run: |
-          VERSION=$(grep -oP '(?<=<Version>)[^<]+' Jellyfin.Xtream/Jellyfin.Xtream.csproj)
+          # Le projet utilise <AssemblyVersion> au lieu de <Version>
+          VERSION=$(grep -oP '(?<=<AssemblyVersion>)[^<]+' Jellyfin.Xtream/Jellyfin.Xtream.csproj || true)
+          if [ -z "$VERSION" ]; then
+            VERSION=$(grep -oP '(?<=<Version>)[^<]+' Jellyfin.Xtream/Jellyfin.Xtream.csproj || true)
+          fi
+          if [ -z "$VERSION" ]; then
+            VERSION=$(grep -oP '(?<=<VersionPrefix>)[^<]+' Jellyfin.Xtream/Jellyfin.Xtream.csproj || true)
+          fi
+          if [ -z "$VERSION" ]; then
+            echo "ERROR: Could not find version in .csproj"
+            cat Jellyfin.Xtream/Jellyfin.Xtream.csproj
+            exit 1
+          fi
+          echo "Found version: $VERSION"
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
           TAG="v${VERSION}-build.${TIMESTAMP}"
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
