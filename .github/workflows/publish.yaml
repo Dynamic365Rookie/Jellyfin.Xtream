@@ -149,37 +149,34 @@ jobs:
           echo "SOURCE_URL : $SOURCE_URL"
           echo "ABI        : $ABI"
 
-          python3 -c "
-          import json
-          import os
+          export GUID SOURCE_URL ABI TIMESTAMP
 
-          data = [
-            {
-              'guid': os.environ['GUID'],
-              'name': 'Jellyfin Xtream',
-              'description': 'Plugin Xtream Codes - Fork avec support Dispatcharr',
-              'overview': 'Plugin Xtream Codes - Fork avec support Dispatcharr',
-              'owner': 'Dynamic365Rookie',
-              'category': 'Live TV',
-              'imageUrl': '',
-              'versions': [
-                {
-                  'checksum': os.environ['UPLOAD_MD5'],
-                  'changelog': 'Automatic release from commit ' + os.environ['COMMIT_SHA'],
-                  'targetAbi': os.environ['ABI'],
-                  'sourceUrl': os.environ['SOURCE_URL'],
-                  'version': os.environ['RELEASE_VERSION'],
-                  'timestamp': os.environ['TIMESTAMP']
-                }
-              ]
-            }
-          ]
+          python3 << 'PYEOF'
+          import json, os
 
-          with open('repository.json', 'w') as f:
+          data = [{
+            "guid": os.environ["GUID"],
+            "name": "Jellyfin Xtream",
+            "description": "Plugin Xtream Codes - Fork avec support Dispatcharr",
+            "overview": "Plugin Xtream Codes - Fork avec support Dispatcharr",
+            "owner": "Dynamic365Rookie",
+            "category": "Live TV",
+            "imageUrl": "",
+            "versions": [{
+              "checksum": os.environ["UPLOAD_MD5"],
+              "changelog": "Automatic release from commit " + os.environ["COMMIT_SHA"],
+              "targetAbi": os.environ["ABI"],
+              "sourceUrl": os.environ["SOURCE_URL"],
+              "version": os.environ["RELEASE_VERSION"],
+              "timestamp": os.environ["TIMESTAMP"]
+            }]
+          }]
+
+          with open("repository.json", "w") as f:
             json.dump(data, f, indent=2)
 
           print(json.dumps(data, indent=2))
-          " GUID=$GUID SOURCE_URL=$SOURCE_URL ABI=$ABI TIMESTAMP=$TIMESTAMP
+          PYEOF
 
       - name: Commit and push repository.json
         run: |
