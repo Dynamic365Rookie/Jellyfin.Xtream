@@ -81,7 +81,6 @@ jobs:
       - name: Prepare and upload assets
         id: prepare
         run: |
-          # Trouver le ZIP généré par le build
           ZIP_FILE=$(ls *.zip 2>/dev/null | head -1)
           echo "Found ZIP: $ZIP_FILE"
 
@@ -95,14 +94,12 @@ jobs:
 
           echo "Final ZIP file: $ZIP_FILE"
 
-          # Calculer le MD5
           MD5=$(md5sum "$ZIP_FILE" | awk '{print $1}')
           echo "MD5: $MD5"
 
           echo "zip_name=${ZIP_FILE}" >> $GITHUB_OUTPUT
           echo "md5=${MD5}" >> $GITHUB_OUTPUT
 
-          # Créer les fichiers de checksum
           md5sum "$ZIP_FILE" > "${ZIP_FILE%.zip}.md5"
           sha256sum "$ZIP_FILE" > "${ZIP_FILE%.zip}.sha256"
           ls -la
@@ -154,41 +151,31 @@ jobs:
           echo "SOURCE_URL: $SOURCE_URL"
           echo "ABI       : $ABI"
 
-          cat > repository.json << EOF
-          [
-            {
-              "checksum": "${MD5}",
-              "changelog": "Automatic release from commit ${{ github.sha }}",
-              "guid": "${GUID}",
-              "name": "Jellyfin Xtream",
-              "overview": "Plugin Xtream Codes - Fork avec support Dispatcharr",
-              "owner": "Dynamic365Rookie",
-              "category": "Live TV",
-              "version": "${VERSION}",
-              "targetAbi": "${ABI}",
-              "sourceUrl": "${SOURCE_URL}",
-              "timestamp": "${TIMESTAMP}"
-            }
-          ]
-          EOF
+          cat > repository.json << ENDJSON
+[
+  {
+    "guid": "${GUID}",
+    "name": "Jellyfin Xtream",
+    "description": "Plugin Xtream Codes - Fork avec support Dispatcharr",
+    "overview": "Plugin Xtream Codes - Fork avec support Dispatcharr",
+    "owner": "Dynamic365Rookie",
+    "category": "Live TV",
+    "imageUrl": "",
+    "versions": [
+      {
+        "checksum": "${MD5}",
+        "changelog": "Automatic release from commit ${{ github.sha }}",
+        "targetAbi": "${ABI}",
+        "sourceUrl": "${SOURCE_URL}",
+        "version": "${VERSION}",
+        "timestamp": "${TIMESTAMP}"
+      }
+    ]
+  }
+]
+ENDJSON
 
-          # Supprimer l'indentation du heredoc
-          sed -i 's/^          //' repository.json
           cat repository.json
-
-      - name: Create Jekyll config for correct MIME types
-        run: |
-          cat > _config.yml << 'EOF'
-          include:
-            - repository.json
-          EOF
-          sed -i 's/^          //' _config.yml
-
-          cat > .nojekyll << 'EOF'
-          EOF
-
-          echo "_config.yml content:"
-          cat _config.yml
 
       - name: Commit and push repository.json to gh-pages
         run: |
