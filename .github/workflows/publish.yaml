@@ -75,18 +75,25 @@ jobs:
         with:
           name: build-artifact
 
+      - name: List downloaded files
+        run: ls -la
+
       - name: Prepare and upload assets
         id: prepare
         run: |
           # Trouver le ZIP généré par le build
           ZIP_FILE=$(ls *.zip 2>/dev/null | head -1)
+          echo "Found ZIP: $ZIP_FILE"
+
           if [ -z "$ZIP_FILE" ]; then
             echo "No ZIP found, creating one from DLL"
             DLL_FILE=$(ls *.dll 2>/dev/null | head -1)
-            zip "Jellyfin.Xtream.zip" "$DLL_FILE"
-            ZIP_FILE="Jellyfin.Xtream.zip"
+            echo "Found DLL: $DLL_FILE"
+            ZIP_FILE="jellyfin-xtream_${{ needs.release.outputs.version }}.zip"
+            zip "$ZIP_FILE" "$DLL_FILE"
           fi
-          echo "ZIP file: $ZIP_FILE"
+
+          echo "Final ZIP file: $ZIP_FILE"
 
           # Calculer le MD5
           MD5=$(md5sum "$ZIP_FILE" | awk '{print $1}')
@@ -120,8 +127,7 @@ jobs:
         with:
           ref: gh-pages
 
-      - name: Get GUID from Plugin.cs
-        id: guid
+      - name: Checkout source to get Plugin.cs and csproj
         uses: actions/checkout@v4
         with:
           ref: master
@@ -129,25 +135,24 @@ jobs:
 
       - name: Generate repository.json
         run: |
-          # Récupérer les infos depuis le repo source
-          GUID=$(grep -oP '(?<=new Guid\(")[^"]+' source/Jellyfin.Xtream/Plugin.cs || echo "5d774c35-8567-46d3-a950-9bb8227a0c5d")
-          VERSION=${{ needs.release.outputs.version }}
-          TAG=${{ needs.release.outputs.tag }}
-          MD5=${{ needs.upload.outputs.md5 }}
-          ZIP_NAME=${{ needs.upload.outputs.zip_name }}
+          GUID=$(grep -oP '(?<=Guid\.Parse\(")[^"]+' source/Jellyfin.Xtream/Plugin.cs || echo "5d774c35-8567-46d3-a950-9bb8227a0c5d")
+          VERSION="${{ needs.release.outputs.version }}"
+          TAG="${{ needs.release.outputs.tag }}"
+          MD5="${{ needs.upload.outputs.md5 }}"
+          ZIP_NAME="${{ needs.upload.outputs.zip_name }}"
           REPO="${{ github.repository }}"
           SOURCE_URL="https://github.com/${REPO}/releases/download/${TAG}/${ZIP_NAME}"
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          ABI=$(grep -oP '(?<=<JellyfinVersion>)[^<]+' source/Jellyfin.Xtream/Jellyfin.Xtream.csproj || echo "10.11.0.0")
 
-          # Lire le targetAbi depuis le csproj
-          ABI=$(grep -oP '(?<=<JellyfinVersion>)[^<]+' source/Jellyfin.Xtream/Jellyfin.Xtream.csproj || echo "10.9.0.0")
-
-          echo "Generating repository.json"
-          echo "  GUID: $GUID"
-          echo "  VERSION: $VERSION"
-          echo "  MD5: $MD5"
-          echo "  SOURCE_URL: $SOURCE_URL"
-          echo "  ABI: $ABI"
+          echo "=== repository.json values ==="
+          echo "GUID      : $GUID"
+          echo "VERSION   : $VERSION"
+          echo "TAG       : $TAG"
+          echo "MD5       : $MD5"
+          echo "ZIP_NAME  : $ZIP_NAME"
+          echo "SOURCE_URL: $SOURCE_URL"
+          echo "ABI       : $ABI"
 
           cat > repository.json << EOF
           [
@@ -167,6 +172,8 @@ jobs:
           ]
           EOF
 
+          # Supprimer l'indentation du heredoc
+          sed -i 's/^          //' repository.json
           cat repository.json
 
       - name: Commit and push repository.json to gh-pages
