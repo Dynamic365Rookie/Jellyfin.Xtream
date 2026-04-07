@@ -176,6 +176,20 @@ jobs:
           sed -i 's/^          //' repository.json
           cat repository.json
 
+      - name: Create Jekyll config for correct MIME types
+        run: |
+          cat > _config.yml << 'EOF'
+          include:
+            - repository.json
+          EOF
+          sed -i 's/^          //' _config.yml
+
+          cat > .nojekyll << 'EOF'
+          EOF
+
+          echo "_config.yml content:"
+          cat _config.yml
+
       - name: Commit and push repository.json to gh-pages
         run: |
           git config user.name "github-actions[bot]"
