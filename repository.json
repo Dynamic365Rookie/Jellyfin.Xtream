@@ -1,7 +1,7 @@
 [
   {
-    "checksum": "dcc438a8404ba5b904e90a2295c22ad1",
-    "changelog": "Automatic release from commit 1dcdbc2283f406a6e71cebf687c98718903ab4e8",
+    "checksum": "ceffd6b04666548d07d188129821733d",
+    "changelog": "Automatic release from commit 67ea620d479f50c44da7cb1ec7e6229ef773d482",
     "guid": "5d774c35-8567-46d3-a950-9bb8227a0c5d",
     "name": "Jellyfin Xtream",
     "overview": "Plugin Xtream Codes - Fork avec support Dispatcharr",
@@ -9,7 +9,7 @@
     "category": "Live TV",
     "version": "0.8.1.0",
     "targetAbi": "10.11.0.0",
-    "sourceUrl": "https://github.com/Dynamic365Rookie/Jellyfin.Xtream/releases/download/v0.8.1.0-build.20260407121236/jellyfin-xtream_0.8.1.0.zip",
-    "timestamp": "2026-04-07T12:12:57Z"
+    "sourceUrl": "https://github.com/Dynamic365Rookie/Jellyfin.Xtream/releases/download/v0.8.1.0-build.20260407130020/jellyfin-xtream_0.8.1.0.zip",
+    "timestamp": "2026-04-07T13:00:43Z"
   }
 ]
