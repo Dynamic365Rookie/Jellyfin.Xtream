@@ -1,9 +1,9 @@
-name: "Publish Plugin"
+name: "🚀 Publish Plugin"
 
 on:
-  release:
-    types:
-      - released
+  push:
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
@@ -13,10 +13,47 @@ jobs:
       dotnet-version: "9.0.*"
       dotnet-target: "net9.0"
 
+  release:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    permissions:
+      contents: write
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      tag: ${{ steps.version.outputs.tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get version from csproj
+        id: version
+        run: |
+          VERSION=$(grep -oP '(?<=<Version>)[^<]+' Jellyfin.Xtream/Jellyfin.Xtream.csproj)
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          TAG="v${VERSION}-build.${TIMESTAMP}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          release_name: "${{ steps.version.outputs.tag }}"
+          body: "Automatic release from commit ${{ github.sha }}"
+          draft: false
+          prerelease: false
+
   upload:
     runs-on: ubuntu-latest
     needs:
       - build
+      - release
+    permissions:
+      contents: write
     steps:
       - name: Download Artifact
         uses: actions/download-artifact@v4
@@ -34,7 +71,7 @@ jobs:
       - name: Upload GitHub Release assets
         uses: shogo82148/actions-upload-release-asset@v1.9.2
         with:
-          upload_url: ${{ github.event.release.upload_url }}
+          upload_url: ${{ needs.release.outputs.upload_url }}
           asset_path: ./*
 
   generate:
