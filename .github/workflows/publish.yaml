@@ -1,4 +1,4 @@
-name: "🚀 Publish Plugin"
+name: "Publish Plugin"
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -131,30 +131,33 @@ jobs:
           path: source
 
       - name: Generate repository.json
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          RELEASE_VERSION: ${{ needs.release.outputs.version }}
+          RELEASE_TAG: ${{ needs.release.outputs.tag }}
+          UPLOAD_MD5: ${{ needs.upload.outputs.md5 }}
+          UPLOAD_ZIP: ${{ needs.upload.outputs.zip_name }}
+          GH_REPO: ${{ github.repository }}
         run: |
           GUID=$(grep -oP '(?<=Guid\.Parse\(")[^"]+' source/Jellyfin.Xtream/Plugin.cs || echo "5d774c35-8567-46d3-a950-9bb8227a0c5d")
-          VERSION="${{ needs.release.outputs.version }}"
-          TAG="${{ needs.release.outputs.tag }}"
-          MD5="${{ needs.upload.outputs.md5 }}"
-          ZIP_NAME="${{ needs.upload.outputs.zip_name }}"
-          REPO="${{ github.repository }}"
-          SOURCE_URL="https://github.com/${REPO}/releases/download/${TAG}/${ZIP_NAME}"
+          SOURCE_URL="https://github.com/${GH_REPO}/releases/download/${RELEASE_TAG}/${UPLOAD_ZIP}"
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           ABI=$(grep -oP '(?<=<JellyfinVersion>)[^<]+' source/Jellyfin.Xtream/Jellyfin.Xtream.csproj || echo "10.11.0.0")
 
           echo "=== repository.json values ==="
           echo "GUID      : $GUID"
-          echo "VERSION   : $VERSION"
-          echo "TAG       : $TAG"
-          echo "MD5       : $MD5"
-          echo "ZIP_NAME  : $ZIP_NAME"
+          echo "VERSION   : $RELEASE_VERSION"
+          echo "TAG       : $RELEASE_TAG"
+          echo "MD5       : $UPLOAD_MD5"
+          echo "ZIP_NAME  : $UPLOAD_ZIP"
           echo "SOURCE_URL: $SOURCE_URL"
           echo "ABI       : $ABI"
+          echo "COMMIT    : $COMMIT_SHA"
 
-          cat > repository.json << ENDJSON
+          cat > repository.json << 'ENDJSON'
 [
   {
-    "guid": "${GUID}",
+    "guid": "GUID_PLACEHOLDER",
     "name": "Jellyfin Xtream",
     "description": "Plugin Xtream Codes - Fork avec support Dispatcharr",
     "overview": "Plugin Xtream Codes - Fork avec support Dispatcharr",
@@ -163,18 +166,28 @@ jobs:
     "imageUrl": "",
     "versions": [
       {
-        "checksum": "${MD5}",
-        "changelog": "Automatic release from commit ${{ github.sha }}",
-        "targetAbi": "${ABI}",
-        "sourceUrl": "${SOURCE_URL}",
-        "version": "${VERSION}",
-        "timestamp": "${TIMESTAMP}"
+        "checksum": "MD5_PLACEHOLDER",
+        "changelog": "Automatic release from commit SHA_PLACEHOLDER",
+        "targetAbi": "ABI_PLACEHOLDER",
+        "sourceUrl": "URL_PLACEHOLDER",
+        "version": "VERSION_PLACEHOLDER",
+        "timestamp": "TIMESTAMP_PLACEHOLDER"
       }
     ]
   }
 ]
 ENDJSON
 
+          # Remplacer les placeholders par les vraies valeurs
+          sed -i "s|GUID_PLACEHOLDER|${GUID}|g" repository.json
+          sed -i "s|MD5_PLACEHOLDER|${UPLOAD_MD5}|g" repository.json
+          sed -i "s|SHA_PLACEHOLDER|${COMMIT_SHA}|g" repository.json
+          sed -i "s|ABI_PLACEHOLDER|${ABI}|g" repository.json
+          sed -i "s|URL_PLACEHOLDER|${SOURCE_URL}|g" repository.json
+          sed -i "s|VERSION_PLACEHOLDER|${RELEASE_VERSION}|g" repository.json
+          sed -i "s|TIMESTAMP_PLACEHOLDER|${TIMESTAMP}|g" repository.json
+
+          echo "=== Final repository.json ==="
           cat repository.json
 
       - name: Commit and push repository.json to gh-pages
